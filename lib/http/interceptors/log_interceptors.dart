@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 
+import '../dio_util.dart';
+
 
 bool isDebug = true;
 
@@ -29,6 +31,10 @@ class LogsInterceptors extends InterceptorsWrapper {
     if (isDebug) {
       if (response != null) {
         print("┌────────────────────────Begin Response————————————————————————");
+        print('status ${response.statusCode}');
+        print('   ┌───────────header——————');
+        print('${response.headers.toString()}');
+        print('   └——————————————————————');
         printLong('response: ' + response.toString());
         print("└————————————————————————End Response——————————————————————————\n\n");
       }
@@ -41,7 +47,7 @@ class LogsInterceptors extends InterceptorsWrapper {
     if (isDebug) {
       print("┌────────────────────────Begin Dio Error————————————————————————");
       print('请求异常: ' + err.toString());
-      print('请求异常信息: ' + err.response?.toString() ?? "");
+      print('请求异常信息: ' + (err.response?.toString() ?? ""));
       print("└————————————————————————End Dio Error——————————————————————————\n\n");
     }
     return err;

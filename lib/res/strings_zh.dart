@@ -1,29 +1,22 @@
-
 import 'package:wanandroid_flutter/res/strings.dart';
 
 ///语言集具体实现类：中文
 class StringsZh extends BaseStrings {
   @override
-  String seriesGr = "GR系列";
+  get login => '登录';
 
   @override
-  String seriesMagic = "Magic系列";
+  get password => '密码';
 
   @override
-  String seriesMini = "Mini系列";
+  get regist => '注册';
 
   @override
-  String seriesSmartHome = "智慧家居系列";
+  get username => '用户名';
 
   @override
-  String smartHome = "智慧家居";
+  get netConnectFailed => '网络连接超时或者服务器未响应';
 
   @override
-  String get materials => "营销物料";
-
-  @override
-  String get sellingpoint => "卖点";
-
-  @override
-  String get video => "教学视频";
+  get rePassword => '再次输入密码';
 }

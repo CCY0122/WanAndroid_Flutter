@@ -1,7 +1,9 @@
 import 'dio_util.dart';
+import 'index.dart';
 
 class Api {
   static const String BASE_URL = "https://www.wanandroid.com";
+  static const int ERROR_CODE_UN_LOGIN = -1001;
 }
 
 
@@ -11,14 +13,14 @@ class AccountApi {
   static const String REGIST_PATH = "/user/register";
   static const String LOGOUT_PATH = "/user/logout/json";
 
-  static Future login(String username, String password) {
+  static Future<Response> login(String username, String password) {
     return dio.post(LOGIN_PATH, queryParameters: {
       "username": username,
       "password": password,
     });
   }
 
-  static Future regist(String username, String password, String repassword) {
+  static Future<Response> regist(String username, String password, String repassword) {
     return dio.post(REGIST_PATH, queryParameters: {
       "username": username,
       "password": password,
@@ -26,7 +28,7 @@ class AccountApi {
     });
   }
 
-  static Future logout(){
+  static Future<Response> logout(){
     return dio.get(LOGOUT_PATH);
   }
 }
