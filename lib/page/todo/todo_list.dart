@@ -101,6 +101,7 @@ class _TodoItemState extends State<TodoItem> {
                     minHeight: pt(45),
                   ),
                   decoration: ShapeDecoration(
+                    //todo 用shadows的话透明度不好看，考虑使用card 的elevation实现悬浮感
                     color: Colors.white24,
 //                    shadows: <BoxShadow>[
 //                      DisplayUtil.supreLightElevation(),
