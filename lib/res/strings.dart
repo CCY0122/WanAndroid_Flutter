@@ -14,6 +14,8 @@ abstract class Strings {
   get login;
   get netConnectFailed;
   get rePassword;
+  get todo;
+  get createNew;
 }
 
 ///通用的语言，直接这里实现。

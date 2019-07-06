@@ -32,9 +32,9 @@ class LogsInterceptors extends InterceptorsWrapper {
       if (response != null) {
         print("┌────────────────────────Begin Response————————————————————————");
         print('status ${response.statusCode}');
-        print('   ┌───────────header——————');
-        print('${response.headers.toString()}');
-        print('   └——————————————————————');
+//        print('   ┌───────────header——————');
+//        print('${response.headers.toString()}');
+//        print('   └——————————————————————');
         printLong('response: ' + response.toString());
         print("└————————————————————————End Response——————————————————————————\n\n");
       }

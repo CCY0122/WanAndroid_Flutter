@@ -19,4 +19,10 @@ class StringsZh extends BaseStrings {
 
   @override
   get rePassword => '再次输入密码';
+
+  @override
+  get createNew => '新建';
+
+  @override
+  get todo => '便笺';
 }

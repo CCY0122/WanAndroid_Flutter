@@ -6,6 +6,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
+import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/test/test_page.dart';
 
@@ -17,6 +18,8 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 final Map<String, WidgetBuilder> routes = {
   LoginWanandroidPage.ROUTER_NAME: (context) => new LoginWanandroidPage(),
+  MyStatelessWidget.ROUTER_NAME: (context) => new MyStatelessWidget(),
+  TodoPage.ROUTER_NAME: (context) => new TodoPage(),
 };
 
 void main() async {
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
       routes: routes,
       title: _title,
       navigatorKey: navigatorKey,
-      home: MyStatelessWidget(),
+//      home: MyStatelessWidget(),
     );
   }
 }
@@ -63,6 +66,7 @@ void openPage(BuildContext context) {
 
 /// This is the stateless widget that the main application instantiates.
 class MyStatelessWidget extends StatelessWidget {
+  static const String ROUTER_NAME = "/";
   MyStatelessWidget({Key key}) : super(key: key);
 
   @override
@@ -88,10 +92,28 @@ class MyStatelessWidget extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: Text(
-          'This is the home page',
-          style: TextStyle(fontSize: 24),
+      body:  Center(
+        child: Column(
+          children: <Widget>[
+            FlatButton(
+              child: Text('去测试页'),
+              onPressed: (){
+                openPage(context);
+              },
+            ),
+            FlatButton(
+              child: Text('去登录'),
+              onPressed: (){
+                Navigator.pushNamed(context, LoginWanandroidPage.ROUTER_NAME);
+              },
+            ),
+            FlatButton(
+              child: Text('去todo'),
+              onPressed: (){
+                Navigator.pushNamed(context, TodoPage.ROUTER_NAME);
+              },
+            ),
+          ],
         ),
       ),
     );

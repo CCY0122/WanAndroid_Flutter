@@ -28,11 +28,18 @@ class DisplayUtil {
   }
 
   ///比直接设置elevation的悬浮感更轻薄的背景阴影
-  static BoxShadow lightElevation() {
+  static BoxShadow lightElevation({Color baseColor = const Color(0xFFEEEEEE)}) {
     return BoxShadow(
-      color: Color(0xFFEBEBEB),
+      color: baseColor,
       blurRadius: 9,
       spreadRadius: 3,
+    );
+  }
+
+  static BoxShadow supreLightElevation({Color baseColor = const Color(0xFFEEEEEE)}) {
+    return BoxShadow(
+      color: baseColor,
+      blurRadius: 6,
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -33,8 +32,11 @@ class _TestPageState extends State<TestPage> {
         if (index == 1) {
           return accountTest();
         }
+        if (index == 2) {
+          return TodoTest();
+        }
       },
-      itemCount: 2,
+      itemCount: 3,
     );
   }
 
@@ -191,5 +193,43 @@ class _TestPageState extends State<TestPage> {
   Future printSPisLogin() async {
     bool islogin = await SPUtil.isLogin();
     print('isLogin = $islogin');
+  }
+}
+
+class TodoTest extends StatefulWidget {
+  @override
+  _TodoTestState createState() => _TodoTestState();
+}
+
+class _TodoTestState extends State<TodoTest> {
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: <Widget>[
+        RaisedButton(
+          child: Text('add'),
+          onPressed: () {
+            TodoApi.addTodo(
+              'test2',
+              'test content2',
+              date: TodoApi.dateFormat(
+                DateTime(2019),
+              ),
+              type: 1,
+            ).then((result) {
+              print('success:${result.toString()}');
+            }).catchError((e) {
+              print('failed:$e');
+            });
+          },
+        ),
+        RaisedButton(
+          child: Text('DELETE'),
+          onPressed: (){
+            TodoApi.deleteTodo(11511);
+          },
+        )
+      ],
+    );
   }
 }

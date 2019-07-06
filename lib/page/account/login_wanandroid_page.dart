@@ -21,19 +21,30 @@ class LoginModeNotification extends Notification {
 
 ///wanAndroid登录
 class LoginWanandroidPage extends StatefulWidget {
-  static const String ROUTER_NAME = "login_wanandroid_page";
+  static const String ROUTER_NAME = "/LoginWanandroidPage";
 
   @override
   _LoginWanandroidPageState createState() => _LoginWanandroidPageState();
 }
 
-class _LoginWanandroidPageState extends State<LoginWanandroidPage> {
+class _LoginWanandroidPageState extends State<LoginWanandroidPage> with SingleTickerProviderStateMixin {
   LoginMode mode;
+  AnimationController animationController;
+  CurvedAnimation curvedAnimation;
 
   @override
   void initState() {
     super.initState();
     mode = LoginMode.LOGIN;
+    animationController = AnimationController(vsync: this,duration: Duration(seconds: 1));
+    curvedAnimation = CurvedAnimation(parent: animationController, curve: Curves.elasticOut);
+    animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    animationController.dispose();
   }
 
   @override
@@ -74,16 +85,19 @@ class _LoginWanandroidPageState extends State<LoginWanandroidPage> {
                   ),
                 ),
                 Positioned(
-                  //todo 这里放自己的app logo，或者放微信？
                   top: pt(50),
                   child: Image.asset(
                     'images/ic_launcher.png',
+                    color: Colors.white,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(top: pt(170)),
-                  child: LoginCard(
-                    mode: mode,
+                ScaleTransition(
+                  scale: curvedAnimation,
+                  child: Container(
+                    margin: EdgeInsets.only(top: pt(170)),
+                    child: LoginCard(
+                      mode: mode,
+                    ),
                   ),
                 ),
               ],
