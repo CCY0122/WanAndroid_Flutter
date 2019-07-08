@@ -25,4 +25,7 @@ class StringsZh extends BaseStrings {
 
   @override
   get todo => '便笺';
+
+  @override
+  get allEmpty => '空空如也';
 }

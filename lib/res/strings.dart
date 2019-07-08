@@ -16,6 +16,7 @@ abstract class Strings {
   get rePassword;
   get todo;
   get createNew;
+  get allEmpty;
 }
 
 ///通用的语言，直接这里实现。

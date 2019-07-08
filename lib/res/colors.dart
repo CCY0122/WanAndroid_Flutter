@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-class WColors {
+class WColors{
   static const Color theme_color = Color(0xFF7CB4EF);
   static const Color theme_color_light = Color(0xFF7EDDFF);
   static const Color theme_color_dark = Color(0xFF9A99E8);

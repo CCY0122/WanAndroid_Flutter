@@ -15,91 +15,68 @@ class TodoPage extends StatefulWidget {
 
 class _TodoPageState extends State<TodoPage> {
   TextEditingController addTodoC;
-  List<String> todoTemplates;
 
   @override
   void initState() {
     super.initState();
     addTodoC = TextEditingController();
-    if (todoTemplates == null) {
-      todoTemplates = ['便笺模板1', '便笺模板2', '便笺模板3', '便笺模板4'];
-    }
-    _getTodoTemplates().then((s) {
-      todoTemplates = s;
-      setState(() {});
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: WColors.theme_color_dark,
+        title: Text(
+          res.todo,
+        ),
+        centerTitle: true,
+        elevation: 0,
+      ),
       body: DecoratedBox(
         decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('images/todo_bg.jpeg'), fit: BoxFit.cover),
+          color: WColors.gray_background,
         ),
-        child: SafeArea(
-          child: Stack(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Expanded(
-                    child: TodoListPage(),
-                  ),
-                ],
-              ),
-              SingleChildScrollView(
-                //fixme 在android上仍不过过渡滑动
-                physics: AlwaysScrollableScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: pt(120),
-                      height: pt(110),
-                      margin: EdgeInsets.only(
-                        top: pt(16),
-                        bottom: pt(16),
-                        left: pt(16),
-                        right: pt(8),
-                      ),
-                      decoration: BoxDecoration(
-                          color: Colors.white24,
-                          boxShadow: <BoxShadow>[
-                            DisplayUtil.lightElevation(),
-                          ],
-                          borderRadius: BorderRadius.circular(6)),
-                      child: Text('xin jian'),
-                      alignment: Alignment.center,
+        child: Stack(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Container(
+                  height: pt(100),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        WColors.theme_color_dark,
+                        WColors.theme_color,
+                        WColors.theme_color_light,
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
-                  ]..addAll(todoTemplates.map((s) {
-                      return Container(
-                        width: pt(120),
-                        height: pt(110),
-                        margin: EdgeInsets.only(
-                          top: pt(16),
-                          bottom: pt(16),
-                          left: pt(8),
-                          right: pt(todoTemplates.indexOf(s) ==
-                                  (todoTemplates.length - 1)
-                              ? 16
-                              : 8),
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: <BoxShadow>[
-                            DisplayUtil.lightElevation(),
-                          ],
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(s),
-                      );
-                    }).toList()),
+                  ),
                 ),
-              )
-            ],
-          ),
+                Expanded(
+                  child: TodoListPage(),
+                ),
+              ],
+            ),
+            Positioned(
+              top: pt(38),
+              left: 0,
+              right: 0,
+              child: Container(
+                height: pt(80),
+                margin: EdgeInsets.symmetric(horizontal: pt(16)),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    DisplayUtil.supreLightElevation()
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

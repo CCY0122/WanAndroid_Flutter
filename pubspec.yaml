@@ -56,6 +56,7 @@ flutter:
   assets:
     - images/ic_launcher.png
     - images/todo_bg.jpeg
+    - images/pull.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
