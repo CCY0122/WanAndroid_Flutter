@@ -48,6 +48,9 @@ class TodoApi {
     //yyyy-MM-dd
     String timestamp =
         "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+//    String timestamp =
+//        "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}";
+
     return timestamp;
   }
 
@@ -60,7 +63,7 @@ class TodoApi {
   static Future<Response> addTodo(
     String title,
     String content, {
-    String date,
+    String completeDate,
     int type,
     int priority,
   }) {
@@ -68,8 +71,9 @@ class TodoApi {
       'title': title,
       'content': content,
     };
-    if (date != null) {
-      query['date'] = date;
+    query['date'] = dateFormat(DateTime.now());
+    if (completeDate != null) {
+      query['completeDate'] = completeDate;
     }
     if (type != null) {
       query['type'] = type;
@@ -91,8 +95,9 @@ class TodoApi {
   static Future<Response> updateTodo(
     int id,
     String title,
-    String content, {
-    String date,
+    String content,
+    String date, {
+    String completeDate,
     int status,
     int type,
     int priority,
@@ -103,6 +108,9 @@ class TodoApi {
     };
     if (date != null) {
       query['date'] = date;
+    }
+    if (completeDate != null) {
+      query['completeDate'] = completeDate;
     }
     if (type != null) {
       query['type'] = type;

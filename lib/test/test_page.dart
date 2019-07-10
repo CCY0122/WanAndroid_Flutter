@@ -209,18 +209,16 @@ class _TodoTestState extends State<TodoTest> {
         RaisedButton(
           child: Text('add'),
           onPressed: () {
-            TodoApi.addTodo(
-              'test2',
-              'test content2',
-              date: TodoApi.dateFormat(
-                DateTime(2019),
-              ),
-              type: 1,
-            ).then((result) {
-              print('success:${result.toString()}');
-            }).catchError((e) {
-              print('failed:$e');
-            });
+//            TodoApi.addTodo(
+//              'test2',
+//              'test content2',
+//              completeDateMilli: DateTime.now().millisecondsSinceEpoch,
+//              type: 1,
+//            ).then((result) {
+//              print('success:${result.toString()}');
+//            }).catchError((e) {
+//              print('failed:$e');
+//            });
           },
         ),
         RaisedButton(

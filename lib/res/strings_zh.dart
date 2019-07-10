@@ -28,4 +28,85 @@ class StringsZh extends BaseStrings {
 
   @override
   get allEmpty => '空空如也';
+
+  @override
+  get life => '生活';
+
+  @override
+  get play => '娱乐';
+
+  @override
+  get work => '工作';
+
+  @override
+  get all => '全部';
+
+  @override
+  get important => '重要';
+
+  @override
+  get normal => '一般';
+
+  @override
+  get relaxed => '宽松';
+
+  @override
+  get orderByCreateTime => '按创建日期排序';
+
+  @override
+  get orderByFinishTime => '按完成日期排序';
+
+  @override
+  get isLoading => '加载中';
+
+  @override
+  get create => '创建';
+
+  @override
+  get detail => '详情';
+
+  @override
+  get title => '标题';
+
+  @override
+  get finishTime => '完成日期';
+
+  @override
+  get planFinishTime => '计划完成日期';
+
+  @override
+  get getExpress => '取快递';
+
+  @override
+  get noTemplate => '无模板';
+
+  @override
+  get getExpressDetail => '回家前记得去丰巢取快递';
+
+  @override
+  get readbook => '读书计划';
+
+  @override
+  get readbookDetail => '一个月内看完《-》';
+
+  @override
+  get repay => '还钱';
+
+  @override
+  get repayDetail => '9号之前记得还花呗！！！！！';
+
+  @override
+  get editor => '编辑';
+
+  @override
+  get isBottomst => '—————我是有底线的—————';
+
+  @override
+  get cancel => '取消';
+
+  @override
+  get confirm => '确定';
+
+  @override
+  get ensureDelete => '确定删除？';
 }

@@ -17,6 +17,34 @@ abstract class Strings {
   get todo;
   get createNew;
   get allEmpty;
+  get work;
+  get life;
+  get play;
+  get all;
+  get important;
+  get normal;
+  get relaxed;
+  get orderByCreateTime;
+  get orderByFinishTime;
+  get isLoading;
+  get create;
+  get title;
+  get detail;
+  get finishTime;
+  get planFinishTime;
+  get noTemplate;
+  get getExpress;
+  get repay;
+  get readbook;
+  get getExpressDetail;
+  get repayDetail;
+  get readbookDetail;
+  get editor;
+  get isBottomst;
+  get confirm;
+  get cancel;
+  get ensureDelete;
+
 }
 
 ///通用的语言，直接这里实现。
