@@ -44,6 +44,9 @@ abstract class Strings {
   get confirm;
   get cancel;
   get ensureDelete;
+  get markDone;
+  get markUndo;
+  get todoTips;
 
 }
 

@@ -101,7 +101,8 @@ class _TodoListPageState extends State<TodoListPage> {
           color: WColors.theme_color,
           child: ListView.builder(
             controller: _scrollController,
-            physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            physics:
+                AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             shrinkWrap: false,
             itemBuilder: (BuildContext context, int index) {
               if (datas == null || datas.length == 0) {
@@ -204,12 +205,29 @@ class TodoItem extends StatefulWidget {
   _TodoItemState createState() => _TodoItemState();
 }
 
-class _TodoItemState extends State<TodoItem> {
-  BuildContext sc;
+class _TodoItemState extends State<TodoItem> with TickerProviderStateMixin {
+  ItemDragData _dragData;
+  AnimationController _finishDragController;
+  BuildContext contentContext;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _dragData = ItemDragData();
+    _dragData.initPosition = -pt(45 / 2.0 + 70); //一个圆角半径+日期widget所占长度
+    _dragData.totalDragLength = pt(375); //屏幕宽
+    _dragData.alreadyDragLength = 0;
+  }
+
+  @override
+  void dispose() {
+    _finishDragController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    sc = context;
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, TodoCreatePage.ROUTER_NAME,
@@ -245,6 +263,26 @@ class _TodoItemState extends State<TodoItem> {
           },
         );
       },
+      onHorizontalDragUpdate: (DragUpdateDetails details) {
+        if (isLoading) {
+          return;
+        }
+        setState(() {
+          _dragData.alreadyDragLength += details.primaryDelta;
+        });
+      },
+      onHorizontalDragCancel: () {
+        if (isLoading) {
+          return;
+        }
+        onFinishDrag();
+      },
+      onHorizontalDragEnd: (DragEndDetails details) {
+        if (isLoading) {
+          return;
+        }
+        onFinishDrag(velocity: details.primaryVelocity);
+      },
       child: Container(
         alignment: Alignment.center,
         width: double.infinity,
@@ -255,9 +293,13 @@ class _TodoItemState extends State<TodoItem> {
           alignment: Alignment.center,
           children: <Widget>[
             Positioned(
-              left: widget.data.status == 1 ? null : -pt(45 / 2.0 + 70),
-              //一个圆角半径+日期widget所占长度
-              right: widget.data.status == 1 ? -pt(45 / 2.0 + 70) : null,
+              left: widget.data.status == 1
+                  ? null
+                  : _dragData.initPosition + _dragData.alreadyDragLength,
+//              一个圆角半径+日期widget所占长度
+              right: widget.data.status == 1
+                  ? _dragData.initPosition - _dragData.alreadyDragLength
+                  : null,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -271,73 +313,78 @@ class _TodoItemState extends State<TodoItem> {
                       style: TextStyle(fontSize: 10, color: WColors.hint_color),
                     ),
                   ),
-                  Container(
-                    //一个疑问：一旦给contatiner加上alignment后，它的宽就固定为maxWidth了，这不是我想要的，所以目前只好给他的child再套上一个stack来实现内容垂直居中
-                    constraints: BoxConstraints(
-                      maxWidth: pt(375 - 70.0), //屏幕宽 - 日期widget长度
-                      minWidth: pt(375 / 2.0 + 45 / 2.0), //一半屏幕宽 + 一个圆角半径
-                      maxHeight: pt(45),
-                      minHeight: pt(45),
-                    ),
-                    decoration: ShapeDecoration(
-                      color: widget.data.status == 1
-                          ? WColors.theme_color_light
-                          : WColors.theme_color_dark,
-                      shadows: <BoxShadow>[
-                        DisplayUtil.supreLightElevation(
-                          baseColor: widget.data.status == 1
-                              ? WColors.theme_color_light.withAlpha(0xaa)
-                              : WColors.theme_color_dark.withAlpha(0xaa),
-                        ),
-                      ],
-                      shape: StadiumBorder(),
-                    ),
-//                  padding: EdgeInsets.symmetric(
-//                    horizontal: pt(45 / 2.0 + 10),
-//                  ),
-                    child: Stack(
-                      alignment: widget.data.status == 1
-                          ? Alignment.centerLeft
-                          : Alignment.centerRight,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: pt(45 / 2.0 + 5),
+                  Builder(builder: (context) {
+                    contentContext = context;
+                    return Container(
+                      //一个疑问：一旦给contatiner加上alignment后，它的宽就固定为maxWidth了，这不是我想要的，所以目前只好给他的child再套上一个stack来实现内容垂直居中
+                      constraints: BoxConstraints(
+                        maxWidth: pt(375 - 70.0), //屏幕宽 - 日期widget长度
+                        minWidth: pt(375 / 2.0 + 45 / 2.0), //一半屏幕宽 + 一个圆角半径
+                        maxHeight: pt(45),
+                        minHeight: pt(45),
+                      ),
+                      decoration: ShapeDecoration(
+                        color: widget.data.status == 1
+                            ? WColors.theme_color_light
+                            : WColors.theme_color_dark,
+                        shadows: <BoxShadow>[
+                          DisplayUtil.supreLightElevation(
+                            baseColor: widget.data.status == 1
+                                ? WColors.theme_color_light.withAlpha(0xaa)
+                                : WColors.theme_color_dark.withAlpha(0xaa),
                           ),
-                          child: Text(
-                            widget.data.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ),
-                        Positioned(
-                          right: 0,
-                          child: RotatedBox(
-                            child: Image.asset(
-                              'images/pull.png',
-                              width: pt(20),
-                              height: pt(20),
-                              color: Colors.white30,
+                        ],
+                        shape: StadiumBorder(),
+                      ),
+                      child: Stack(
+                        alignment: widget.data.status == 1
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: pt(45 / 2.0 + 5),
                             ),
-                            quarterTurns: 3,
-                          ),
-                        ),
-                        Positioned(
-                          left: 0,
-                          child: RotatedBox(
-                            child: Image.asset(
-                              'images/pull.png',
-                              width: pt(20),
-                              height: pt(20),
-                              color: Colors.white30,
+                            child: Text(
+                              widget.data.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
                             ),
-                            quarterTurns: 1,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
+                          Positioned(
+                            right: 0,
+                            child: isLoading
+                                ? CupertinoActivityIndicator()
+                                : RotatedBox(
+                                    child: Image.asset(
+                                      'images/pull.png',
+                                      width: pt(20),
+                                      height: pt(20),
+                                      color: Colors.white30,
+                                    ),
+                                    quarterTurns: 3,
+                                  ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            child: isLoading
+                                ? CupertinoActivityIndicator()
+                                : RotatedBox(
+                                    child: Image.asset(
+                                      'images/pull.png',
+                                      width: pt(20),
+                                      height: pt(20),
+                                      color: Colors.white30,
+                                    ),
+                                    quarterTurns: 1,
+                                  ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
                   Container(
                     width: pt(60),
                     margin: EdgeInsets.only(left: pt(10)),
@@ -356,4 +403,99 @@ class _TodoItemState extends State<TodoItem> {
       ),
     );
   }
+
+  ///拖动结束，触发位置互换或恢复位置动画
+  void onFinishDrag({double velocity = 0}) {
+    if (_finishDragController != null && _finishDragController.isAnimating) {
+      return;
+    }
+    if (contentContext == null ||
+        contentContext.findRenderObject() is! RenderBox) {
+      return;
+    }
+    //内容item宽度
+    double itemWidth =
+        (contentContext.findRenderObject() as RenderBox).size.width;
+    //是否是初始位置在右侧的item（即已完成的todo）
+    bool isRightItem = (widget.data.status == 1);
+    //是否最终拖动方向是向右
+    bool isDragToRight = _dragData.alreadyDragLength > 0;
+    //是否达到了互换左右侧item的阈值(拖动超过一半item距离或者滑动速度够大）
+    bool isReachedThreshold =
+        (_dragData.alreadyDragLength.abs() >= itemWidth / 2.0) ||
+            velocity.abs() > 60;
+    _finishDragController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+
+    Animation animation;
+
+    bool leftChangeToRight =
+        !isRightItem && isDragToRight && isReachedThreshold;
+    bool rightChangeToLeft =
+        isRightItem && !isDragToRight && isReachedThreshold;
+    if (leftChangeToRight || rightChangeToLeft) {
+      //交换位置
+      animation = Tween<double>(
+        begin: _dragData.alreadyDragLength,
+        end: (leftChangeToRight ? 1 : -1) *
+            (pt(375) - itemWidth + pt(70 - 45 / 2.0)), //画图计算出来的
+      ).animate(CurvedAnimation(
+          parent: _finishDragController, curve: Curves.easeOutBack));
+      animation.addStatusListener((AnimationStatus status) {
+        if (status == AnimationStatus.completed) {
+          changeTodoStatus(widget.data);
+        }
+      });
+      animation.addListener(() {
+        setState(() {
+          _dragData.alreadyDragLength = animation.value;
+        });
+      });
+
+      _finishDragController.forward();
+    } else {
+      //恢复原始位置
+      animation = Tween<double>(
+        begin: _dragData.alreadyDragLength,
+        end: 0,
+      ).animate(CurvedAnimation(
+          parent: _finishDragController, curve: Curves.easeOutBack));
+      animation.addListener(() {
+        setState(() {
+          _dragData.alreadyDragLength = animation.value;
+        });
+      });
+      _finishDragController.forward();
+    }
+  }
+
+  Future changeTodoStatus(Datas data, {int status}) async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await TodoApi.updateTodoStatus(
+          data.id, status ?? (data.status == 1 ? 0 : 1));
+      data.status = status ?? (data.status == 1 ? 0 : 1);
+    } catch (e) {
+      DisplayUtil.showMsg(context, exception: e);
+    }
+
+    if (mounted) {
+      setState(() {});
+      _dragData.alreadyDragLength = 0;
+      isLoading = false;
+    }
+  }
+}
+
+class ItemDragData {
+  ///item初始位置
+  double initPosition;
+
+  ///总可拖动长度
+  double totalDragLength;
+
+  ///item当前已拖动长度
+  double alreadyDragLength;
 }

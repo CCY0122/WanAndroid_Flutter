@@ -109,4 +109,13 @@ class StringsZh extends BaseStrings {
 
   @override
   get ensureDelete => '确定删除？';
+
+  @override
+  get markDone => '标记为已完成';
+
+  @override
+  get markUndo => '标记为未完成';
+
+  @override
+  get todoTips => '拖动便笺切换完成状态，长按删除便笺';
 }
