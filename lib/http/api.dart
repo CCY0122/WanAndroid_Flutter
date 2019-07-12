@@ -33,6 +33,7 @@ class AccountApi {
   }
 }
 
+///to-do相关接口
 class TodoApi {
   static const String ADD_TODO = "/lg/todo/add/json";
 
@@ -166,5 +167,29 @@ class TodoApi {
       query['orderby'] = orderby;
     }
     return dio.get(TODO_LIST(page), queryParameters: query);
+  }
+}
+
+///项目相关接口
+class ProjectApi {
+  //页码从1开始
+  static String NEW_PROJECTS(int page) => '/article/listproject/$page/json';
+  static const PROJECT_TREE = '/project/tree/json';
+
+  //页码从1开始
+  static String PROJECT_LIST(int page, int id) =>
+      '/project/list/$page/json?cid=$id';
+
+  static Future<Response> getNewProjects(int page) {
+    //老接口原因，输入页码从0开始
+    return dio.get(NEW_PROJECTS(page - 1));
+  }
+
+  static Future<Response> getProjectTree() {
+    return dio.get(PROJECT_TREE);
+  }
+
+  static Future<Response> getProjectList(int page, int id) {
+    return dio.get(PROJECT_LIST(page, id));
   }
 }

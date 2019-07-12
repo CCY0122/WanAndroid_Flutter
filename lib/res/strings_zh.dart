@@ -99,7 +99,7 @@ class StringsZh extends BaseStrings {
   get editor => '编辑';
 
   @override
-  get isBottomst => '—————我是有底线的—————';
+  get isBottomst => '————我是有底线的————';
 
   @override
   get cancel => '取消';
@@ -117,5 +117,11 @@ class StringsZh extends BaseStrings {
   get markUndo => '标记为未完成';
 
   @override
-  get todoTips => '拖动便笺切换完成状态，长按删除便笺';
+  get todoTips => '横向拖动便笺切换完成状态，长按便笺删除';
+
+  @override
+  get pullToRefresh => '下拉刷新';
+
+  @override
+  get pullToRetry => '下拉重试';
 }

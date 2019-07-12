@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wanandroid_flutter/entity/base_entity.dart';
 import 'package:wanandroid_flutter/entity/todo_entity.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/notifications.dart';
@@ -48,6 +49,8 @@ class _TodoListPageState extends State<TodoListPage> {
   int totalPage;
   ScrollController _scrollController;
   bool isLoading;
+  bool isFirst = true;
+  bool _isGetTodoListError = false;
 
   @override
   void initState() {
@@ -105,16 +108,21 @@ class _TodoListPageState extends State<TodoListPage> {
                 AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             shrinkWrap: false,
             itemBuilder: (BuildContext context, int index) {
-              if (datas == null || datas.length == 0) {
+              if (datas == null || datas.length == 0 || _isGetTodoListError) {
                 return Container(
                   height: pt(400),
                   alignment: Alignment.center,
-                  child: datas == null
-                      ? CupertinoActivityIndicator()
-                      : Text(
-                          res.allEmpty,
+                  child: _isGetTodoListError
+                      ? Text(
+                          res.pullToRetry,
                           style: TextStyle(fontSize: 18),
-                        ),
+                        )
+                      : datas == null
+                          ? CupertinoActivityIndicator()
+                          : Text(
+                              res.allEmpty,
+                              style: TextStyle(fontSize: 18),
+                            ),
                 );
               } else {
                 if (index != datas.length) {
@@ -138,7 +146,9 @@ class _TodoListPageState extends State<TodoListPage> {
               }
             },
             itemCount:
-                (datas == null || datas.length == 0) ? 1 : datas.length + 1,
+                (datas == null || datas.length == 0 || _isGetTodoListError)
+                    ? 1
+                    : datas.length + 1,
           ),
           onRefresh: _refreshAuto),
     );
@@ -170,7 +180,14 @@ class _TodoListPageState extends State<TodoListPage> {
       currentPage = entity.data.curPage;
       totalPage = entity.data.pageCount;
       print('_TodoListPageState : 获取todo列表成功');
+      if (isFirst) {
+        isFirst = false;
+        DisplayUtil.showMsg(context,
+            text: res.todoTips, duration: Duration(seconds: 4));
+      }
+      _isGetTodoListError = false;
     } catch (e) {
+      _isGetTodoListError = true;
       DisplayUtil.showMsg(context, exception: e);
     }
     if (mounted) {
