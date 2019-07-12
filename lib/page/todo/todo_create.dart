@@ -27,7 +27,7 @@ class TodoCreatePage extends StatefulWidget {
 
 class _TodoCreatePageState extends State<TodoCreatePage> {
   bool isFirst = true;
-  Datas data;
+  TodoEntity data;
   DateTime planFinishDate;
   int type;
   int priority;

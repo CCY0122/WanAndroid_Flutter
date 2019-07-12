@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_flutter/entity/base_entity.dart';
+import 'package:wanandroid_flutter/entity/base_list_entity.dart';
 import 'package:wanandroid_flutter/entity/todo_entity.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/notifications.dart';
@@ -9,7 +10,7 @@ import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 
 class DataChangeNotification extends Notification {
-  Datas data;
+  TodoEntity data;
   bool removed;
 
   DataChangeNotification(this.data, {this.removed = false});
@@ -44,7 +45,7 @@ class TodoListPage extends StatefulWidget {
 }
 
 class _TodoListPageState extends State<TodoListPage> {
-  List<Datas> datas;
+  List<TodoEntity> datas;
   int currentPage;
   int totalPage;
   ScrollController _scrollController;
@@ -171,14 +172,19 @@ class _TodoListPageState extends State<TodoListPage> {
         priority: widget.priority,
         orderby: widget.order,
       );
-      TodoEntity entity = TodoEntity.fromJson(response.data);
+      BaseEntity<Map<String, dynamic>> baseEntity = BaseEntity.fromJson(response.data);
+      BaseListEntity<List> baseListEntity = BaseListEntity.fromJson(baseEntity.data);
+      List<TodoEntity> newDatas = baseListEntity.datas.map((json){
+        return TodoEntity.fromJson(json);
+      }).toList();
       if (datas == null) {
-        datas = entity.data.datas;
+        datas = newDatas;
       } else {
-        datas.addAll(entity.data.datas);
+        datas.addAll(newDatas);
       }
-      currentPage = entity.data.curPage;
-      totalPage = entity.data.pageCount;
+      print("asdasdasdasd : $baseEntity");
+      currentPage = baseListEntity.curPage;
+      totalPage = baseListEntity.pageCount;
       print('_TodoListPageState : 获取todo列表成功');
       if (isFirst) {
         isFirst = false;
@@ -196,7 +202,7 @@ class _TodoListPageState extends State<TodoListPage> {
     isLoading = false;
   }
 
-  Future _deleteTodo(Datas data) async {
+  Future _deleteTodo(TodoEntity data) async {
     isLoading = true;
     try {
       await TodoApi.deleteTodo(data.id);
@@ -214,7 +220,7 @@ class _TodoListPageState extends State<TodoListPage> {
 
 class TodoItem extends StatefulWidget {
   int index;
-  Datas data;
+  TodoEntity data;
 
   TodoItem(this.index, this.data);
 
@@ -486,7 +492,7 @@ class _TodoItemState extends State<TodoItem> with TickerProviderStateMixin {
     }
   }
 
-  Future changeTodoStatus(Datas data, {int status}) async {
+  Future changeTodoStatus(TodoEntity data, {int status}) async {
     setState(() {
       isLoading = true;
     });

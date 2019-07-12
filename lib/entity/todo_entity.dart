@@ -2,63 +2,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'todo_entity.g.dart';
 
-
-@JsonSerializable()
-class TodoEntity extends Object {
-
-  @JsonKey(name: 'data')
-  Data data;
-
-  @JsonKey(name: 'errorCode')
-  int errorCode;
-
-  @JsonKey(name: 'errorMsg')
-  String errorMsg;
-
-  TodoEntity(this.data,this.errorCode,this.errorMsg,);
-
-  factory TodoEntity.fromJson(Map<String, dynamic> srcJson) => _$TodoEntityFromJson(srcJson);
-
-  Map<String, dynamic> toJson() => _$TodoEntityToJson(this);
-
-}
+//生成命令：flutter packages pub run build_runner build
 
 
 @JsonSerializable()
-class Data extends Object{
-
-  @JsonKey(name: 'curPage')
-  int curPage;
-
-  @JsonKey(name: 'datas')
-  List<Datas> datas;
-
-  @JsonKey(name: 'offset')
-  int offset;
-
-  @JsonKey(name: 'over')
-  bool over;
-
-  @JsonKey(name: 'pageCount')
-  int pageCount;
-
-  @JsonKey(name: 'size')
-  int size;
-
-  @JsonKey(name: 'total')
-  int total;
-
-  Data(this.curPage,this.datas,this.offset,this.over,this.pageCount,this.size,this.total,);
-
-  factory Data.fromJson(Map<String, dynamic> srcJson) => _$DataFromJson(srcJson);
-
-  Map<String, dynamic> toJson() => _$DataToJson(this);
-
-}
-
-
-@JsonSerializable()
-class Datas extends Object{
+class TodoEntity extends Object{
 
   @JsonKey(name: 'completeDate')
   int completeDate;
@@ -93,11 +41,17 @@ class Datas extends Object{
   @JsonKey(name: 'userId')
   int userId;
 
-  Datas(this.completeDate,this.completeDateStr,this.content,this.date,this.dateStr,this.id,this.priority,this.status,this.title,this.type,this.userId,);
+  TodoEntity(this.completeDate,this.completeDateStr,this.content,this.date,this.dateStr,this.id,this.priority,this.status,this.title,this.type,this.userId,);
 
-  factory Datas.fromJson(Map<String, dynamic> srcJson) => _$DatasFromJson(srcJson);
+  factory TodoEntity.fromJson(Map<String, dynamic> srcJson) => _$TodoEntityFromJson(srcJson);
 
-  Map<String, dynamic> toJson() => _$DatasToJson(this);
+  Map<String, dynamic> toJson() => _$TodoEntityToJson(this);
+
+  @override
+  String toString() {
+    return 'TodoEntity{completeDate: $completeDate, completeDateStr: $completeDateStr, content: $content, date: $date, dateStr: $dateStr, id: $id, priority: $priority, status: $status, title: $title, type: $type, userId: $userId}';
+  }
+
 
 }
 
