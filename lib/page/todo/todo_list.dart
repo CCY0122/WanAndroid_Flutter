@@ -182,7 +182,6 @@ class _TodoListPageState extends State<TodoListPage> {
       } else {
         datas.addAll(newDatas);
       }
-      print("asdasdasdasd : $baseEntity");
       currentPage = baseListEntity.curPage;
       totalPage = baseListEntity.pageCount;
       print('_TodoListPageState : 获取todo列表成功');

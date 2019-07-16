@@ -124,4 +124,13 @@ class StringsZh extends BaseStrings {
 
   @override
   get pullToRetry => '下拉重试';
+
+  @override
+  get project => '项目';
+
+  @override
+  get searchTips => '搜索关键词以空格形式隔开';
+
+  @override
+  get ensureLogout => '确定登出？';
 }

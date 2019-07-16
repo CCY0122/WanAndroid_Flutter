@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
       routes: routes,
       title: res.appName,
       navigatorKey: navigatorKey,
-      home: TodoPage(),
+      home: HomePage(),
     );
   }
 }

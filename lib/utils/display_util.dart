@@ -4,7 +4,7 @@ import 'package:wanandroid_flutter/res/index.dart';
 
 ///统一风格的常用UI展示
 class DisplayUtil {
-  ///通用tosat。必须在Scaffold内
+  ///通用tosat。context必须是Scaffold的子树
   static void showMsg(
     BuildContext context, {
     String text,

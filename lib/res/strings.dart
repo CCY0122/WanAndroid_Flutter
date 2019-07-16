@@ -91,6 +91,12 @@ abstract class Strings {
   get pullToRefresh;
 
   get pullToRetry;
+
+  get searchTips;
+
+  get project;
+
+  get ensureLogout;
 }
 
 ///通用的语言，直接这里实现。

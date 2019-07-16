@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
-import 'package:wanandroid_flutter/res/shared_preference_util.dart';
+import 'package:wanandroid_flutter/utils/shared_preference_util.dart';
 
 class TestPage extends StatefulWidget {
   @override
