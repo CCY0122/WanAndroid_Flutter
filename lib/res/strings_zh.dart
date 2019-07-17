@@ -133,4 +133,7 @@ class StringsZh extends BaseStrings {
 
   @override
   get ensureLogout => '确定登出？';
+
+  @override
+  get logout => '登出';
 }

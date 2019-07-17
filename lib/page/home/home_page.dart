@@ -61,62 +61,80 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           builder: (context) => homeBloc,
         ),
       ],
-      child: BlocBuilder<HomeEvent, HomeState>(
-          bloc: homeBloc,
-          builder: (context, state) {
-            return Scaffold(
-              body: Builder(builder: (context) {
-                innerContext = context;
-                return Stack(
-                  children: <Widget>[
-                    DecoratedBox(
-                      decoration: _themeGradientDecoration(),
-                      child: SafeArea(
-                        child: NestedScrollView(
-                          headerSliverBuilder:
-                              (BuildContext context, bool innerBoxIsScrolled) {
-                            //为了练习代码，并不是直接使用SliverAppBar来实现头部
-                            return <Widget>[
-                              SliverToBoxAdapter(
-                                child: Container(
-                                  decoration: _themeGradientDecoration(),
-                                  child: appBarHeader(),
+      child: BlocListener(
+        bloc: homeBloc,
+        listener: (context, state) {
+          if (state is HomeLoadError) {
+            if (innerContext != null) {
+              DisplayUtil.showMsg(innerContext, exception: state.exception);
+            }
+          }
+          if (state is HomeLoaded) {
+            isLogin = state.isLogin;
+          }
+        },
+        child: BlocBuilder<HomeEvent, HomeState>(
+            bloc: homeBloc,
+            builder: (context, state) {
+              return Stack(
+                children: <Widget>[
+                  Scaffold(
+                    body: Builder(builder: (context) {
+                      innerContext = context;
+                      return Stack(
+                        children: <Widget>[
+                          DecoratedBox(
+                            decoration: _themeGradientDecoration(),
+                            child: SafeArea(
+                              child: NestedScrollView(
+                                headerSliverBuilder: (BuildContext context,
+                                    bool innerBoxIsScrolled) {
+                                  //为了练习代码，并不是直接使用SliverAppBar来实现头部
+                                  return <Widget>[
+                                    SliverToBoxAdapter(
+                                      child: Container(
+                                        decoration: _themeGradientDecoration(),
+                                        child: appBarHeader(),
+                                      ),
+                                    ),
+                                    SliverPersistentHeader(
+                                      pinned: true,
+                                      floating: true,
+                                      delegate: CustomSliverAppBarDelegate(
+                                        minHeight: pt(40),
+                                        maxHeight: pt(40),
+                                        child: Container(
+                                          height: pt(40),
+                                          decoration: _themeGradientDecoration(),
+                                          child: appBarTab(_tabController),
+                                        ),
+                                      ),
+                                    ),
+                                  ];
+                                },
+                                body: TabBarView(
+                                  controller: _tabController,
+                                  children:
+                                  tabs.values.map((page) => page).toList(),
                                 ),
                               ),
-                              SliverPersistentHeader(
-                                pinned: true,
-                                floating: true,
-                                delegate: CustomSliverAppBarDelegate(
-                                  minHeight: pt(40),
-                                  maxHeight: pt(40),
-                                  child: Container(
-                                    height: pt(40),
-                                    decoration: _themeGradientDecoration(),
-                                    child: appBarTab(_tabController),
-                                  ),
-                                ),
-                              ),
-                            ];
-                          },
-                          body: TabBarView(
-                            controller: _tabController,
-                            children: tabs.values.map((page) => page).toList(),
+                            ),
                           ),
-                        ),
-                      ),
+                        ],
+                      );
+                    }),
+                    drawer: Drawer(
+                      child: HomeDrawer(isLogin),
                     ),
-                    Offstage(
-                      offstage: state is! HomeLoading,
-                      child: getLoading(),
-                    )
-                  ],
-                );
-              }),
-              drawer: Drawer(
-                child: HomeDrawer(),
-              ),
-            );
-          }),
+                  ),
+                  Offstage(
+                    offstage: state is! HomeLoading,
+                    child: getLoading(),
+                  )
+                ],
+              );
+            }),
+      ),
     );
   }
 
@@ -135,10 +153,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   ///头部标题栏
   Widget appBarHeader() {
-    HomeState state = homeBloc.currentState;
-    if (state is HomeLoaded) {
-      isLogin = state.isLogin;
-    }
     return Container(
       height: pt(60),
       alignment: Alignment.centerLeft,
@@ -157,7 +171,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(pt(17)),
                 child: isLogin
                     ? Image.asset(
-                        'images/todo_bg.jpeg',
+                        'images/user_icon.jpeg',
                         fit: BoxFit.cover,
                         width: pt(34),
                         height: pt(34),

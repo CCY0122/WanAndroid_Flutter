@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 
+//后期改flare动画
 Widget getLoading() {
   return IgnorePointer(
     child: Container(
