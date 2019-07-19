@@ -32,6 +32,7 @@ dependencies:
   flutter_bloc: ^0.18.3
   equatable: ^0.2.6
   cached_network_image: ^1.0.0
+  flutter_swiper: ^1.1.6
 
 dev_dependencies:
   flutter_test:

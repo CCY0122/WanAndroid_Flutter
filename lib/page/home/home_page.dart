@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/base/custom_sliver_app_bar_delegate.dart';
+import 'package:wanandroid_flutter/page/home/project/project_page.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
@@ -24,26 +25,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isLogin = false;
   TabController _tabController;
   Map<String, Widget> tabs = {
-    '1': SimpleList(
-      'a',
-      key: PageStorageKey(1),
-    ),
-    '2': SimpleList(
-      'b',
-      key: PageStorageKey(2),
-    ),
-    '333': SimpleList(
-      'c',
-      key: PageStorageKey(3),
-    ),
-    'asdasd': SimpleList(
-      'd',
-      key: PageStorageKey(4),
-    ),
-    'hhh': SimpleList(
-      'e',
-      key: PageStorageKey(5),
-    ),
+    '1': ProjectSubPage(),
+    '2': ProjectSubPage(),
+    '333': ProjectSubPage(),
+    'asdasd': ProjectSubPage(),
+    'hhh': ProjectSubPage(),
   };
 
   @override
@@ -97,6 +83,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         child: appBarHeader(),
                                       ),
                                     ),
+                                    //因为子页TabBarView不一定都会用CustomScrollView,放弃使用SliverOverlapAbsorber + SliverOverlapInjector
+                                    //使不使用所带来的影响自行修改[NestedTestPage]代码并观察滑动效果（滑到顶部后子页还能继续上滑一段距离）
                                     SliverPersistentHeader(
                                       pinned: true,
                                       floating: true,
@@ -105,7 +93,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         maxHeight: pt(40),
                                         child: Container(
                                           height: pt(40),
-                                          decoration: _themeGradientDecoration(),
+                                          decoration:
+                                              _themeGradientDecoration(),
                                           child: appBarTab(_tabController),
                                         ),
                                       ),
@@ -115,7 +104,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 body: TabBarView(
                                   controller: _tabController,
                                   children:
-                                  tabs.values.map((page) => page).toList(),
+                                      tabs.values.map((page) => page).toList(),
                                 ),
                               ),
                             ),
