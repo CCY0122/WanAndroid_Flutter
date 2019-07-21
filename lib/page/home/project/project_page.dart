@@ -88,7 +88,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
     await Future.delayed(Duration(seconds: 2));
     Response res =
         await dio.get('https://www.wanandroid.com/article/listproject/0/json');
-        await dio.get('https://www.wanandroid.com/lg/collect/list/0/json');
+    await dio.get('https://www.wanandroid.com/lg/collect/list/0/json');
     BaseEntity baseEntity = BaseEntity.fromJson(res.data);
     BaseListEntity<List> baseListEntity =
         BaseListEntity.fromJson(baseEntity.data);
@@ -438,10 +438,11 @@ class _ProjectSubPageState extends State<ProjectSubPage>
   ///项目item
   Widget projectItem(ProjectEntity data) {
     return Card(
+      elevation: 0.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(pt(6))),
       clipBehavior: Clip.antiAlias,
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           print('click item');
           t();
         },
@@ -469,13 +470,30 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                     },
                   ),
                   Positioned(
-                    bottom: pt(4),
-                    left: pt(4),
-                    child: Text(
-                      data.author,
-                      style: TextStyle(color: Colors.white, fontSize: 11),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                        colors: [
+                          Colors.transparent,
+                          Colors.black26,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      )),
+                      padding: EdgeInsets.only(
+                        left: pt(4),
+                        bottom: pt(2),
+                        top: pt(10),
+                      ),
+                      child: Text(
+                        data.author,
+                        style: TextStyle(color: Colors.white, fontSize: 11),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
                 ],
@@ -487,16 +505,17 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                 data.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: (){
+              onTap: () {
                 print('click type ${data.chapterName}');
               },
               child: Padding(
-                padding: EdgeInsets.only(bottom: pt(6), left: pt(4), right: pt(4)),
+                padding:
+                    EdgeInsets.only(bottom: pt(6), left: pt(4), right: pt(4)),
                 child: Row(
                   children: <Widget>[
                     Text(
@@ -524,7 +543,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                               : WColors.hint_color_dark,
                           size: pt(15),
                         ),
-                        onTap: (){
+                        onTap: () {
                           print('click fav ${data.collect}');
                         },
                       ),
