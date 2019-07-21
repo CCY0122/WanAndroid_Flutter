@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -28,10 +29,16 @@ class _ProjectSubPageState extends State<ProjectSubPage>
   List<BannerEntity> banners;
   List<ProjectTypeEntity> projectTypes;
   List<ProjectEntity> projectDatas;
+  ScrollController _scrollController;
+  int currentProjectPage;
+  int totalProjectPage;
+  bool isLoading = false;
+  GlobalKey<RefreshIndicatorState> refreshKey;
 
   @override
   void initState() {
     super.initState();
+    refreshKey = GlobalKey();
     projectBloc = ProjectBloc(BlocProvider.of<HomeBloc>(context));
     banners ??= [];
     projectTypes ??= [
@@ -81,20 +88,41 @@ class _ProjectSubPageState extends State<ProjectSubPage>
       ProjectTypeEntity.t(1, '1开发模式'),
     ];
     projectDatas ??= [];
-    t();
+    currentProjectPage ??= 1;
+    totalProjectPage ??= 1;
+    _scrollController ??= ScrollController();
+    _scrollController.addListener(() {
+      // 如果下拉的当前位置到scroll的最下面
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        if (currentProjectPage < totalProjectPage && !isLoading) {
+          t(currentProjectPage + 1);
+        }
+      }
+    });
+    t(currentProjectPage);
   }
 
-  Future t() async {
+  Future t(int page) async {
+    isLoading = true;
     await Future.delayed(Duration(seconds: 2));
-    Response res =
-        await dio.get('https://www.wanandroid.com/article/listproject/0/json');
+    Response res = await ProjectApi.getNewProjects(page);
     await dio.get('https://www.wanandroid.com/lg/collect/list/0/json');
     BaseEntity baseEntity = BaseEntity.fromJson(res.data);
     BaseListEntity<List> baseListEntity =
         BaseListEntity.fromJson(baseEntity.data);
-    projectDatas = baseListEntity.datas.map((json) {
-      return ProjectEntity.fromJson(json);
-    }).toList();
+    currentProjectPage = baseListEntity.curPage;
+    totalProjectPage = baseListEntity.pageCount;
+    if (projectDatas == null || projectDatas.length == 0) {
+      projectDatas = baseListEntity.datas.map((json) {
+        return ProjectEntity.fromJson(json);
+      }).toList();
+    } else {
+      projectDatas.addAll(baseListEntity.datas.map((json) {
+        return ProjectEntity.fromJson(json);
+      }).toList());
+    }
+    isLoading = false;
     setState(() {});
   }
 
@@ -127,69 +155,92 @@ class _ProjectSubPageState extends State<ProjectSubPage>
         child: BlocBuilder<ProjectEvent, ProjectState>(
           bloc: projectBloc,
           builder: (context, state) {
-            return CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics()),
-              slivers: <Widget>[
-                SliverToBoxAdapter(
-                  child: bannerView(
-                      datas: banners.map((entity) {
-                    return BannerModel(
-                      entity.title ?? '',
-                      entity.imagePath ?? '',
-                      entity.url ?? '',
-                    );
-                  }).toList()),
-                ),
-                SliverToBoxAdapter(
-                  child: typesGridView(
-                    datas: projectTypes
-                        .asMap()
-                        .map<int, ProjectTypesModel>((index, entity) {
-                          return MapEntry(
-                            index,
-                            ProjectTypesModel(
-                              entity.id,
-                              entity.name,
-                              Image.asset(
-                                MyImage.animals[index % MyImage.animals.length],
-                                width: pt(40),
-                                height: pt(40),
-                              ),
-                            ),
-                          );
-                        })
-                        .values
-                        .toList(),
+            return RefreshIndicator(
+              key: refreshKey,
+              color: WColors.theme_color,
+              onRefresh: ()async{
+                //todo 在bloc模式里这里该怎么做？如何弄一个可以自己控制阻塞、完成的future对象？
+                await Future.delayed(Duration(seconds: 2));
+              },
+              child: CustomScrollView(
+                controller: _scrollController,
+                physics: AlwaysScrollableScrollPhysics(
+                    parent: BouncingScrollPhysics()),
+                slivers: <Widget>[
+                  SliverToBoxAdapter(
+                    child: bannerView(
+                        datas: banners.map((entity) {
+                      return BannerModel(
+                        entity.title ?? '',
+                        entity.imagePath ?? '',
+                        entity.url ?? '',
+                      );
+                    }).toList()),
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    color: WColors.gray_background,
-                    padding: EdgeInsets.only(left: pt(16), top: pt(8)),
-                    child: Row(
-                      children: <Widget>[
-                        Image.asset(
-                          'images/new.png',
-                          width: pt(30),
-                          height: pt(30),
-                        ),
-                        SizedBox(
-                          width: pt(10),
-                        ),
-                        Text(
-                          res.newestProject,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
+                  SliverToBoxAdapter(
+                    child: typesGridView(
+                      datas: projectTypes
+                          .asMap()
+                          .map<int, ProjectTypesModel>((index, entity) {
+                            return MapEntry(
+                              index,
+                              ProjectTypesModel(
+                                entity.id,
+                                entity.name,
+                                Image.asset(
+                                  MyImage.animals[index % MyImage.animals.length],
+                                  width: pt(40),
+                                  height: pt(40),
+                                ),
+                              ),
+                            );
+                          })
+                          .values
+                          .toList(),
                     ),
                   ),
-                ),
-                projectGrid(datas: projectDatas),
-              ],
+                  SliverToBoxAdapter(
+                    child: Container(
+                      color: WColors.gray_background,
+                      padding: EdgeInsets.only(left: pt(16), top: pt(8)),
+                      child: Row(
+                        children: <Widget>[
+                          Image.asset(
+                            'images/new.png',
+                            width: pt(30),
+                            height: pt(30),
+                          ),
+                          SizedBox(
+                            width: pt(10),
+                          ),
+                          Text(
+                            res.newestProject,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  projectGrid(datas: projectDatas),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      width: double.infinity,
+                      height: pt(45),
+                      color: WColors.gray_background,
+                      alignment: Alignment.center,
+                      child: (currentProjectPage < totalProjectPage)
+                          ? CupertinoActivityIndicator()
+                          : Text(
+                              res.isBottomst,
+                              style: TextStyle(color: WColors.hint_color),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),
@@ -444,7 +495,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
       child: GestureDetector(
         onTap: () {
           print('click item');
-          t();
+          refreshKey.currentState.show();
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -530,7 +581,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                     Icon(
                       Icons.chevron_right,
                       color: WColors.hint_color_dark,
-                      size: pt(10),
+                      size: pt(12),
                     ),
                     Expanded(
                         child: Align(

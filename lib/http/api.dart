@@ -180,8 +180,9 @@ class ProjectApi {
   static String PROJECT_LIST(int page, int id) =>
       '/project/list/$page/json?cid=$id';
 
+  //页码从1开始
   static Future<Response> getNewProjects(int page) {
-    //老接口原因，输入页码从0开始
+    //老接口原因，实际输入页码是从0开始
     return dio.get(NEW_PROJECTS(page - 1));
   }
 
