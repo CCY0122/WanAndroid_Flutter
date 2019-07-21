@@ -40,7 +40,7 @@ class _TodoPageState extends State<TodoPage> {
   Widget build(BuildContext context) {
     Widget widget = Scaffold(
       appBar: AppBar(
-        backgroundColor: WColors.theme_color_dark,
+        backgroundColor: WColors.theme_color,
         title: Text(
           res.todo,
         ),
@@ -66,6 +66,7 @@ class _TodoPageState extends State<TodoPage> {
               }
               return true;
           }
+          return false;
         },
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -80,7 +81,7 @@ class _TodoPageState extends State<TodoPage> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          WColors.theme_color_dark,
+//                          WColors.theme_color_dark,
                           WColors.theme_color,
                           WColors.theme_color_light,
                         ],

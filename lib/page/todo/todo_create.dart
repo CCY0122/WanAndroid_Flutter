@@ -58,7 +58,7 @@ class _TodoCreatePageState extends State<TodoCreatePage> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: WColors.theme_color_dark,
+        backgroundColor: WColors.theme_color,
         elevation: 0,
         title: Text(
           data == null ? res.create : res.editor,
@@ -75,13 +75,14 @@ class _TodoCreatePageState extends State<TodoCreatePage> {
               this.template = notification.template;
               changeTextByTemplate();
             }
+            return true;
           },
           child: Container(
             height: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  WColors.theme_color_dark,
+//                  WColors.theme_color_dark,
                   WColors.theme_color,
                   WColors.theme_color_light,
                 ],

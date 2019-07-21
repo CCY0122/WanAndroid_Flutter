@@ -100,6 +100,16 @@ abstract class Strings {
   get ensureLogout;
 
   get logout;
+
+  get newestProject;
+
+  get article;
+
+  get vxArticle;
+
+  get navigation;
+
+  get collect;
 }
 
 ///通用的语言，直接这里实现。

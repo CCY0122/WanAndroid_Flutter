@@ -62,6 +62,47 @@ flutter:
     - images/add.png
     - images/finish.png
     - images/user_icon.jpeg
+    - images/new.png
+    - images/baitu.png
+    - images/bianfu.png
+    - images/bianselong.png
+    - images/daishu.png
+    - images/daxiang.png
+    - images/eyu.png
+    - images/gongji.png
+    - images/gou.png
+    - images/hainiu.png
+    - images/haiyaoyu.png
+    - images/hashiqi.png
+    - images/hema.png
+    - images/houzi.png
+    - images/huanxiong.png
+    - images/hudie.png
+    - images/jiakechong.png
+    - images/jingangyingwu.png
+    - images/jingyu.png
+    - images/juzuiniao.png
+    - images/laohu.png
+    - images/laoshu.png
+    - images/luotuo.png
+    - images/mao.png
+    - images/maotouying.png
+    - images/mianyang.png
+    - images/milu.png
+    - images/nainiu.png
+    - images/pangxie.png
+    - images/qie.png
+    - images/qingwa.png
+    - images/shayu.png
+    - images/she.png
+    - images/shiyishou.png
+    - images/shizi.png
+    - images/shuta.png
+    - images/songshu.png
+    - images/tiane.png
+    - images/tihu.png
+    - images/tuoniao.png
+    - images/wugui.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

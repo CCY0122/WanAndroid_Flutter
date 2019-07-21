@@ -5,6 +5,7 @@ import 'package:wanandroid_flutter/page/base/custom_sliver_app_bar_delegate.dart
 import 'package:wanandroid_flutter/page/home/project/project_page.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
+import 'package:wanandroid_flutter/test/test_page.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
 import 'package:wanandroid_flutter/views/saerch_bar.dart';
@@ -25,11 +26,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isLogin = false;
   TabController _tabController;
   Map<String, Widget> tabs = {
-    '1': ProjectSubPage(),
-    '2': ProjectSubPage(),
-    '333': ProjectSubPage(),
-    'asdasd': ProjectSubPage(),
-    'hhh': ProjectSubPage(),
+    res.project: ProjectSubPage(),
+    res.article: ProjectSubPage(),
+    res.vxArticle: ProjectSubPage(),
+    res.navigation: ProjectSubPage(),
+    res.collect: ProjectSubPage(),
   };
 
   @override
@@ -101,10 +102,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     ),
                                   ];
                                 },
-                                body: TabBarView(
-                                  controller: _tabController,
-                                  children:
-                                      tabs.values.map((page) => page).toList(),
+                                body: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(pt(10)),
+                                      topRight: Radius.circular(pt(10)),
+                                    ),
+                                  ),
+                                  child: TabBarView(
+                                    controller: _tabController,
+                                    children:
+                                        tabs.values.map((page) => page).toList(),
+                                  ),
                                 ),
                               ),
                             ),
@@ -176,7 +186,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Expanded(
             child: SearchBar(
               height: pt(30),
-              color: Colors.grey[200],
+              color: Colors.grey[50],
               child: TextField(
                 textInputAction: TextInputAction.search,
                 onSubmitted: (text) {
@@ -199,7 +209,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, TodoPage.ROUTER_NAME);
+//              Navigator.pushNamed(context, TodoPage.ROUTER_NAME);
+              Navigator.push(context, MaterialPageRoute(builder: (c){
+                return Scaffold(body: TestPage());
+              }));
             },
             child: Container(
               alignment: Alignment.center,
@@ -224,7 +237,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       indicatorColor: Colors.white,
       tabs: tabs.keys.map((title) {
         return Padding(
-          padding: EdgeInsets.symmetric(vertical: pt(10), horizontal: pt(8)),
+          padding: EdgeInsets.symmetric(vertical: pt(10), horizontal: pt(6)),
           child: Text(
             title,
             style: TextStyle(fontSize: 15),

@@ -136,4 +136,19 @@ class StringsZh extends BaseStrings {
 
   @override
   get logout => '登出';
+
+  @override
+  get newestProject => '最新项目';
+
+  @override
+  get article => '博文';
+
+  @override
+  get navigation => '导航';
+
+  @override
+  get vxArticle => '公众号';
+
+  @override
+  get collect => '收藏';
 }
