@@ -107,7 +107,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
     isLoading = true;
     await Future.delayed(Duration(seconds: 2));
     Response res = await ProjectApi.getNewProjects(page);
-    await dio.get('https://www.wanandroid.com/lg/collect/list/0/json');
+//    await dio.get('https://www.wanandroid.com/lg/collect/list/0/json');
     BaseEntity baseEntity = BaseEntity.fromJson(res.data);
     BaseListEntity<List> baseListEntity =
         BaseListEntity.fromJson(baseEntity.data);
