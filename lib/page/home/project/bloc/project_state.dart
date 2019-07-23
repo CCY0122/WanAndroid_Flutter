@@ -7,10 +7,10 @@ abstract class ProjectState extends Equatable {
   ProjectState([List props = const []]) : super(props);
 }
 
-class ProjectInit extends ProjectState {
+class ProjectUnready extends ProjectState {
   @override
   String toString() {
-    return 'ProjectInit{}';
+    return 'ProjectUnready{}';
   }
 }
 
@@ -21,6 +21,7 @@ class ProjectLoading extends ProjectState {
   }
 }
 
+///banner数据加载完成
 class ProjectBannerLoaded extends ProjectState {
   List<BannerEntity> banners;
 
@@ -32,6 +33,7 @@ class ProjectBannerLoaded extends ProjectState {
   }
 }
 
+///项目分类加载完成
 class ProjectTypesLoaded extends ProjectState {
   List<ProjectTypeEntity> types;
 
@@ -43,20 +45,31 @@ class ProjectTypesLoaded extends ProjectState {
   }
 }
 
+///最新项目加载完成
 class ProjectDatasLoaded extends ProjectState {
   List<ProjectEntity> datas;
+  int curretnPage;
+  int totalPage;
 
-  ProjectDatasLoaded(this.datas) : super([datas]);
+  ProjectDatasLoaded(this.datas, this.curretnPage, this.totalPage)
+      : super([datas, curretnPage, totalPage]);
 
   @override
   String toString() {
-    return 'ProjectDatasLoaded{datas: $datas}';
+    return 'ProjectDatasLoaded{datas: $datas, curretnPage: $curretnPage, totalPage: $totalPage}';
   }
 }
 
+///页面加载完成
 class ProjectLoaded extends ProjectState {
   @override
   String toString() {
     return 'ProjectLoaded{}';
   }
+}
+
+class ProjectLoadError extends ProjectState {
+  Exception exception;
+
+  ProjectLoadError(this.exception) : super([exception]);
 }

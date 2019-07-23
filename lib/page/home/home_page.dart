@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/base/custom_sliver_app_bar_delegate.dart';
 import 'package:wanandroid_flutter/page/home/project/project_page.dart';
+import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
-import 'package:wanandroid_flutter/test/test_page.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
 import 'package:wanandroid_flutter/views/saerch_bar.dart';
@@ -24,12 +24,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   HomeBloc homeBloc = HomeBloc();
   bool isLogin = false;
   TabController _tabController;
+  static List<PageStorageKey<String>> keys = [
+    PageStorageKey<String>('1'),
+    PageStorageKey<String>('2'),
+    PageStorageKey<String>('3'),
+    PageStorageKey<String>('4'),
+    PageStorageKey<String>('5'),
+  ];
   Map<String, Widget> tabs = {
-    res.project: ProjectSubPage(),
-    res.article: ProjectSubPage(),
-    res.vxArticle: ProjectSubPage(),
-    res.navigation: ProjectSubPage(),
-    res.collect: ProjectSubPage(),
+    res.project: ProjectSubPage(keys[0]),
+    res.article: ProjectSubPage(keys[1]),
+    res.vxArticle: ProjectSubPage(keys[2]),
+    res.navigation: ProjectSubPage(keys[3]),
+    res.collect: ProjectSubPage(keys[4]),
   };
 
   @override
@@ -111,8 +118,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   ),
                                   child: TabBarView(
                                     controller: _tabController,
-                                    children:
-                                        tabs.values.map((page) => page).toList(),
+                                    children: tabs.values
+                                        .map((page) => page)
+                                        .toList(),
                                   ),
                                 ),
                               ),
@@ -208,10 +216,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           GestureDetector(
             onTap: () {
-//              Navigator.pushNamed(context, TodoPage.ROUTER_NAME);
-              Navigator.push(context, MaterialPageRoute(builder: (c){
-                return Scaffold(body: TestPage());
-              }));
+              Navigator.pushNamed(context, TodoPage.ROUTER_NAME);
+//              Navigator.push(context, MaterialPageRoute(builder: (c){
+//                return Scaffold(body: TestPage());
+//              }));
             },
             child: Container(
               alignment: Alignment.center,
@@ -260,38 +268,4 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 }
 
-class SimpleList extends StatefulWidget {
-  String prefix;
-  PageStorageKey scrollableWidgetKey;
 
-  SimpleList(this.prefix, {Key key}) : scrollableWidgetKey = key;
-
-  @override
-  _SimpleListState createState() => _SimpleListState();
-}
-
-class _SimpleListState extends State<SimpleList> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: WColors.gray_background,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-        ),
-      ),
-      child: ListView.builder(
-        key: widget.scrollableWidgetKey,
-        itemBuilder: (c, i) {
-          return Container(
-            height: pt(50),
-            alignment: Alignment.center,
-            child: Text('${widget.prefix} $i'),
-          );
-        },
-        itemCount: 20,
-      ),
-    );
-  }
-}

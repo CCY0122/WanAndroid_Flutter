@@ -19,6 +19,7 @@ class DioUtil {
     dio.options.sendTimeout = 5 * 1000;
     dio.options.receiveTimeout = 3 * 1000;
 
+    //todo 网络环境监听
     dio.interceptors.add(LogsInterceptors());
     dio.interceptors.add(WanAndroidErrorInterceptors());
 

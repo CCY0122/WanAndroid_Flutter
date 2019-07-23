@@ -9,7 +9,7 @@ Widget getLoading() {
       alignment: Alignment.center,
       color: Colors.transparent,
       child: Container(
-        color: Colors.white,
+        color: Colors.red[200],
         width: pt(100),
         height: pt(100),
         alignment: Alignment.center,

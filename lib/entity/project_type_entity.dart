@@ -30,8 +30,6 @@ class ProjectTypeEntity extends Object {
   int visible;
 
 
-  ProjectTypeEntity.t(this.id, this.name);
-
   ProjectTypeEntity(this.children,this.courseId,this.id,this.name,this.order,this.parentChapterId,this.userControlSetTop,this.visible,);
 
   factory ProjectTypeEntity.fromJson(Map<String, dynamic> srcJson) => _$ProjectTypeEntityFromJson(srcJson);

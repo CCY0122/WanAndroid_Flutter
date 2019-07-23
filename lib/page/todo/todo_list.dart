@@ -101,8 +101,6 @@ class _TodoListPageState extends State<TodoListPage> {
         }
         return false;
       },
-      //todo 如何用代码控制RefreshIndicator拉出刷新头?
-      //答 用“RefreshIndicatorState“
       child: RefreshIndicator(
           color: WColors.theme_color,
           child: ListView.builder(

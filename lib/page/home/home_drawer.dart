@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/res/index.dart';
+import 'package:wanandroid_flutter/test/nested_test_page.dart';
+import 'package:wanandroid_flutter/test/test_page.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 
 import 'bloc/home_index.dart';
@@ -58,6 +60,36 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
+            ),
+            FlatButton(
+              child: Text('去测试页'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Scaffold(
+                        body: TestPage(),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            FlatButton(
+              child: Text('去nest'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Scaffold(
+                        body: NestedTestPage(),
+                      );
+                    },
+                  ),
+                );
+              },
             ),
           ],
         );

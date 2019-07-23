@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:wanandroid_flutter/entity/banner_entity.dart';
-import 'package:wanandroid_flutter/entity/base_entity.dart';
-import 'package:wanandroid_flutter/entity/base_list_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/entity/project_type_entity.dart';
-import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/project/bloc/project_index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/flat_pagination.dart';
-import 'dart:convert';
+import 'package:wanandroid_flutter/views/loading_view.dart';
 
 ///项目主页，也是主页的第一个tab页
-///todo 加载更多、下啦刷新
 class ProjectSubPage extends StatefulWidget {
+  PageStorageKey pageStorageKey;
+
+  ProjectSubPage(this.pageStorageKey);
+
   @override
   _ProjectSubPageState createState() => _ProjectSubPageState();
 }
@@ -29,101 +29,21 @@ class _ProjectSubPageState extends State<ProjectSubPage>
   List<BannerEntity> banners;
   List<ProjectTypeEntity> projectTypes;
   List<ProjectEntity> projectDatas;
-  ScrollController _scrollController;
   int currentProjectPage;
   int totalProjectPage;
+
+  ///不能直接使用[ProjectLoading]作为是否在加载的依据，原因见[ProjectBloc]
   bool isLoading = false;
-  GlobalKey<RefreshIndicatorState> refreshKey;
 
   @override
   void initState() {
     super.initState();
-    refreshKey = GlobalKey();
     projectBloc = ProjectBloc(BlocProvider.of<HomeBloc>(context));
     banners ??= [];
-    projectTypes ??= [
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '啊开发阿萨德模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1'),
-      ProjectTypeEntity.t(1, '1'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-      ProjectTypeEntity.t(1, '全部'),
-      ProjectTypeEntity.t(1, '开发模式'),
-      ProjectTypeEntity.t(1, '1开发模式'),
-    ];
+    projectTypes ??= [];
     projectDatas ??= [];
     currentProjectPage ??= 1;
     totalProjectPage ??= 1;
-    _scrollController ??= ScrollController();
-    _scrollController.addListener(() {
-      // 如果下拉的当前位置到scroll的最下面
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        if (currentProjectPage < totalProjectPage && !isLoading) {
-          t(currentProjectPage + 1);
-        }
-      }
-    });
-    t(currentProjectPage);
-  }
-
-  Future t(int page) async {
-    isLoading = true;
-    await Future.delayed(Duration(seconds: 2));
-    Response res = await ProjectApi.getNewProjects(page);
-//    await dio.get('https://www.wanandroid.com/lg/collect/list/0/json');
-    BaseEntity baseEntity = BaseEntity.fromJson(res.data);
-    BaseListEntity<List> baseListEntity =
-        BaseListEntity.fromJson(baseEntity.data);
-    currentProjectPage = baseListEntity.curPage;
-    totalProjectPage = baseListEntity.pageCount;
-    if (projectDatas == null || projectDatas.length == 0) {
-      projectDatas = baseListEntity.datas.map((json) {
-        return ProjectEntity.fromJson(json);
-      }).toList();
-    } else {
-      projectDatas.addAll(baseListEntity.datas.map((json) {
-        return ProjectEntity.fromJson(json);
-      }).toList());
-    }
-    isLoading = false;
-    setState(() {});
   }
 
   @override
@@ -133,6 +53,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocProviderTree(
       blocProviders: [
         BlocProvider(builder: (context) => projectBloc),
@@ -142,12 +63,22 @@ class _ProjectSubPageState extends State<ProjectSubPage>
           BlocListener<ProjectEvent, ProjectState>(
             bloc: projectBloc,
             listener: (context, state) {
+              if (state is ProjectLoading) {
+                isLoading = true;
+              } else if (state is ProjectLoaded || state is ProjectLoadError) {
+                isLoading = false;
+              }
+
               if (state is ProjectBannerLoaded) {
                 banners = state.banners;
               } else if (state is ProjectTypesLoaded) {
                 projectTypes = state.types;
               } else if (state is ProjectDatasLoaded) {
+                currentProjectPage = state.curretnPage;
+                totalProjectPage = state.totalPage;
                 projectDatas = state.datas;
+              } else if (state is ProjectLoadError) {
+                DisplayUtil.showMsg(context, exception: state.exception);
               }
             },
           ),
@@ -155,90 +86,136 @@ class _ProjectSubPageState extends State<ProjectSubPage>
         child: BlocBuilder<ProjectEvent, ProjectState>(
           bloc: projectBloc,
           builder: (context, state) {
-            return RefreshIndicator(
-              key: refreshKey,
-              color: WColors.theme_color,
-              onRefresh: ()async{
-                //todo 在bloc模式里这里该怎么做？如何弄一个可以自己控制阻塞、完成的future对象？
-                await Future.delayed(Duration(seconds: 2));
+            return NotificationListener(
+              onNotification: (notification) {
+                if (notification is ScrollUpdateNotification) {
+//                  print('scroll key = ${widget.pageStorageKey}');
+                  //确定是项目列表发出来的滚动，而不是项目分类栏发出来的滚动
+                  if (notification.metrics.axis == Axis.vertical) {
+                    //确定是否到达了底部
+                    if (notification.metrics.pixels >=
+                        notification.metrics.maxScrollExtent) {
+                      //确定当前允许加载更多
+                      if (state is ProjectLoaded &&
+                          currentProjectPage < totalProjectPage) {
+                        projectBloc.dispatch(LoadMoreProjectDatas(
+                            projectDatas, currentProjectPage + 1));
+                      }
+                      return true;
+                    }
+                  }
+                }
+                return true;
               },
-              child: CustomScrollView(
-                controller: _scrollController,
-                physics: AlwaysScrollableScrollPhysics(
-                    parent: BouncingScrollPhysics()),
-                slivers: <Widget>[
-                  SliverToBoxAdapter(
-                    child: bannerView(
-                        datas: banners.map((entity) {
-                      return BannerModel(
-                        entity.title ?? '',
-                        entity.imagePath ?? '',
-                        entity.url ?? '',
-                      );
-                    }).toList()),
-                  ),
-                  SliverToBoxAdapter(
-                    child: typesGridView(
-                      datas: projectTypes
-                          .asMap()
-                          .map<int, ProjectTypesModel>((index, entity) {
-                            return MapEntry(
-                              index,
-                              ProjectTypesModel(
-                                entity.id,
-                                entity.name,
-                                Image.asset(
-                                  MyImage.animals[index % MyImage.animals.length],
-                                  width: pt(40),
-                                  height: pt(40),
-                                ),
-                              ),
+              child: Stack(
+                children: <Widget>[
+                  RefreshIndicator(
+                    color: WColors.theme_color,
+                    onRefresh: () async {
+                      if (state is ProjectLoaded || state is ProjectLoadError) {
+                        projectBloc.dispatch(LoadProject());
+                      }
+                      //app有自己的加载框样式，不使用RefreshIndicator拉出来的圆球作为加载框。所以onRefresh立即返回，让圆球立即消失
+                      return;
+                    },
+                    child: CustomScrollView(
+                      key: widget.pageStorageKey,
+                      //在NestedScrollView的文档注释里有这句话：
+                      // The "controller" and "primary" members should be left
+                      // unset, so that the NestedScrollView can control this
+                      // inner scroll view.
+                      // If the "controller" property is set, then this scroll
+                      // view will not be associated with the NestedScrollView.
+                      // 所以这里不能设置controller
+//                controller: _scrollController,
+                      physics: AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics()),
+                      slivers: <Widget>[
+                        //banner
+                        SliverToBoxAdapter(
+                          child: bannerView(
+                              datas: banners.map((entity) {
+                            return BannerModel(
+                              entity.title ?? '',
+                              entity.imagePath ?? '',
+                              entity.url ?? '',
                             );
-                          })
-                          .values
-                          .toList(),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      color: WColors.gray_background,
-                      padding: EdgeInsets.only(left: pt(16), top: pt(8)),
-                      child: Row(
-                        children: <Widget>[
-                          Image.asset(
-                            'images/new.png',
-                            width: pt(30),
-                            height: pt(30),
+                          }).toList()),
+                        ),
+                        //分类
+                        SliverToBoxAdapter(
+                          child: typesGridView(
+                            datas: projectTypes
+                                .asMap()
+                                .map<int, ProjectTypesModel>((index, entity) {
+                                  return MapEntry(
+                                    index,
+                                    ProjectTypesModel(
+                                      entity.id,
+                                      entity.name,
+                                      Image.asset(
+                                        MyImage.animals[
+                                            index % MyImage.animals.length],
+                                        width: pt(40),
+                                        height: pt(40),
+                                      ),
+                                    ),
+                                  );
+                                })
+                                .values
+                                .toList(),
                           ),
-                          SizedBox(
-                            width: pt(10),
-                          ),
-                          Text(
-                            res.newestProject,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  projectGrid(datas: projectDatas),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      width: double.infinity,
-                      height: pt(45),
-                      color: WColors.gray_background,
-                      alignment: Alignment.center,
-                      child: (currentProjectPage < totalProjectPage)
-                          ? CupertinoActivityIndicator()
-                          : Text(
-                              res.isBottomst,
-                              style: TextStyle(color: WColors.hint_color),
+                        ),
+                        //最新项目标题
+                        SliverToBoxAdapter(
+                          child: Container(
+                            color: WColors.gray_background,
+                            padding: EdgeInsets.only(left: pt(16), top: pt(8)),
+                            child: Row(
+                              children: <Widget>[
+                                Image.asset(
+                                  'images/new.png',
+                                  width: pt(30),
+                                  height: pt(30),
+                                ),
+                                SizedBox(
+                                  width: pt(10),
+                                ),
+                                Text(
+                                  res.newestProject,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
                             ),
+                          ),
+                        ),
+                        //项目列表
+                        projectGrid(datas: projectDatas),
+                        //底部footer
+                        SliverToBoxAdapter(
+                          child: Container(
+                            width: double.infinity,
+                            height: pt(45),
+                            color: WColors.gray_background,
+                            alignment: Alignment.center,
+                            child: (currentProjectPage < totalProjectPage)
+                                ? CupertinoActivityIndicator()
+                                : Text(
+                                    res.isBottomst,
+                                    style: TextStyle(color: WColors.hint_color),
+                                  ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  Offstage(
+                    offstage: !isLoading,
+                    child: getLoading(),
+                  )
                 ],
               ),
             );
@@ -250,28 +227,6 @@ class _ProjectSubPageState extends State<ProjectSubPage>
 
   ///banner
   Widget bannerView({List<BannerModel> datas = const []}) {
-    datas = [
-      BannerModel(
-          '',
-          'https://wanandroid.com/blogimgs/0b712568-6203-4a03-b475-ff55e68d89e8.jpeg',
-          ''),
-      BannerModel(
-          '',
-          'https://wanandroid.com/blogimgs/0b712568-6203-4a03-b475-ff55e68d89e8.jpeg',
-          ''),
-      BannerModel(
-          '',
-          'https://wanandroid.com/blogimgs/0b712568-6203-4a03-b475-ff55e68d89e8.jpeg',
-          ''),
-      BannerModel(
-          '',
-          'https://wanandroid.com/blogimgs/0b712568-6203-4a03-b475-ff55e68d89e8.jpeg',
-          ''),
-      BannerModel(
-          '',
-          'https://wanandroid.com/blogimgs/0b712568-6203-4a03-b475-ff55e68d89e8.jpeg',
-          ''),
-    ];
     return Container(
       height: pt(140 + 16 * 2.0),
       padding: EdgeInsets.all(pt(16)),
@@ -291,10 +246,10 @@ class _ProjectSubPageState extends State<ProjectSubPage>
               },
             );
           },
-          autoplay: true,
+          autoplay: datas.length > 1,
           pagination: SwiperPagination(
             builder: FlatDotSwiperPaginationBuilder(
-              color: Colors.grey[300],
+              color: Colors.white,
               activeColor: WColors.theme_color,
               size: 5,
               activeSize: 5,
@@ -302,6 +257,9 @@ class _ProjectSubPageState extends State<ProjectSubPage>
             ),
             alignment: Alignment.bottomRight,
           ),
+          onTap: (index) {
+            DisplayUtil.showMsg(context, text: '点击了$index');
+          },
         ),
       ),
     );
@@ -309,86 +267,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
 
   ///项目分类网格布局，固定两行
   Widget typesGridView({List<ProjectTypesModel> datas = const []}) {
-    //为了练习代码，就不做成上面bannerView这种可直接用Swiper实现的滑动效果了
-//    datas = [
-//      ProjectTypesModel(
-//          null,
-//          'asd1',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//      ProjectTypesModel(
-//          null,
-//          'asd2',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//      ProjectTypesModel(
-//          null,
-//          'asd3',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//      ProjectTypesModel(
-//          null,
-//          'asd4',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//      ProjectTypesModel(
-//          null,
-//          'asd5',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//      ProjectTypesModel(
-//          null,
-//          'asd6',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//      ProjectTypesModel(
-//          null,
-//          'asd7',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//      ProjectTypesModel(
-//          null,
-//          'asd8',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//      ProjectTypesModel(
-//          null,
-//          'asd9',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//      ProjectTypesModel(
-//          null,
-//          'asd10',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//      ProjectTypesModel(
-//          null,
-//          'asd11',
-//          Icon(
-//            Icons.ac_unit,
-//            size: pt(35),
-//          )),
-//    ];
+    //这里无法用table实现。
 
     //一行最多item
     int maxOneRowCount = (datas.length / 2).ceil();
@@ -414,22 +293,27 @@ class _ProjectSubPageState extends State<ProjectSubPage>
           Row(
             children: Iterable.generate(maxOneRowCount, (index) {
               ProjectTypesModel data = datas[index];
-              return Container(
-                alignment: Alignment.center,
-                width: itemWidth,
-                height: pt(75),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    data.icon,
-                    Text(
-                      data.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: WColors.hint_color_dark, fontSize: 12),
-                    ),
-                  ],
+              return GestureDetector(
+                onTap: () {
+                  DisplayUtil.showMsg(context, text: '点击了${data.title}');
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  width: itemWidth,
+                  height: pt(75),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      data.icon,
+                      Text(
+                        data.title.replaceAll('&amp;', '/'),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: WColors.hint_color_dark, fontSize: 11.5),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }).toList(),
@@ -440,20 +324,28 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                   children:
                       Iterable.generate(datas.length - maxOneRowCount, (index) {
                     ProjectTypesModel data = datas[index + maxOneRowCount];
-                    return Container(
-                      alignment: Alignment.center,
-                      width: itemWidth,
-                      height: pt(75),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          data.icon,
-                          Text(
-                            data.title,
-                            style: TextStyle(
-                                color: WColors.hint_color_dark, fontSize: 12),
-                          ),
-                        ],
+                    return GestureDetector(
+                      onTap: () {
+                        DisplayUtil.showMsg(context, text: '点击了${data.title}');
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: itemWidth,
+                        height: pt(75),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            data.icon,
+                            Text(
+                              data.title.replaceAll('&amp;', '/'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: WColors.hint_color_dark,
+                                  fontSize: 11.5),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }).toList(),
@@ -494,8 +386,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
       clipBehavior: Clip.antiAlias,
       child: GestureDetector(
         onTap: () {
-          print('click item');
-          refreshKey.currentState.show();
+          DisplayUtil.showMsg(context, text: '点击了item${data.title}');
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -562,7 +453,8 @@ class _ProjectSubPageState extends State<ProjectSubPage>
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                print('click type ${data.chapterName}');
+                DisplayUtil.showMsg(context,
+                    text: 'click type ${data.chapterName}');
               },
               child: Padding(
                 padding:
@@ -595,7 +487,8 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                           size: pt(15),
                         ),
                         onTap: () {
-                          print('click fav ${data.collect}');
+                          DisplayUtil.showMsg(context,
+                              text: 'click fav ${data.collect}');
                         },
                       ),
                     ))

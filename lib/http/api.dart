@@ -193,4 +193,8 @@ class ProjectApi {
   static Future<Response> getProjectList(int page, int id) {
     return dio.get(PROJECT_LIST(page, id));
   }
+
+  static Future<Response> getBanners() {
+    return dio.get('/banner/json');
+  }
 }
