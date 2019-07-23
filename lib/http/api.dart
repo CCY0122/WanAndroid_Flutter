@@ -172,15 +172,14 @@ class TodoApi {
 
 ///项目相关接口
 class ProjectApi {
-  //页码从1开始
-  static String NEW_PROJECTS(int page) => '/article/listproject/$page/json';
   static const PROJECT_TREE = '/project/tree/json';
 
-  //页码从1开始
+  static String NEW_PROJECTS(int page) => '/article/listproject/$page/json';
+
   static String PROJECT_LIST(int page, int id) =>
       '/project/list/$page/json?cid=$id';
 
-  //页码从1开始
+  ///页码从1开始
   static Future<Response> getNewProjects(int page) {
     //老接口原因，实际输入页码是从0开始
     return dio.get(NEW_PROJECTS(page - 1));
@@ -190,11 +189,38 @@ class ProjectApi {
     return dio.get(PROJECT_TREE);
   }
 
+  ///页码从1开始
   static Future<Response> getProjectList(int page, int id) {
     return dio.get(PROJECT_LIST(page, id));
   }
 
   static Future<Response> getBanners() {
     return dio.get('/banner/json');
+  }
+}
+
+///博文（体系）相关接口
+class ArticleApi {
+  static const ARTICLE_TREE = '/tree/json';
+
+  static String NEW_ARTICLES(int page) => '/article/list/$page/json';
+
+  static String ARTICLE_LIST(int page, int id) =>
+      '/article/list/$page/json?cid=$id';
+
+  ///页码从1开始
+  static Future<Response> getNewArticle(int page) {
+    //老接口原因，实际输入页码是从0开始
+    return dio.get(NEW_ARTICLES(page));
+  }
+
+  static Future<Response> getArticleTypes() {
+    return dio.get(ARTICLE_TREE);
+  }
+
+  ///页码从1开始
+  static Future<Response> getArticleList(int page, int id) {
+    //老接口原因，实际输入页码是从0开始
+    return dio.get(ARTICLE_LIST(page - 1, id));
   }
 }

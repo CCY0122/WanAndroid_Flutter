@@ -74,6 +74,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+
+  //不用加try-catch，调用层已捕获了
+
   Future<List<BannerEntity>> _getBanners() async {
     Response response = await ProjectApi.getBanners();
     BaseEntity<List> baseEntity = BaseEntity.fromJson(response.data);

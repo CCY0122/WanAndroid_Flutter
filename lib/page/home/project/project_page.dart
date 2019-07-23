@@ -11,9 +11,10 @@ import 'package:wanandroid_flutter/page/home/project/bloc/project_index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/flat_pagination.dart';
+import 'package:wanandroid_flutter/views/load_more_footer.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
 
-///项目主页，也是主页的第一个tab页
+///项目页
 class ProjectSubPage extends StatefulWidget {
   PageStorageKey pageStorageKey;
 
@@ -196,18 +197,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                         projectGrid(datas: projectDatas),
                         //底部footer
                         SliverToBoxAdapter(
-                          child: Container(
-                            width: double.infinity,
-                            height: pt(45),
-                            color: WColors.gray_background,
-                            alignment: Alignment.center,
-                            child: (currentProjectPage < totalProjectPage)
-                                ? CupertinoActivityIndicator()
-                                : Text(
-                                    res.isBottomst,
-                                    style: TextStyle(color: WColors.hint_color),
-                                  ),
-                          ),
+                          child: getLoadMoreFooter(currentProjectPage < totalProjectPage),
                         ),
                       ],
                     ),
