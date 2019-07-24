@@ -49,8 +49,8 @@ class _ArticleSubPageState extends State<ArticleSubPage>
     articleDatas ??= [];
     currentProjectPage ??= 1;
     totalProjectPage ??= 1;
-    selectParentId ??= -1;
-    selectChildId ??= -1;
+    selectParentId = -1;
+    selectChildId =-1;
     parentTypeIsExpanded = false;
     childTypeIsExpanded = false;
     rootKey = GlobalKey();
@@ -258,11 +258,17 @@ class _ArticleSubPageState extends State<ArticleSubPage>
                             ),
                           ),
                           //文章列表
-//                          articleList(),
+                          SliverPadding(
+                              padding: EdgeInsets.only(
+                                top: pt(10),
+                              ),
+                              sliver: articleList(datas: articleDatas)),
                           //底部footer
                           SliverToBoxAdapter(
                             child: getLoadMoreFooter(
-                                currentProjectPage < totalProjectPage),
+                              currentProjectPage < totalProjectPage,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
@@ -285,8 +291,9 @@ class _ArticleSubPageState extends State<ArticleSubPage>
                         },
                         onSelected: (selectId) {
                           if (!isLoading) {
-                            ///这里可以利用collaspTypeScrollController将折叠分类列表滚动到当前已选中的item位置，但是实现很麻烦，flutter没有类似scrollTo(position)这种方法
+                            ///这里可以利用collaspTypeScrollController将折叠分类列表滚动到当前已选中的item位置，但是麻烦，flutter没有类似scrollTo(position)这种方法。
                             setState(() {
+                              parentTypeIsExpanded = false;
                               selectParentId = selectId;
                               selectChildId = _getChildTypes()[0].id;
                               articleBloc.dispatch(
@@ -320,6 +327,7 @@ class _ArticleSubPageState extends State<ArticleSubPage>
                         onSelected: (selectId) {
                           if (!isLoading) {
                             setState(() {
+                              childTypeIsExpanded = false;
                               selectChildId = selectId;
                               articleBloc.dispatch(
                                 LoadMoreArticleDatas(
@@ -524,9 +532,40 @@ class _ArticleSubPageState extends State<ArticleSubPage>
     return Math.max(0.0, relativeViewGlobalY - rootGlobalY);
   }
 
-  Widget articleList() {
-    return SliverToBoxAdapter(
-      child: Container(),
+  Widget articleList({List<ProjectEntity> datas = const []}) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((context, index) {
+        ProjectEntity data = datas[index];
+        return Column(children: [
+          ListTile(
+            dense: true,
+            contentPadding: EdgeInsets.only(right: pt(8), left: pt(8)),
+            leading: IconButton(
+              icon: Icon(
+                data.collect ? Icons.favorite : Icons.favorite_border,
+                color: data.collect
+                    ? WColors.warning_red
+                    : WColors.hint_color_dark,
+              ),
+              onPressed: () {
+                DisplayUtil.showMsg(context, text: 'asd');
+              },
+            ),
+            title: Text(
+              data.title,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            ),
+            subtitle: Text(
+                '${res.author}：${data.author}  ${res.time}：${data.niceDate}'),
+            onTap: () {
+              DisplayUtil.showMsg(context, text: 'item${data.title}');
+            },
+          ),
+          Divider(
+            height: 10,
+          ),
+        ]);
+      }, childCount: datas.length),
     );
   }
 

@@ -18,7 +18,7 @@ class LoadArticle extends ArticleEvent {
   }
 }
 
-///加载更多博文
+///加载(更多)博文
 class LoadMoreArticleDatas extends ArticleEvent {
   List<ProjectEntity> originDatas;
   int id;

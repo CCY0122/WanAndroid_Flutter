@@ -160,4 +160,10 @@ class StringsZh extends BaseStrings {
 
   @override
   get typeLevel2 => '二级分类';
+
+  @override
+  get author => '作者';
+
+  @override
+  get time => '时间';
 }

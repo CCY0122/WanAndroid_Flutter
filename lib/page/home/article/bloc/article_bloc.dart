@@ -55,7 +55,7 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
       yield ArticleTypesloaded(types);
       ArticleDatasLoaded datasState = await _getArticleDatasState(
         datas: [],
-        id: -1,
+        id: id,
         page: 1,
       );
       yield datasState;

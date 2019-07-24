@@ -6,6 +6,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:wanandroid_flutter/entity/banner_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/entity/project_type_entity.dart';
+import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/project/bloc/project_index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
@@ -477,8 +478,10 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                           size: pt(15),
                         ),
                         onTap: () {
-                          DisplayUtil.showMsg(context,
-                              text: 'click fav ${data.collect}');
+                          dio.post('https://www.wanandroid.com/lg/collect/${data.id}/json').then((_){
+                            DisplayUtil.showMsg(context,
+                                text: 'click fav ${data.collect}');
+                          });
                         },
                       ),
                     ))

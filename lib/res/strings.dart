@@ -116,6 +116,10 @@ abstract class Strings {
   get typeLevel2;
 
   get newestArticle;
+
+  get author;
+
+  get time;
 }
 
 ///通用的语言，直接这里实现。

@@ -24,26 +24,26 @@ final Map<String, WidgetBuilder> routes = {
   TodoPage.ROUTER_NAME: (context) => new TodoPage(),
   TodoCreatePage.ROUTER_NAME: (context) => new TodoCreatePage(),
 };
-
+bool _blocDebug = false;
 class GlobalBlocDel extends BlocDelegate {
 
   @override
   void onEvent(Bloc bloc, Object event) {
-    if(true){
+    if(_blocDebug){
       print('Bloc-event : $event');
     }
   }
 
   @override
   void onError(Bloc bloc, Object error, StackTrace stacktrace) {
-    if(true){
+    if(_blocDebug){
       print('Bloc-error : $error ; $stacktrace');
     }
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
-    if(true){
+    if(_blocDebug){
       print('Bloc-Transition : $transition');
     }
   }
