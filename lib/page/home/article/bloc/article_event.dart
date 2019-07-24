@@ -5,6 +5,7 @@ abstract class ArticleEvent extends Equatable {
   ArticleEvent([List props = const []]) : super(props);
 }
 
+///加载全部
 class LoadArticle extends ArticleEvent {
   ///如果为-1，则加载最新博文，否则加载对应id类型的博文
   int id;
@@ -17,6 +18,7 @@ class LoadArticle extends ArticleEvent {
   }
 }
 
+///加载更多博文
 class LoadMoreArticleDatas extends ArticleEvent {
   List<ProjectEntity> originDatas;
   int id;

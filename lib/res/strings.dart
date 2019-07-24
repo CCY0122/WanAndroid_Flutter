@@ -110,6 +110,12 @@ abstract class Strings {
   get navigation;
 
   get collect;
+
+  get typeLevel1;
+
+  get typeLevel2;
+
+  get newestArticle;
 }
 
 ///通用的语言，直接这里实现。

@@ -5,6 +5,7 @@ abstract class ProjectEvent extends Equatable {
   ProjectEvent([List props = const []]) : super(props);
 }
 
+///加载全部
 class LoadProject extends ProjectEvent {
   @override
   String toString() {
@@ -12,6 +13,7 @@ class LoadProject extends ProjectEvent {
   }
 }
 
+///加载更多项目
 class LoadMoreProjectDatas extends ProjectEvent {
   List<ProjectEntity> originDatas;
   int page;

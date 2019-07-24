@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/base/custom_sliver_app_bar_delegate.dart';
-import 'package:wanandroid_flutter/page/home/project/project_page.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
 import 'package:wanandroid_flutter/views/saerch_bar.dart';
 
+import 'article/article_page.dart';
 import 'bloc/home_index.dart';
 import 'home_drawer.dart';
+import 'project/project_page.dart';
 
 class HomePage extends StatefulWidget {
   static const ROUTER_NAME = '/HomePage';
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   ];
   Map<String, Widget> tabs = {
     res.project: ProjectSubPage(keys[0]),
-    res.article: ProjectSubPage(keys[1]),
+    res.article: ArticleSubPage(keys[1]),
     res.vxArticle: ProjectSubPage(keys[2]),
     res.navigation: ProjectSubPage(keys[3]),
     res.collect: ProjectSubPage(keys[4]),
@@ -267,5 +268,3 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 }
-
-

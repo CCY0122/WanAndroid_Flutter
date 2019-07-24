@@ -89,7 +89,7 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
     parentTypes.map((parent) {
       parent.children =
           parent.children.map((e) => ArticleTypeEntity.fromJson(e)).toList();
-    });
+    }).toList();
     return parentTypes;
   }
 

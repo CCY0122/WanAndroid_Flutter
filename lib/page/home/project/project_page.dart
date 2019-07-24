@@ -113,7 +113,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                   RefreshIndicator(
                     color: WColors.theme_color,
                     onRefresh: () async {
-                      if (state is ProjectLoaded || state is ProjectLoadError) {
+                      if (!isLoading) {
                         projectBloc.dispatch(LoadProject());
                       }
                       //app有自己的加载框样式，不使用RefreshIndicator拉出来的圆球作为加载框。所以onRefresh立即返回，让圆球立即消失

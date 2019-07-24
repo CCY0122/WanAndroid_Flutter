@@ -151,4 +151,13 @@ class StringsZh extends BaseStrings {
 
   @override
   get collect => '收藏';
+
+  @override
+  get newestArticle => '最新博文';
+
+  @override
+  get typeLevel1 => '一级分类';
+
+  @override
+  get typeLevel2 => '二级分类';
 }

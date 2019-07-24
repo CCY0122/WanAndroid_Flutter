@@ -32,6 +32,8 @@ class ArticleTypeEntity extends Object {
 
   ArticleTypeEntity(this.children,this.courseId,this.id,this.name,this.order,this.parentChapterId,this.userControlSetTop,this.visible,);
 
+  ArticleTypeEntity.simple(this.name,this.id,this.children);
+
   factory ArticleTypeEntity.fromJson(Map<String, dynamic> srcJson) => _$ArticleTypeEntityFromJson(srcJson);
 
   Map<String, dynamic> toJson() => _$ArticleTypeEntityToJson(this);
