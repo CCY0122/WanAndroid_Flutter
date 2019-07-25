@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:wanandroid_flutter/entity/banner_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/entity/project_type_entity.dart';
@@ -269,7 +268,14 @@ class _ProjectSubPageState extends State<ProjectSubPage>
             alignment: Alignment.bottomRight,
           ),
           onTap: (index) {
-            DisplayUtil.showMsg(context, text: '点击了$index');
+            Navigator.pushNamed(
+              context,
+              WebViewPage.ROUTER_NAME,
+              arguments: {
+                'title': datas[index].title,
+                'url': datas[index].url,
+              },
+            );
           },
         ),
       ),

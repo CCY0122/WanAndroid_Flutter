@@ -83,6 +83,8 @@ class _WebViewPageState extends State<WebViewPage> {
       url: url,
       hidden: true,
       initialChild: getLoading(),
+      withZoom: true,
+      withLocalStorage: true,
     );
   }
 
