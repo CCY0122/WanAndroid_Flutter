@@ -7,6 +7,7 @@ import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/page/home/article/bloc/article_index.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
+import 'package:wanandroid_flutter/page/home/web_view.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/load_more_footer.dart';
@@ -637,7 +638,14 @@ class _ArticleSubPageState extends State<ArticleSubPage>
               ],
             ),
             onTap: () {
-              DisplayUtil.showMsg(context, text: 'item${data.title}');
+              Navigator.pushNamed(
+                context,
+                WebViewPage.ROUTER_NAME,
+                arguments: {
+                  'title': data.title,
+                  'url': data.link,
+                },
+              );
             },
           ),
           Divider(

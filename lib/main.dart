@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/page/home/home/home_page.dart';
 import 'package:wanandroid_flutter/page/home/project/project_detail_page.dart';
+import 'package:wanandroid_flutter/page/home/web_view.dart';
 import 'package:wanandroid_flutter/page/todo/todo_create.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
@@ -25,7 +26,9 @@ final Map<String, WidgetBuilder> routes = {
   TodoPage.ROUTER_NAME: (context) => new TodoPage(),
   TodoCreatePage.ROUTER_NAME: (context) => new TodoCreatePage(),
   ProjectDetailPage.ROUTER_NAME: (context) => new ProjectDetailPage(),
+  WebViewPage.ROUTER_NAME: (context) => WebViewPage(),
 };
+
 bool _blocDebug = true;
 
 class GlobalBlocDel extends BlocDelegate {

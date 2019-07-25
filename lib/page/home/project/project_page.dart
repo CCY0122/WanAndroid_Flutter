@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:wanandroid_flutter/entity/banner_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/entity/project_type_entity.dart';
@@ -10,6 +11,7 @@ import 'package:wanandroid_flutter/entity/todo_entity.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/project/bloc/project_index.dart';
+import 'package:wanandroid_flutter/page/home/web_view.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
@@ -474,7 +476,14 @@ class _ProjectSubPageState extends State<ProjectSubPage>
       clipBehavior: Clip.antiAlias,
       child: GestureDetector(
         onTap: () {
-          DisplayUtil.showMsg(context, text: '点击了item${data.title}');
+          Navigator.pushNamed(
+            context,
+            WebViewPage.ROUTER_NAME,
+            arguments: {
+              'title': data.title,
+              'url': data.link,
+            },
+          );
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

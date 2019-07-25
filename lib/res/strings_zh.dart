@@ -178,4 +178,7 @@ class StringsZh extends BaseStrings {
 
   @override
   get undone => '未完成';
+
+  @override
+  get openBrowser => '浏览器打开';
 }

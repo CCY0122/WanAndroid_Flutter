@@ -33,6 +33,8 @@ dependencies:
   equatable: ^0.2.6
   cached_network_image: ^1.0.0
   flutter_swiper: ^1.1.6
+  flutter_webview_plugin: ^0.3.5
+  url_launcher: ^5.1.0
 
 dev_dependencies:
   flutter_test:

@@ -128,6 +128,8 @@ abstract class Strings {
   get undone;
 
   get done;
+
+  get openBrowser;
 }
 
 ///通用的语言，直接这里实现。
