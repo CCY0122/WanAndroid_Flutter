@@ -81,6 +81,7 @@ class _ArticleSubPageState extends State<ArticleSubPage>
               if (state is ArticleTypesloaded) {
                 types = state.articleTypes;
                 types.map((e) {}).toList();
+                //插入'最新博文'类别
                 types.insert(
                   0,
                   ArticleTypeEntity.simple(
@@ -99,6 +100,11 @@ class _ArticleSubPageState extends State<ArticleSubPage>
                 articleDatas = state.datas;
                 currentProjectPage = state.curretnPage;
                 totalProjectPage = state.totalPage;
+              } else if (state is ArticleCollectChanged) {
+                articleDatas
+                    .where((e) => e.id == state.id)
+                    .map((e) => e.collect = state.collect)
+                    .toList();
               } else if (state is ArticleLoadError) {
                 DisplayUtil.showMsg(context, exception: state.exception);
               }
@@ -110,7 +116,8 @@ class _ArticleSubPageState extends State<ArticleSubPage>
           builder: (context, state) {
             return NotificationListener(
               onNotification: (notification) {
-                //不要在这里检测加载更多，因为其子树有多个垂直滚动widget
+                //不要在这里检测加载更多，因为子树可能有多个垂直滚动widget
+                //so问题来了：如何在NotificationListener确定一个ScrollNotification是由哪个scrollable widget发来的？
               },
               child: Stack(
                 children: <Widget>[
@@ -275,70 +282,78 @@ class _ArticleSubPageState extends State<ArticleSubPage>
                     ),
                   ),
                   //展开的一级分类
-                  Offstage(
-                    offstage: !parentTypeIsExpanded,
-                    child: AnimatedOpacity(
-                      opacity: parentTypeIsExpanded ? 1 : 0,
-                      duration: Duration(milliseconds: 400),
-                      child: expandedTypesView(
-                        relativeViewkey: parentTypeKey,
-                        types: types,
-                        selectId: selectParentId,
-                        onExpanded: () {
-                          setState(() {
-                            parentTypeIsExpanded = false;
-                          });
-                        },
-                        onSelected: (selectId) {
-                          if (!isLoading) {
-                            ///这里可以利用collaspTypeScrollController将折叠分类列表滚动到当前已选中的item位置，但是麻烦，flutter没有类似scrollTo(position)这种方法。
+                  Positioned(
+                    top: _getExpandedViewMarginTop(parentTypeKey),
+                    left: 0,
+                    right: 0,
+                    child: Offstage(
+                      offstage: !parentTypeIsExpanded,
+                      child: AnimatedOpacity(
+                        opacity: parentTypeIsExpanded ? 1 : 0,
+                        duration: Duration(milliseconds: 400),
+                        child: expandedTypesView(
+                          types: types,
+                          selectId: selectParentId,
+                          onExpanded: () {
                             setState(() {
                               parentTypeIsExpanded = false;
-                              selectParentId = selectId;
-                              selectChildId = _getChildTypes()[0].id;
-                              articleBloc.dispatch(
-                                LoadMoreArticleDatas(
-                                  originDatas: [],
-                                  page: 1,
-                                  id: selectChildId,
-                                ),
-                              );
                             });
-                          }
-                        },
+                          },
+                          onSelected: (selectId) {
+                            if (!isLoading) {
+                              ///这里可以利用collaspTypeScrollController将折叠分类列表滚动到当前已选中的item位置，但是麻烦，flutter没有类似scrollTo(position)这种方法。
+                              setState(() {
+                                parentTypeIsExpanded = false;
+                                selectParentId = selectId;
+                                selectChildId = _getChildTypes()[0].id;
+                                articleBloc.dispatch(
+                                  LoadMoreArticleDatas(
+                                    originDatas: [],
+                                    page: 1,
+                                    id: selectChildId,
+                                  ),
+                                );
+                              });
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
                   //展开的二级分类
-                  Offstage(
-                    offstage: !childTypeIsExpanded,
-                    child: AnimatedOpacity(
-                      opacity: childTypeIsExpanded ? 1 : 0,
-                      duration: Duration(milliseconds: 400),
-                      child: expandedTypesView(
-                        relativeViewkey: childTypeKey,
-                        types: _getChildTypes(),
-                        selectId: selectChildId,
-                        onExpanded: () {
-                          setState(() {
-                            childTypeIsExpanded = false;
-                          });
-                        },
-                        onSelected: (selectId) {
-                          if (!isLoading) {
+                  Positioned(
+                    top: _getExpandedViewMarginTop(childTypeKey),
+                    left: 0,
+                    right: 0,
+                    child: Offstage(
+                      offstage: !childTypeIsExpanded,
+                      child: AnimatedOpacity(
+                        opacity: childTypeIsExpanded ? 1 : 0,
+                        duration: Duration(milliseconds: 400),
+                        child: expandedTypesView(
+                          types: _getChildTypes(),
+                          selectId: selectChildId,
+                          onExpanded: () {
                             setState(() {
                               childTypeIsExpanded = false;
-                              selectChildId = selectId;
-                              articleBloc.dispatch(
-                                LoadMoreArticleDatas(
-                                  originDatas: [],
-                                  page: 1,
-                                  id: selectChildId,
-                                ),
-                              );
                             });
-                          }
-                        },
+                          },
+                          onSelected: (selectId) {
+                            if (!isLoading) {
+                              setState(() {
+                                childTypeIsExpanded = false;
+                                selectChildId = selectId;
+                                articleBloc.dispatch(
+                                  LoadMoreArticleDatas(
+                                    originDatas: [],
+                                    page: 1,
+                                    id: selectChildId,
+                                  ),
+                                );
+                              });
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -407,7 +422,6 @@ class _ArticleSubPageState extends State<ArticleSubPage>
 
   ///展开时的type view
   Widget expandedTypesView({
-    @required Key relativeViewkey, //展开位置所依赖的view的key
     @required List<ArticleTypeEntity> types,
     @required int selectId,
     @required VoidCallback onExpanded,
@@ -423,7 +437,6 @@ class _ArticleSubPageState extends State<ArticleSubPage>
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
       )),
-      margin: EdgeInsets.only(top: _getExpandedViewMarginTop(relativeViewkey)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -549,7 +562,11 @@ class _ArticleSubPageState extends State<ArticleSubPage>
                     : WColors.hint_color_dark,
               ),
               onPressed: () {
-                DisplayUtil.showMsg(context, text: 'asd');
+                if (!isLoading) {
+                  articleBloc.dispatch(
+                    CollectArticle(data.id, !data.collect),
+                  );
+                }
               },
             ),
             title: Text(

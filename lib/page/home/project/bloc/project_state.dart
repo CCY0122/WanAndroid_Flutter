@@ -73,6 +73,20 @@ class ProjectDatasLoaded extends ProjectState {
   }
 }
 
+///收藏状态变化
+class ProjectCollectChanged extends ProjectState {
+  int id;
+  bool collect;
+
+  ProjectCollectChanged(this.id, this.collect);
+
+  @override
+  String toString() {
+    return 'ProjectCollectChanged{id: $id, collect: $collect}';
+  }
+
+}
+
 ///页面加载完成
 class ProjectLoaded extends ProjectState {
   @override

@@ -45,6 +45,8 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
         id: event.id,
         page: event.page,
       );
+    } else if (event is CollectArticle) {
+      yield* _mapCollectArticleToState(event.id, event.collect);
     }
   }
 
@@ -75,6 +77,21 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
         page: page,
       );
       yield datasState;
+      yield ArticleLoaded();
+    } catch (e) {
+      yield ArticleLoadError(e);
+    }
+  }
+
+  Stream<ArticleState> _mapCollectArticleToState(int id, bool collect) async* {
+    try {
+      yield ArticleLoading();
+      if (collect) {
+        await CollectApi.collect(id);
+      } else {
+        await CollectApi.unCollect(id);
+      }
+      yield ArticleCollectChanged(id, collect);
       yield ArticleLoaded();
     } catch (e) {
       yield ArticleLoadError(e);

@@ -18,10 +18,24 @@ class LoadMoreProjectDatas extends ProjectEvent {
   List<ProjectEntity> originDatas;
   int page;
 
-  LoadMoreProjectDatas(this.originDatas, this.page) :super([originDatas, page]);
+  LoadMoreProjectDatas(this.originDatas, this.page)
+      : super([originDatas, page]);
 
   @override
   String toString() {
     return 'LoadMoreProjectDatas{originDatas: $originDatas, page: $page}';
+  }
+}
+
+///收藏、取消收藏
+class CollectProject extends ProjectEvent {
+  int id;
+  bool collect;
+
+  CollectProject(this.id, this.collect) : super([id, collect]);
+
+  @override
+  String toString() {
+    return 'CollectProject{id: $id, collect: $collect}';
   }
 }

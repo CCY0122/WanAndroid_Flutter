@@ -45,6 +45,20 @@ class ArticleDatasLoaded extends ArticleState {
   }
 }
 
+///收藏状态变化
+class ArticleCollectChanged extends ArticleState {
+  int id;
+  bool collect;
+
+  ArticleCollectChanged(this.id, this.collect);
+
+  @override
+  String toString() {
+    return 'ArticleCollectChanged{id: $id, collect: $collect}';
+  }
+
+}
+
 class ArticleLoaded extends ArticleState {
   @override
   String toString() {

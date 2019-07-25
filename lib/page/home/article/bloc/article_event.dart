@@ -32,3 +32,16 @@ class LoadMoreArticleDatas extends ArticleEvent {
     return 'LoadMoreArticleDatas{originDatas: $originDatas, id: $id, page: $page}';
   }
 }
+
+///收藏、取消收藏
+class CollectArticle extends ArticleEvent {
+  int id;
+  bool collect;
+
+  CollectArticle(this.id, this.collect) : super([id, collect]);
+
+  @override
+  String toString() {
+    return 'CollectArticle{id: $id, collect: $collect}';
+  }
+}

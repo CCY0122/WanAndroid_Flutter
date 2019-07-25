@@ -7,7 +7,6 @@ import 'package:wanandroid_flutter/entity/banner_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/entity/project_type_entity.dart';
 import 'package:wanandroid_flutter/entity/todo_entity.dart';
-import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/project/bloc/project_index.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
@@ -85,6 +84,11 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                 currentProjectPage = state.curretnPage;
                 totalProjectPage = state.totalPage;
                 projectDatas = state.datas;
+              } else if (state is ProjectCollectChanged) {
+                projectDatas
+                    .where((e) => e.id == state.id)
+                    .map((e) => e.collect = state.collect)
+                    .toList();
               } else if (state is ProjectLoadError) {
                 DisplayUtil.showMsg(context, exception: state.exception);
               }
@@ -357,6 +361,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
     );
   }
 
+  ///to-do轮播栏
   Widget todoViewFlipper({List<TodoEntity> datas = const []}) {
     if (datas == null || datas.length == 0) {
       return Container();
@@ -367,7 +372,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
           height: 1,
         ),
         Container(
-          height: pt(38),
+          height: pt(35),
           alignment: Alignment.center,
           padding: EdgeInsets.symmetric(horizontal: pt(16)),
           child: Swiper(
@@ -567,13 +572,11 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                           size: pt(15),
                         ),
                         onTap: () {
-                          dio
-                              .post(
-                                  'https://www.wanandroid.com/lg/collect/${data.id}/json')
-                              .then((_) {
-                            DisplayUtil.showMsg(context,
-                                text: 'click fav ${data.collect}');
-                          });
+                          if(!isLoading){
+                            projectBloc.dispatch(
+                              CollectProject(data.id, !data.collect),
+                            );
+                          }
                         },
                       ),
                     ))

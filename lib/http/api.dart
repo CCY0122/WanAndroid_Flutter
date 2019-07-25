@@ -224,3 +224,28 @@ class ArticleApi {
     return dio.get(ARTICLE_LIST(page - 1, id));
   }
 }
+
+///收藏相关接口
+class CollectApi {
+  static String COLLECT(int id) => '/lg/collect/$id/json';
+
+  static String UN_COLLECT(int id) => '/lg/uncollect_originId/$id/json';
+
+  static String UN_COLLECT_WITH_ORIGIN_ID(int id) => '/lg/uncollect/$id/json';
+
+  static Future<Response> collect(int id) {
+    return dio.post(COLLECT(id));
+  }
+
+  static Future<Response> unCollect(int id) {
+    return dio.post(UN_COLLECT(id));
+  }
+
+  ///originId:列表页下发，无则为-1
+  static Future<Response> unCollectWithOriginId(int id, int originId) {
+    return dio.post(
+      UN_COLLECT_WITH_ORIGIN_ID(id),
+      queryParameters: {'originId': originId},
+    );
+  }
+}

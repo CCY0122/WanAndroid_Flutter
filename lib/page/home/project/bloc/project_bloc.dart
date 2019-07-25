@@ -44,6 +44,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       yield* _mapLoadProjectToState();
     } else if (event is LoadMoreProjectDatas) {
       yield* _mapLoadMoreProjectDatasToState(event.originDatas, event.page);
+    } else if (event is CollectProject) {
+      yield* _mapCollectProjectToState(event.id, event.collect);
     }
   }
 
@@ -72,6 +74,21 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       yield ProjectLoading();
       ProjectDatasLoaded datasState = await _getProjectDatasState(datas, page);
       yield datasState;
+      yield ProjectLoaded();
+    } catch (e) {
+      yield ProjectLoadError(e);
+    }
+  }
+
+  Stream<ProjectState> _mapCollectProjectToState(int id, bool collect) async* {
+    try {
+      yield ProjectLoading();
+      if (collect) {
+        await CollectApi.collect(id);
+      } else {
+        await CollectApi.unCollect(id);
+      }
+      yield ProjectCollectChanged(id, collect);
       yield ProjectLoaded();
     } catch (e) {
       yield ProjectLoadError(e);
