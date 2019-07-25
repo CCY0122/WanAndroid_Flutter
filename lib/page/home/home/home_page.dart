@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/base/custom_sliver_app_bar_delegate.dart';
+import 'package:wanandroid_flutter/page/home/article/article_page.dart';
+import 'package:wanandroid_flutter/page/home/project/project_page.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
 import 'package:wanandroid_flutter/views/saerch_bar.dart';
 
-import 'article/article_page.dart';
-import 'bloc/home_index.dart';
-import 'home_drawer.dart';
-import 'project/project_page.dart';
+import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
+import 'package:wanandroid_flutter/page/home/home/home_drawer.dart';
 
 class HomePage extends StatefulWidget {
   static const ROUTER_NAME = '/HomePage';
@@ -255,16 +254,4 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Future logout() async {
-    try {
-      await AccountApi.logout();
-      await SPUtil.setLogin(false);
-      print('logout success');
-      setState(() {
-        isLogin = false;
-      });
-    } catch (e) {
-      DisplayUtil.showMsg(innerContext, exception: e);
-    }
-  }
 }

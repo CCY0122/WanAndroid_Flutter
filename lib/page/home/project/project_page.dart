@@ -7,7 +7,8 @@ import 'package:wanandroid_flutter/entity/banner_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/entity/project_type_entity.dart';
 import 'package:wanandroid_flutter/entity/todo_entity.dart';
-import 'package:wanandroid_flutter/page/home/bloc/home_index.dart';
+import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
+import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/project/bloc/project_index.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
@@ -124,6 +125,8 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                   RefreshIndicator(
                     color: WColors.theme_color,
                     onRefresh: () async {
+                      ///鉴于flutter关于NestedScrollView的这个bug：https://github.com/flutter/flutter/issues/36419。
+                      ///所以当本页的下拉被拉出来时，实际上其他页（如articlePage）的下拉也被拉出来了。导致其他页也会触发刷新。
                       if (!isLoading) {
                         projectBloc.dispatch(LoadProject());
                       }
@@ -572,10 +575,19 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                           size: pt(15),
                         ),
                         onTap: () {
-                          if(!isLoading){
-                            projectBloc.dispatch(
-                              CollectProject(data.id, !data.collect),
-                            );
+                          if (!isLoading) {
+                            if (BlocProvider.of<HomeBloc>(context).isLogin) {
+                              projectBloc.dispatch(
+                                CollectProject(data.id, !data.collect),
+                              );
+                            } else {
+                              Navigator.pushNamed(
+                                      context, LoginWanandroidPage.ROUTER_NAME)
+                                  .then((_) {
+                                BlocProvider.of<HomeBloc>(context)
+                                    .dispatch(LoadHome());
+                              });
+                            }
                           }
                         },
                       ),

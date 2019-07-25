@@ -8,7 +8,7 @@ import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/entity/project_type_entity.dart';
 import 'package:wanandroid_flutter/entity/todo_entity.dart';
 import 'package:wanandroid_flutter/http/index.dart';
-import 'package:wanandroid_flutter/page/home/bloc/home_index.dart';
+import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 
 import 'project_index.dart';
 
@@ -58,8 +58,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       yield ProjectBannerLoaded(bannerEntitys);
       List<ProjectTypeEntity> types = await _getProjectTypes();
       yield ProjectTypesLoaded(types);
-      List<TodoEntity> todos = await _getTodos();
-      yield ProjectTodoLoaded(todos);
+
+      ///获取to-do列表需要已登录
+      if (homeBloc.isLogin) {
+        List<TodoEntity> todos = await _getTodos();
+        yield ProjectTodoLoaded(todos);
+      } else {
+        yield ProjectTodoLoaded([]);
+      }
       ProjectDatasLoaded datasState = await _getProjectDatasState([], 1);
       yield datasState;
       yield ProjectLoaded();

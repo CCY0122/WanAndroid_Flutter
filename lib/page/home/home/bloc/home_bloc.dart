@@ -2,9 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 
-import 'home_index.dart';
+import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
+
+  bool isLogin = false;
+
+
   @override
   HomeState get initialState => HomeLoading();
 
@@ -20,7 +24,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapLoadHomeToState() async* {
     try {
       yield HomeLoading();
-      bool isLogin = await SPUtil.isLogin();
+      isLogin = await SPUtil.isLogin();
       yield HomeLoaded(isLogin);
     } catch (e) {
       yield HomeLoadError(e);
@@ -32,9 +36,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield HomeLoading();
       await AccountApi.logout();
       await SPUtil.setLogin(false);
-      yield HomeLoaded(false);
+      yield HomeLoaded(isLogin);
+      dispatch(LoadHome());
     } catch (e) {
       yield HomeLoadError(e);
     }
   }
+
 }

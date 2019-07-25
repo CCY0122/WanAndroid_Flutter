@@ -6,7 +6,7 @@ import 'package:wanandroid_flutter/entity/base_entity.dart';
 import 'package:wanandroid_flutter/entity/base_list_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/http/index.dart';
-import 'package:wanandroid_flutter/page/home/bloc/home_index.dart';
+import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 
 import 'article_index.dart';
 

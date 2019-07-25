@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/entity/article_type_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
+import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/page/home/article/bloc/article_index.dart';
-import 'package:wanandroid_flutter/page/home/bloc/home_index.dart';
+import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/load_more_footer.dart';
@@ -563,9 +564,17 @@ class _ArticleSubPageState extends State<ArticleSubPage>
               ),
               onPressed: () {
                 if (!isLoading) {
-                  articleBloc.dispatch(
-                    CollectArticle(data.id, !data.collect),
-                  );
+                  if (BlocProvider.of<HomeBloc>(context).isLogin) {
+                    articleBloc.dispatch(
+                      CollectArticle(data.id, !data.collect),
+                    );
+                  } else {
+                    Navigator.pushNamed(
+                            context, LoginWanandroidPage.ROUTER_NAME)
+                        .then((_) {
+                      BlocProvider.of<HomeBloc>(context).dispatch(LoadHome());
+                    });
+                  }
                 }
               },
             ),

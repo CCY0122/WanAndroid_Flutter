@@ -6,7 +6,7 @@ import 'package:wanandroid_flutter/test/nested_test_page.dart';
 import 'package:wanandroid_flutter/test/test_page.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 
-import 'bloc/home_index.dart';
+import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 
 ///主页侧滑菜单
 class HomeDrawer extends StatefulWidget {

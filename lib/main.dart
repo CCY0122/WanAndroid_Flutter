@@ -3,15 +3,16 @@
 // This sample shows an [AppBar] with two simple actions. The first action
 // opens a [SnackBar], while the second action navigates to a new page.
 
+import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
-import 'package:wanandroid_flutter/page/home/home_page.dart';
+import 'package:wanandroid_flutter/page/home/home/home_page.dart';
+import 'package:wanandroid_flutter/page/home/project/project_detail_page.dart';
 import 'package:wanandroid_flutter/page/todo/todo_create.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
-import 'package:wanandroid_flutter/test/test_page.dart';
-import 'package:bloc/bloc.dart';
+
 import 'http/index.dart';
 
 ///在拿不到context的地方通过navigatorKey进行路由跳转：
@@ -23,27 +24,28 @@ final Map<String, WidgetBuilder> routes = {
   HomePage.ROUTER_NAME: (context) => new HomePage(),
   TodoPage.ROUTER_NAME: (context) => new TodoPage(),
   TodoCreatePage.ROUTER_NAME: (context) => new TodoCreatePage(),
+  ProjectDetailPage.ROUTER_NAME: (context) => new ProjectDetailPage(),
 };
-bool _blocDebug = false;
-class GlobalBlocDel extends BlocDelegate {
+bool _blocDebug = true;
 
+class GlobalBlocDel extends BlocDelegate {
   @override
   void onEvent(Bloc bloc, Object event) {
-    if(_blocDebug){
+    if (_blocDebug) {
       print('Bloc-event : $event');
     }
   }
 
   @override
   void onError(Bloc bloc, Object error, StackTrace stacktrace) {
-    if(_blocDebug){
+    if (_blocDebug) {
       print('Bloc-error : $error ; $stacktrace');
     }
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
-    if(_blocDebug){
+    if (_blocDebug) {
       print('Bloc-Transition : $transition');
     }
   }
@@ -56,7 +58,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -70,6 +71,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
