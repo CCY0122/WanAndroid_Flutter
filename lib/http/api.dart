@@ -211,7 +211,7 @@ class ArticleApi {
   ///页码从1开始
   static Future<Response> getNewArticle(int page) {
     //老接口原因，实际输入页码是从0开始
-    return dio.get(NEW_ARTICLES(page));
+    return dio.get(NEW_ARTICLES(page - 1));
   }
 
   static Future<Response> getArticleTypes() {

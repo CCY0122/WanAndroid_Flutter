@@ -166,4 +166,16 @@ class StringsZh extends BaseStrings {
 
   @override
   get time => '时间';
+
+  @override
+  get QA => '问答';
+
+  @override
+  get New => '新';
+
+  @override
+  get done => '已完成';
+
+  @override
+  get undone => '未完成';
 }

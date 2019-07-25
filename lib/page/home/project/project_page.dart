@@ -6,9 +6,11 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:wanandroid_flutter/entity/banner_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/entity/project_type_entity.dart';
+import 'package:wanandroid_flutter/entity/todo_entity.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/project/bloc/project_index.dart';
+import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/flat_pagination.dart';
@@ -31,6 +33,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
   List<BannerEntity> banners;
   List<ProjectTypeEntity> projectTypes;
   List<ProjectEntity> projectDatas;
+  List<TodoEntity> todoDatas;
   int currentProjectPage;
   int totalProjectPage;
 
@@ -43,6 +46,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
     projectBloc = ProjectBloc(BlocProvider.of<HomeBloc>(context));
     banners ??= [];
     projectTypes ??= [];
+    todoDatas ??= [];
     projectDatas ??= [];
     currentProjectPage ??= 1;
     totalProjectPage ??= 1;
@@ -75,6 +79,8 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                 banners = state.banners;
               } else if (state is ProjectTypesLoaded) {
                 projectTypes = state.types;
+              } else if (state is ProjectTodoLoaded) {
+                todoDatas = state.todos;
               } else if (state is ProjectDatasLoaded) {
                 currentProjectPage = state.curretnPage;
                 totalProjectPage = state.totalPage;
@@ -168,6 +174,10 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                                 .toList(),
                           ),
                         ),
+                        //to-do轮播栏
+                        SliverToBoxAdapter(
+                          child: todoViewFlipper(datas: todoDatas),
+                        ),
                         //最新项目标题
                         SliverToBoxAdapter(
                           child: Container(
@@ -198,7 +208,8 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                         projectGrid(datas: projectDatas),
                         //底部footer
                         SliverToBoxAdapter(
-                          child: getLoadMoreFooter(currentProjectPage < totalProjectPage),
+                          child: getLoadMoreFooter(
+                              currentProjectPage < totalProjectPage),
                         ),
                       ],
                     ),
@@ -346,6 +357,84 @@ class _ProjectSubPageState extends State<ProjectSubPage>
     );
   }
 
+  Widget todoViewFlipper({List<TodoEntity> datas = const []}) {
+    if (datas == null || datas.length == 0) {
+      return Container();
+    }
+    return Column(
+      children: <Widget>[
+        Divider(
+          height: 1,
+        ),
+        Container(
+          height: pt(38),
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(horizontal: pt(16)),
+          child: Swiper(
+            onTap: (index) {
+              Navigator.pushNamed(context, TodoPage.ROUTER_NAME);
+            },
+            autoplayDelay: 5000,
+            duration: 1000,
+            scrollDirection: Axis.vertical,
+            itemCount: datas.length,
+            autoplay: datas.length > 1,
+            itemBuilder: (context, index) {
+              TodoEntity data = datas[index];
+              return Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.alarm,
+                    size: 20,
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: pt(5)),
+                      child: Text(
+                        data.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: pt(5)),
+                    child: Text(
+                      data.completeDateStr,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: WColors.hint_color_dark,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: data.status == 1
+                                ? WColors.theme_color
+                                : WColors.warning_red),
+                        borderRadius: BorderRadius.circular(4)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: pt(4), vertical: pt(1)),
+                    child: Text(
+                      data.status == 1 ? res.done : res.undone,
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: data.status == 1
+                              ? WColors.theme_color
+                              : WColors.warning_red),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  ///项目列表
   Widget projectGrid({List<ProjectEntity> datas = const []}) {
     return SliverGrid(
         delegate: SliverChildBuilderDelegate(
@@ -478,7 +567,10 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                           size: pt(15),
                         ),
                         onTap: () {
-                          dio.post('https://www.wanandroid.com/lg/collect/${data.id}/json').then((_){
+                          dio
+                              .post(
+                                  'https://www.wanandroid.com/lg/collect/${data.id}/json')
+                              .then((_) {
                             DisplayUtil.showMsg(context,
                                 text: 'click fav ${data.collect}');
                           });

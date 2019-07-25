@@ -120,6 +120,14 @@ abstract class Strings {
   get author;
 
   get time;
+
+  get QA;
+
+  get New;
+
+  get undone;
+
+  get done;
 }
 
 ///通用的语言，直接这里实现。

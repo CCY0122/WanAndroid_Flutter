@@ -50,7 +50,7 @@ class _ArticleSubPageState extends State<ArticleSubPage>
     currentProjectPage ??= 1;
     totalProjectPage ??= 1;
     selectParentId = -1;
-    selectChildId =-1;
+    selectChildId = -1;
     parentTypeIsExpanded = false;
     childTypeIsExpanded = false;
     rootKey = GlobalKey();
@@ -532,6 +532,7 @@ class _ArticleSubPageState extends State<ArticleSubPage>
     return Math.max(0.0, relativeViewGlobalY - rootGlobalY);
   }
 
+  ///博文列表
   Widget articleList({List<ProjectEntity> datas = const []}) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
@@ -555,8 +556,60 @@ class _ArticleSubPageState extends State<ArticleSubPage>
               data.title,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
             ),
-            subtitle: Text(
-                '${res.author}：${data.author}  ${res.time}：${data.niceDate}'),
+            subtitle: Row(
+              children: [
+                data.fresh
+                    ? Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: WColors.warning_red)),
+                        margin: EdgeInsets.only(right: pt(6)),
+                        padding: EdgeInsets.symmetric(horizontal: pt(4)),
+                        child: Text(
+                          res.New,
+                          style: TextStyle(
+                              color: WColors.warning_red,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 10),
+                        ),
+                      )
+                    : Container(),
+
+                ///WanAndroid文档原话：superChapterId其实不是一级分类id，因为要拼接跳转url，内容实际都挂在二级分类下，所以该id实际上是一级分类的第一个子类目的id，拼接后故可正常跳转
+                data.superChapterId == 294
+                    ? Container(
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: WColors.theme_color_dark)),
+                        margin: EdgeInsets.only(right: pt(6)),
+                        padding: EdgeInsets.symmetric(horizontal: pt(4)),
+                        child: Text(
+                          res.project,
+                          style: TextStyle(
+                              color: WColors.theme_color_dark,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 10),
+                        ),
+                      )
+                    : Container(),
+                data.superChapterId == 440
+                    ? Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: WColors.theme_color)),
+                        margin: EdgeInsets.only(right: pt(6)),
+                        padding: EdgeInsets.symmetric(horizontal: pt(4)),
+                        child: Text(
+                          res.QA,
+                          style: TextStyle(
+                              color: WColors.theme_color,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 10),
+                        ),
+                      )
+                    : Container(),
+                Text(
+                    '${res.author}：${data.author}  ${res.time}：${data.niceDate}'),
+              ],
+            ),
             onTap: () {
               DisplayUtil.showMsg(context, text: 'item${data.title}');
             },

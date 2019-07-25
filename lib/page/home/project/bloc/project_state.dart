@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:wanandroid_flutter/entity/banner_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/entity/project_type_entity.dart';
+import 'package:wanandroid_flutter/entity/todo_entity.dart';
 
 abstract class ProjectState extends Equatable {
   ProjectState([List props = const []]) : super(props);
@@ -42,6 +43,18 @@ class ProjectTypesLoaded extends ProjectState {
   @override
   String toString() {
     return 'ProjectTypesLoaded{types: $types}';
+  }
+}
+
+///to-do数据加载完成
+class ProjectTodoLoaded extends ProjectState {
+  List<TodoEntity> todos;
+
+  ProjectTodoLoaded(this.todos) : super([todos]);
+
+  @override
+  String toString() {
+    return 'ProjectTodoLoaded{todos: $todos}';
   }
 }
 

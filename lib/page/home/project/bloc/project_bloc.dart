@@ -6,6 +6,7 @@ import 'package:wanandroid_flutter/entity/base_entity.dart';
 import 'package:wanandroid_flutter/entity/base_list_entity.dart';
 import 'package:wanandroid_flutter/entity/project_entity.dart';
 import 'package:wanandroid_flutter/entity/project_type_entity.dart';
+import 'package:wanandroid_flutter/entity/todo_entity.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/page/home/bloc/home_index.dart';
 
@@ -42,7 +43,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     if (event is LoadProject) {
       yield* _mapLoadProjectToState();
     } else if (event is LoadMoreProjectDatas) {
-      yield* _mapLoadMoreProjectDatasToState(event.originDatas,event.page);
+      yield* _mapLoadMoreProjectDatasToState(event.originDatas, event.page);
     }
   }
 
@@ -55,7 +56,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       yield ProjectBannerLoaded(bannerEntitys);
       List<ProjectTypeEntity> types = await _getProjectTypes();
       yield ProjectTypesLoaded(types);
-      ProjectDatasLoaded datasState = await _getProjectDatasState([],1);
+      List<TodoEntity> todos = await _getTodos();
+      yield ProjectTodoLoaded(todos);
+      ProjectDatasLoaded datasState = await _getProjectDatasState([], 1);
       yield datasState;
       yield ProjectLoaded();
     } catch (e) {
@@ -63,17 +66,17 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
-  Stream<ProjectState> _mapLoadMoreProjectDatasToState(List<ProjectEntity> datas,int page) async* {
+  Stream<ProjectState> _mapLoadMoreProjectDatasToState(
+      List<ProjectEntity> datas, int page) async* {
     try {
       yield ProjectLoading();
-      ProjectDatasLoaded datasState = await _getProjectDatasState(datas,page);
+      ProjectDatasLoaded datasState = await _getProjectDatasState(datas, page);
       yield datasState;
       yield ProjectLoaded();
     } catch (e) {
       yield ProjectLoadError(e);
     }
   }
-
 
   //不用加try-catch，调用层已捕获了
 
@@ -93,6 +96,19 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return ProjectTypeEntity.fromJson(e);
     }).toList();
     return types;
+  }
+
+  //获取未完成的to-do
+  Future<List<TodoEntity>> _getTodos() async {
+    Response response = await TodoApi.getTodoList(1);
+    BaseEntity<Map<String, dynamic>> baseEntity =
+        BaseEntity.fromJson(response.data);
+    BaseListEntity<List> baseListEntity =
+        BaseListEntity.fromJson(baseEntity.data);
+    List<TodoEntity> newDatas = baseListEntity.datas.map((json) {
+      return TodoEntity.fromJson(json);
+    }).toList();
+    return newDatas;
   }
 
   //页码从1开始
