@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
+import 'package:wanandroid_flutter/page/home/drawer/support_author.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/test/nested_test_page.dart';
@@ -110,7 +111,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               DisplayUtil.showMsg(context, text: res.feedback);
             }),
             _menuItem(Icon(Icons.attach_money), res.supportAuthor, () {
-              DisplayUtil.showMsg(context, text: res.supportAuthor);
+              Navigator.pushNamed(context, SupportAuthorPage.ROUTER_NAME);
             }),
             _menuItem(Icon(Icons.error_outline), res.about, () {
               DisplayUtil.showMsg(context, text: res.about);

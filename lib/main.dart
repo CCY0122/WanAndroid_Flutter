@@ -7,6 +7,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
+import 'package:wanandroid_flutter/page/home/drawer/support_author.dart';
 import 'package:wanandroid_flutter/page/home/home/home_page.dart';
 import 'package:wanandroid_flutter/page/home/project/project_detail_page.dart';
 import 'package:wanandroid_flutter/page/home/web_view.dart';
@@ -27,6 +28,7 @@ final Map<String, WidgetBuilder> routes = {
   TodoCreatePage.ROUTER_NAME: (context) => new TodoCreatePage(),
   ProjectDetailPage.ROUTER_NAME: (context) => new ProjectDetailPage(),
   WebViewPage.ROUTER_NAME: (context) => WebViewPage(),
+  SupportAuthorPage.ROUTER_NAME: (context) => SupportAuthorPage(),
 };
 
 bool _blocDebug = true;

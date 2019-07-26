@@ -108,6 +108,8 @@ flutter:
     - images/drawer_bg.jpeg
     - images/rocket.png
     - images/wechat.png
+    - images/ccy_pay_qr.jpeg
+    - images/nice_xiongdei.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
