@@ -105,6 +105,7 @@ flutter:
     - images/tihu.png
     - images/tuoniao.png
     - images/wugui.png
+    - images/drawer_bg.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

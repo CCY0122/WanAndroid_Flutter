@@ -48,6 +48,7 @@ class TestSubPage extends StatefulWidget {
 }
 
 class _TestSubPageState extends State<TestSubPage> with AutomaticKeepAliveClientMixin {
+  List<String> _tabs = ['1','22','333','4444','55555'];
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -61,6 +62,17 @@ class _TestSubPageState extends State<TestSubPage> with AutomaticKeepAliveClient
             slivers: <Widget>[
               SliverOverlapInjector(
                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
+              SliverAppBar(
+                backgroundColor: Colors.red,
+                title: const Text('123123'),
+                pinned: true,
+                expandedHeight: 150.0,
+
+//                forceElevated: innerBoxIsScrolled,
+                bottom: TabBar(
+                  tabs: _tabs.map((String name) => Tab(text: name)).toList(),
+                ),
               ),
               SliverPadding(
                 padding: const EdgeInsets.all(8.0),

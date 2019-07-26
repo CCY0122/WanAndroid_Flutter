@@ -364,6 +364,7 @@ class _LoginCardState extends State<LoginCard> {
     try {
       await AccountApi.login(username, password);
       await SPUtil.setLogin(true);
+      await SPUtil.setUserName(username);
       print('_LoginCardState : login success');
       Navigator.of(context).pop();
       return;
@@ -387,6 +388,7 @@ class _LoginCardState extends State<LoginCard> {
       print('_LoginCardState : regist success');
       await AccountApi.login(username, password);
       await SPUtil.setLogin(true);
+      await SPUtil.setUserName(username);
       print('_LoginCardState : login success');
       Navigator.of(context).pop();
       return;

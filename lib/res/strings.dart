@@ -130,6 +130,13 @@ abstract class Strings {
   get done;
 
   get openBrowser;
+
+  get about;
+
+  get feedback;
+
+  get supportAuthor;
+
 }
 
 ///通用的语言，直接这里实现。

@@ -17,8 +17,9 @@ class HomeLoading extends HomeState {
 ///而不应该是这样：加载子页需要依赖的数据（如登录状态）同时加载子页不依赖的数据（如检测升级）-> 发送HomeLoaded
 class HomeLoaded extends HomeState {
   bool isLogin;
+  String userName;
 
-  HomeLoaded(this.isLogin) : super([isLogin]);
+  HomeLoaded(this.isLogin, {this.userName}) : super([isLogin, userName]);
 
   @override
   String toString() {

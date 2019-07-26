@@ -181,4 +181,13 @@ class StringsZh extends BaseStrings {
 
   @override
   get openBrowser => '浏览器打开';
+
+  @override
+  get about => '关于';
+
+  @override
+  get feedback => '反馈';
+
+  @override
+  get supportAuthor => '支持作者';
 }
