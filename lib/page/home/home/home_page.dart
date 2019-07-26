@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/page/base/custom_sliver_app_bar_delegate.dart';
 import 'package:wanandroid_flutter/page/home/article/article_page.dart';
+import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
+import 'package:wanandroid_flutter/page/home/home/home_drawer.dart';
 import 'package:wanandroid_flutter/page/home/project/project_page.dart';
+import 'package:wanandroid_flutter/page/home/wxarticle/wx_article_page.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
 import 'package:wanandroid_flutter/views/saerch_bar.dart';
 
-import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
-import 'package:wanandroid_flutter/page/home/home/home_drawer.dart';
-
+///主页
+///本页目前最大的问题为：【flutter关于NestedScrollView的这个bug：https://github.com/flutter/flutter/issues/36419】
 class HomePage extends StatefulWidget {
   static const ROUTER_NAME = '/HomePage';
 
@@ -24,6 +26,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   HomeBloc homeBloc = HomeBloc();
   bool isLogin = false;
   TabController _tabController;
+  ScrollController _scrollController;
+  bool isSearchWXArticle = false;
+  TextEditingController _searchTextContriller;
+
   static List<PageStorageKey<String>> keys = [
     PageStorageKey<String>('1'),
     PageStorageKey<String>('2'),
@@ -31,18 +37,40 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     PageStorageKey<String>('4'),
     PageStorageKey<String>('5'),
   ];
+
   Map<String, Widget> tabs = {
     res.project: ProjectSubPage(keys[0]),
     res.article: ArticleSubPage(keys[1]),
-    res.vxArticle: ProjectSubPage(keys[2]),
-    res.navigation: ProjectSubPage(keys[3]),
-    res.collect: ProjectSubPage(keys[4]),
+    res.vxArticle: WXArticleSubPage(keys[1]),
+    res.navigation: Scaffold(
+      body: Center(
+        child: Text('敬请期待'),
+      ),
+    ),
+    res.collect: Scaffold(
+      body: Center(
+        child: Text('敬请期待'),
+      ),
+    ),
   };
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: tabs.length, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.index == 2) {
+        setState(() {
+          isSearchWXArticle = true;
+        });
+      } else {
+        setState(() {
+          isSearchWXArticle = false;
+        });
+      }
+    });
+    _scrollController = ScrollController();
+    _searchTextContriller = TextEditingController();
     homeBloc.dispatch(LoadHome());
   }
 
@@ -65,6 +93,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           if (state is HomeLoaded) {
             isLogin = state.isLogin;
           }
+          if (state is HomeSearchStarted) {
+            if (!state.isSearchWXArticle) {
+              DisplayUtil.showMsg(innerContext, text: '去搜索结果页（待实现）');
+            }
+          }
         },
         child: BlocBuilder<HomeEvent, HomeState>(
             bloc: homeBloc,
@@ -80,6 +113,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             decoration: _themeGradientDecoration(),
                             child: SafeArea(
                               child: NestedScrollView(
+                                controller: _scrollController,
                                 headerSliverBuilder: (BuildContext context,
                                     bool innerBoxIsScrolled) {
                                   //为了练习代码，并不是直接使用SliverAppBar来实现头部
@@ -131,6 +165,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     }),
                     drawer: Drawer(
                       child: HomeDrawer(isLogin),
+                    ),
+                    floatingActionButton: FloatingActionButton(
+                      onPressed: () {
+                        //本打算监听_scrollController，当滑动距离较大时再显示"返回顶部"按钮，但实际发现在NestedScrollView头部被收起后就收不到监听了。
+                        //那么只能在TabBarView子页中监听它们自己的滚动距离，然后再通知到主页（可以用bloc发一个event、也可以发一个自定义Notification）显示"返回顶部"按钮。（嫌麻烦，不做了，永久显示吧）
+                        _scrollController.animateTo(1,
+                            duration: Duration(seconds: 1),
+                            curve: Curves.decelerate);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Image.asset('images/rocket.png'),
+                      ),
+                      mini: true,
+                      backgroundColor: WColors.theme_color,
                     ),
                   ),
                   Offstage(
@@ -195,23 +244,40 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               height: pt(30),
               color: Colors.grey[50],
               child: TextField(
+                controller: _searchTextContriller,
                 textInputAction: TextInputAction.search,
                 onSubmitted: (text) {
-                  //todo 去搜索结果页
-                  print('on submitted');
-                  DisplayUtil.showMsg(innerContext, text: 'asd');
+                  if (_searchTextContriller.text != null) {
+                    homeBloc.dispatch(
+                      StartSearchEvent(
+                          isSearchWXArticle, _searchTextContriller.text),
+                    );
+                  }
                 },
                 style: TextStyle(fontSize: 14),
                 decoration: InputDecoration(
-                    hintText: res.searchTips,
+                    hintText: isSearchWXArticle
+                        ? res.searchWXArticleTips
+                        : res.searchTips,
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(),
                     hintStyle: TextStyle(
                       fontSize: 12,
-                      color: WColors.hint_color_dark,
+                      color: isSearchWXArticle
+                          ? WColors.wechat_green
+                          : WColors.hint_color_dark,
                     )),
               ),
-              iconColor: WColors.hint_color_dark,
+              iconColor: isSearchWXArticle
+                  ? WColors.wechat_green
+                  : WColors.hint_color_dark,
+              icon: isSearchWXArticle
+                  ? Image.asset(
+                      'images/wechat.png',
+                      width: 24,
+                      height: 24,
+                    )
+                  : null,
             ),
           ),
           GestureDetector(
@@ -253,5 +319,4 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       }).toList(),
     );
   }
-
 }

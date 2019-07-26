@@ -137,6 +137,8 @@ abstract class Strings {
 
   get supportAuthor;
 
+  get searchWXArticleTips;
+
 }
 
 ///通用的语言，直接这里实现。

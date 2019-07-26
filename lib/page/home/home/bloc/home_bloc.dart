@@ -16,6 +16,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapLoadHomeToState();
     } else if (event is LogoutHome) {
       yield* _mapLogoutHomeToState();
+    } else if (event is StartSearchEvent) {
+      yield HomeSearchStarted(event.isSearchWXArticle, event.searchKey);
     }
   }
 

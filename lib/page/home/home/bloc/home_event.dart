@@ -4,17 +4,30 @@ abstract class HomeEvent extends Equatable {
   HomeEvent([List props = const []]) : super(props);
 }
 
-
-class LoadHome extends HomeEvent{
+///加载主页数据
+class LoadHome extends HomeEvent {
   @override
   String toString() {
     return 'LoadHome';
   }
 }
 
-class LogoutHome extends HomeEvent{
+class LogoutHome extends HomeEvent {
   @override
   String toString() {
     return 'LogoutHome';
+  }
+}
+
+class StartSearchEvent extends HomeEvent {
+  bool isSearchWXArticle;
+  String searchKey;
+
+  StartSearchEvent(this.isSearchWXArticle, this.searchKey)
+      : super([isSearchWXArticle, searchKey]);
+
+  @override
+  String toString() {
+    return 'StartSearchEvent{isSearchWXArticle: $isSearchWXArticle, searchKey: $searchKey}';
   }
 }

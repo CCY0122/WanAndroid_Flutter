@@ -225,6 +225,28 @@ class ArticleApi {
   }
 }
 
+///公众号相关接口
+class WXArticleApi {
+  static const WXARTICLE_TREE = '/wxarticle/chapters/json';
+
+  static String WXARTICLE_LIST(int page, int id) =>
+      '/wxarticle/list/$id/$page/json';
+
+  static Future<Response> getWXArticleTypes() {
+    return dio.get(WXARTICLE_TREE);
+  }
+
+  ///页码从1开始
+  static Future<Response> getWXArticleList(int page, int id,
+      {String searchKey}) {
+    if (searchKey != null) {
+      Map<String, dynamic> query = {'k': searchKey};
+      return dio.get(WXARTICLE_LIST(page, id), queryParameters: query);
+    }
+    return dio.get(WXARTICLE_LIST(page, id));
+  }
+}
+
 ///收藏相关接口
 class CollectApi {
   static String COLLECT(int id) => '/lg/collect/$id/json';

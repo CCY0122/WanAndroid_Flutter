@@ -37,3 +37,16 @@ class HomeLoadError extends HomeState {
     return 'HomeLoadError';
   }
 }
+
+class HomeSearchStarted extends HomeState {
+  bool isSearchWXArticle;
+  String searchKey;
+
+  HomeSearchStarted(this.isSearchWXArticle, this.searchKey)
+      : super([isSearchWXArticle, searchKey]);
+
+  @override
+  String toString() {
+    return 'HomeSearchStarted{isSearchWXArticle: $isSearchWXArticle, searchKey: $searchKey}';
+  }
+}

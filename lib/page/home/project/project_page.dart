@@ -115,11 +115,11 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                         projectBloc.dispatch(LoadMoreProjectDatas(
                             projectDatas, currentProjectPage + 1));
                       }
-                      return true;
+                      return false;
                     }
                   }
                 }
-                return true;
+                return false;
               },
               child: Stack(
                 children: <Widget>[
@@ -312,7 +312,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
               ProjectTypesModel data = datas[index];
               return GestureDetector(
                 onTap: () {
-                  DisplayUtil.showMsg(context, text: '点击了${data.title}');
+                  DisplayUtil.showMsg(context, text: '点击了${data.title}(待实现）');
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -386,6 +386,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
           height: pt(35),
           alignment: Alignment.center,
           padding: EdgeInsets.symmetric(horizontal: pt(16)),
+          //目前Swiper不能禁止掉手势滑动，实际这里禁用掉用户体验会更好。
           child: Swiper(
             onTap: (index) {
               Navigator.pushNamed(context, TodoPage.ROUTER_NAME);
@@ -557,7 +558,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
               behavior: HitTestBehavior.opaque,
               onTap: () {
                 DisplayUtil.showMsg(context,
-                    text: 'click type ${data.chapterName}');
+                    text: 'click type ${data.chapterName}（待实现）');
               },
               child: Padding(
                 padding:

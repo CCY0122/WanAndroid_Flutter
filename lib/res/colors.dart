@@ -11,4 +11,5 @@ class WColors {
   static const Color line_color = Color(0xFFEFEFEF);
   static const Color hint_color = Color(0xFFD0D0D0);
   static const Color hint_color_dark = Color(0xFF8E8E93);
+  static const Color wechat_green = Color(0xFF62b900);
 }

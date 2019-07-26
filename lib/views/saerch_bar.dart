@@ -7,8 +7,9 @@ class SearchBar extends StatefulWidget {
   Widget child;
   Color color;
   Color iconColor;
+  Widget icon;
 
-  SearchBar({this.height, this.width, this.child, this.color, this.iconColor});
+  SearchBar({this.height, this.width, this.child, this.color, this.iconColor,this.icon});
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -33,7 +34,7 @@ class _SearchBarState extends State<SearchBar> {
             padding: EdgeInsets.symmetric(
               horizontal: pt(5),
             ),
-            child: Icon(
+            child: widget.icon ?? Icon(
               Icons.search,
               color: widget.iconColor,
             ),
