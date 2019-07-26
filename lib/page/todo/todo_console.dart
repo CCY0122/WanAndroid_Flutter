@@ -30,7 +30,7 @@ class _TodoConsoleState extends State<TodoConsole> {
   ];
   FilterEntry currentPriority;
 
-  //排序接口有bug，没有正常排序
+  //排序接口有bug，没有正常排序：https://github.com/hongyangAndroid/wanandroid/issues/138
   List<FilterEntry> orders = [
     FilterEntry(4, res.orderByCreateTime),
     FilterEntry(2, res.orderByFinishTime),
