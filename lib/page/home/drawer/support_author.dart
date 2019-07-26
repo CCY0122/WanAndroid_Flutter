@@ -23,6 +23,7 @@ class _SupportAuthorPageState extends State<SupportAuthorPage> {
         builder: (context) {
           return Column(
             children: <Widget>[
+              //问题:如何保存asset文件到本地呢？
               Image.asset('images/ccy_pay_qr.jpeg'),
               RaisedButton(
                 onPressed: () {
