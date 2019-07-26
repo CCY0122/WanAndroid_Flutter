@@ -1,4 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flare_dart/math/mat2d.dart';
+import 'package:flare_flutter/flare.dart';
+import 'package:flare_flutter/flare_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +20,7 @@ import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/flat_pagination.dart';
 import 'package:wanandroid_flutter/views/load_more_footer.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
+import 'package:flare_flutter/flare_actor.dart';
 
 ///项目页
 class ProjectSubPage extends StatefulWidget {
@@ -63,7 +67,9 @@ class _ProjectSubPageState extends State<ProjectSubPage>
     super.build(context);
     return BlocProviderTree(
       blocProviders: [
-        BlocProvider(builder: (context) => projectBloc),
+        BlocProvider<ProjectBloc>(
+          builder: (context) => projectBloc,
+        ),
       ],
       child: BlocListenerTree(
         blocListeners: [
@@ -477,6 +483,40 @@ class _ProjectSubPageState extends State<ProjectSubPage>
 
   ///项目item
   Widget projectItem(ProjectEntity data) {
+    return ProjectItem(data, isLoading, true);
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+}
+
+class ProjectItem extends StatefulWidget {
+  ProjectEntity data;
+  bool isLoading;
+  bool isFirstShow;
+
+  ProjectItem(this.data, this.isLoading, this.isFirstShow);
+
+  @override
+  _ProjectItemState createState() => _ProjectItemState();
+}
+
+class _ProjectItemState extends State<ProjectItem> {
+  ///item是在列表将它滑动到屏幕内时才创建的，对于flare动画来说，第一次滑动进来时不应播放动画，仅点击它时才要播放动画。
+  ///所以通过该标志位控制第一次加载时不播放flare动画，点击时再改成可播放。
+  ///因为只是第一次创建时不播放动画，记得代码中使用state的isFirstShow，而不是使用widget.isFirstShow。
+  ///做法参考自：https://github.com/2d-inc/Flare-Flutter/issues/59
+  ///todo 待测试：debug版会在重建时有一闪而过的状态切换，待测试release模式是否有此现象
+  bool isFirstShow;
+
+  @override
+  void initState() {
+    super.initState();
+    isFirstShow = widget.isFirstShow;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       elevation: 0.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(pt(6))),
@@ -487,8 +527,8 @@ class _ProjectSubPageState extends State<ProjectSubPage>
             context,
             WebViewPage.ROUTER_NAME,
             arguments: {
-              'title': data.title,
-              'url': data.link,
+              'title': widget.data.title,
+              'url': widget.data.link,
             },
           );
         },
@@ -499,7 +539,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
               child: Stack(
                 children: <Widget>[
                   CachedNetworkImage(
-                    imageUrl: data.envelopePic,
+                    imageUrl: widget.data.envelopePic,
                     width: double.infinity,
                     alignment: Alignment(0.0, -0.95),
                     fit: BoxFit.cover,
@@ -535,7 +575,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                         top: pt(10),
                       ),
                       child: Text(
-                        data.author,
+                        widget.data.author,
                         style: TextStyle(color: Colors.white, fontSize: 11),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -548,7 +588,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
             Padding(
               padding: EdgeInsets.symmetric(vertical: pt(4), horizontal: pt(4)),
               child: Text(
-                data.title,
+                widget.data.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
@@ -558,7 +598,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
               behavior: HitTestBehavior.opaque,
               onTap: () {
                 DisplayUtil.showMsg(context,
-                    text: 'click type ${data.chapterName}（待实现）');
+                    text: 'click type ${widget.data.chapterName}（待实现）');
               },
               child: Padding(
                 padding:
@@ -566,7 +606,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                 child: Row(
                   children: <Widget>[
                     Text(
-                      data.chapterName,
+                      widget.data.chapterName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -583,18 +623,30 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                         child: Align(
                       alignment: Alignment(0.9, 0),
                       child: GestureDetector(
-                        child: Icon(
-                          data.collect ? Icons.favorite : Icons.favorite_border,
-                          color: data.collect
-                              ? WColors.warning_red
-                              : WColors.hint_color_dark,
-                          size: pt(15),
+                        child: SizedBox(
+                          width: pt(13),
+                          height: pt(13),
+                          child: FlareActor(
+                            'assets/Favorite.flr',
+                            color: widget.data.collect
+                                ? WColors.warning_red
+                                : Colors.grey,
+                            shouldClip: false,
+                            snapToEnd: isFirstShow,
+                            animation: widget.data.collect
+                                ? "Favorite"
+                                : "Unfavorite", //_animationName
+                          ),
                         ),
                         onTap: () {
-                          if (!isLoading) {
+                          if (!widget.isLoading) {
+                            setState(() {
+                              isFirstShow = false;
+                            });
                             if (BlocProvider.of<HomeBloc>(context).isLogin) {
-                              projectBloc.dispatch(
-                                CollectProject(data.id, !data.collect),
+                              BlocProvider.of<ProjectBloc>(context).dispatch(
+                                CollectProject(
+                                    widget.data.id, !widget.data.collect),
                               );
                             } else {
                               Navigator.pushNamed(
@@ -617,9 +669,6 @@ class _ProjectSubPageState extends State<ProjectSubPage>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class BannerModel {

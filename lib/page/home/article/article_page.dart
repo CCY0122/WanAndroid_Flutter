@@ -1,5 +1,6 @@
 import 'dart:math' as Math;
 
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/entity/article_type_entity.dart';
@@ -68,7 +69,7 @@ class _ArticleSubPageState extends State<ArticleSubPage>
     return BlocProviderTree(
       key: rootKey,
       blocProviders: [
-        BlocProvider(builder: (context) => articleBloc),
+        BlocProvider<ArticleBloc>(builder: (context) => articleBloc),
       ],
       child: BlocListenerTree(
         blocListeners: [
@@ -410,110 +411,154 @@ class _ArticleSubPageState extends State<ArticleSubPage>
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
         ProjectEntity data = datas[index];
-        return Column(children: [
-          ListTile(
-            dense: true,
-            contentPadding: EdgeInsets.only(right: pt(8), left: pt(8)),
-            leading: IconButton(
-              icon: Icon(
-                data.collect ? Icons.favorite : Icons.favorite_border,
-                color: data.collect
-                    ? WColors.warning_red
-                    : WColors.hint_color_dark,
-              ),
-              onPressed: () {
-                if (!isLoading) {
-                  if (BlocProvider.of<HomeBloc>(context).isLogin) {
-                    articleBloc.dispatch(
-                      CollectArticle(data.id, !data.collect),
-                    );
-                  } else {
-                    Navigator.pushNamed(
-                            context, LoginWanandroidPage.ROUTER_NAME)
-                        .then((_) {
-                      BlocProvider.of<HomeBloc>(context).dispatch(LoadHome());
-                    });
-                  }
-                }
-              },
-            ),
-            title: Text(
-              data.title,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-            ),
-            subtitle: Row(
-              children: [
-                data.fresh
-                    ? Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: WColors.warning_red)),
-                        margin: EdgeInsets.only(right: pt(6)),
-                        padding: EdgeInsets.symmetric(horizontal: pt(4)),
-                        child: Text(
-                          res.New,
-                          style: TextStyle(
-                              color: WColors.warning_red,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 10),
-                        ),
-                      )
-                    : Container(),
-
-                ///WanAndroid文档原话：superChapterId其实不是一级分类id，因为要拼接跳转url，内容实际都挂在二级分类下，所以该id实际上是一级分类的第一个子类目的id，拼接后故可正常跳转
-                data.superChapterId == 294
-                    ? Container(
-                        decoration: BoxDecoration(
-                            border:
-                                Border.all(color: WColors.theme_color_dark)),
-                        margin: EdgeInsets.only(right: pt(6)),
-                        padding: EdgeInsets.symmetric(horizontal: pt(4)),
-                        child: Text(
-                          res.project,
-                          style: TextStyle(
-                              color: WColors.theme_color_dark,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 10),
-                        ),
-                      )
-                    : Container(),
-                data.superChapterId == 440
-                    ? Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: WColors.theme_color)),
-                        margin: EdgeInsets.only(right: pt(6)),
-                        padding: EdgeInsets.symmetric(horizontal: pt(4)),
-                        child: Text(
-                          res.QA,
-                          style: TextStyle(
-                              color: WColors.theme_color,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 10),
-                        ),
-                      )
-                    : Container(),
-                Text(
-                    '${res.author}：${data.author}  ${res.time}：${data.niceDate}'),
-              ],
-            ),
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                WebViewPage.ROUTER_NAME,
-                arguments: {
-                  'title': data.title,
-                  'url': data.link,
-                },
-              );
-            },
-          ),
-          Divider(
-            height: 10,
-          ),
-        ]);
+        return ArticleItem(data, isLoading, true);
       }, childCount: datas.length),
     );
   }
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class ArticleItem extends StatefulWidget {
+  ProjectEntity data;
+  bool isLoading;
+  bool isFirstShow;
+
+  ArticleItem(this.data, this.isLoading, this.isFirstShow);
+
+  @override
+  _ArticleItemState createState() => _ArticleItemState();
+}
+
+class _ArticleItemState extends State<ArticleItem> {
+  ///请参考[_ProjectItemState]
+  bool isFirstShow;
+
+  @override
+  void initState() {
+    super.initState();
+    isFirstShow = widget.isFirstShow;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.only(right: pt(8), left: pt(8)),
+          leading: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              alignment: Alignment.center,
+              width: 40, //查看源码，这是leading的最小宽高
+              height: 40,
+              child: SizedBox(
+                width: pt(18),
+                height: pt(18),
+                child: FlareActor(
+                  'assets/Favorite.flr',
+                  color:
+                      widget.data.collect ? WColors.warning_red : Colors.grey,
+                  shouldClip: false,
+                  snapToEnd: isFirstShow,
+                  animation: widget.data.collect
+                      ? "Favorite"
+                      : "Unfavorite", //_animationName
+                ),
+              ),
+            ),
+            onTap: () {
+              if (!widget.isLoading) {
+                setState(() {
+                  isFirstShow = false;
+                });
+                if (BlocProvider.of<HomeBloc>(context).isLogin) {
+                  BlocProvider.of<ArticleBloc>(context).dispatch(
+                    CollectArticle(widget.data.id, !widget.data.collect),
+                  );
+                } else {
+                  Navigator.pushNamed(context, LoginWanandroidPage.ROUTER_NAME)
+                      .then((_) {
+                    BlocProvider.of<HomeBloc>(context).dispatch(LoadHome());
+                  });
+                }
+              }
+            },
+          ),
+          title: Text(
+            widget.data.title,
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+          ),
+          subtitle: Row(
+            children: [
+              widget.data.fresh
+                  ? Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: WColors.warning_red)),
+                      margin: EdgeInsets.only(right: pt(6)),
+                      padding: EdgeInsets.symmetric(horizontal: pt(4)),
+                      child: Text(
+                        res.New,
+                        style: TextStyle(
+                            color: WColors.warning_red,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10),
+                      ),
+                    )
+                  : Container(),
+
+              ///WanAndroid文档原话：superChapterId其实不是一级分类id，因为要拼接跳转url，内容实际都挂在二级分类下，所以该id实际上是一级分类的第一个子类目的id，拼接后故可正常跳转
+              widget.data.superChapterId == 294
+                  ? Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: WColors.theme_color_dark)),
+                      margin: EdgeInsets.only(right: pt(6)),
+                      padding: EdgeInsets.symmetric(horizontal: pt(4)),
+                      child: Text(
+                        res.project,
+                        style: TextStyle(
+                            color: WColors.theme_color_dark,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10),
+                      ),
+                    )
+                  : Container(),
+              widget.data.superChapterId == 440
+                  ? Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: WColors.theme_color)),
+                      margin: EdgeInsets.only(right: pt(6)),
+                      padding: EdgeInsets.symmetric(horizontal: pt(4)),
+                      child: Text(
+                        res.QA,
+                        style: TextStyle(
+                            color: WColors.theme_color,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10),
+                      ),
+                    )
+                  : Container(),
+              Text(
+                  '${res.author}：${widget.data.author}  ${res.time}：${widget.data.niceDate}'),
+            ],
+          ),
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              WebViewPage.ROUTER_NAME,
+              arguments: {
+                'title': widget.data.title,
+                'url': widget.data.link,
+              },
+            );
+          },
+        ),
+        Divider(
+          height: 10,
+        ),
+      ],
+    );
+  }
 }
