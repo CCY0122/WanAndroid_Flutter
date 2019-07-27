@@ -13,7 +13,7 @@ import 'package:wanandroid_flutter/views/loading_view.dart';
 import 'package:wanandroid_flutter/views/saerch_bar.dart';
 
 ///主页
-///本页目前最大的问题为：【flutter关于NestedScrollView的这个bug：https://github.com/flutter/flutter/issues/36419】
+///本页存在该问题：【flutter关于NestedScrollView的这个bug：https://github.com/flutter/flutter/issues/36419】
 class HomePage extends StatefulWidget {
   static const ROUTER_NAME = '/HomePage';
 
@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       ),
                                     ),
                                     //因为子页TabBarView不一定都会用CustomScrollView,放弃使用SliverOverlapAbsorber + SliverOverlapInjector
-                                    //使不使用所带来的影响自行修改[NestedTestPage]代码并观察滑动效果（滑到顶部后子页还能继续上滑一段距离）
+                                    //影响是滑到顶部后子页还能继续上滑一小段距离（我的tabBarView是包了一层上面有圆角的DecoratedBox的，滑动列表时可发现圆角背景还会上滑而不是固定住，但影响不大，页面和它内部滚动widget的滚动衔接还是在的，所以看上去都是在滑动）
                                     SliverPersistentHeader(
                                       pinned: true,
                                       floating: true,
@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                   Offstage(
                     offstage: state is! HomeLoading,
-                    child: getLoading(),
+                    child: getLoading(start: state is HomeLoading),
                   )
                 ],
               );

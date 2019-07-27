@@ -36,6 +36,7 @@ dependencies:
   flutter_webview_plugin: ^0.3.5
   url_launcher: ^5.1.0
   flare_flutter: ^1.5.4
+  package_info: 0.4.0+6
 
 dev_dependencies:
   flutter_test:
@@ -56,8 +57,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-    # To add assets to your application, add an assets section, like this:
-    # 安卓图片大小对应关系：1.5X=hdpi 2.0x=xhdpi 3.0x=xxhdpi 4.0x=xxxhdpi
+  # To add assets to your application, add an assets section, like this:
+  # 安卓图片大小对应关系：1.5X=hdpi 2.0x=xhdpi 3.0x=xxhdpi 4.0x=xxxhdpi
   assets:
     - images/ic_launcher.png
     - images/todo_bg.jpeg
@@ -111,6 +112,7 @@ flutter:
     - images/wechat.png
     - images/ccy_pay_qr.jpeg
     - images/nice_xiongdei.jpeg
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -137,3 +139,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Stiff
+      fonts:
+        - asset: assets/fonts/font_stiff.ttf

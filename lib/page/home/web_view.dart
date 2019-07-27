@@ -15,11 +15,27 @@ class _WebViewPageState extends State<WebViewPage> {
   String title;
   String url;
   FlutterWebviewPlugin flutterWebviewPlugin;
+  bool showLoading = false;
 
   @override
   void initState() {
     super.initState();
     flutterWebviewPlugin = FlutterWebviewPlugin();
+
+    //initialChild只有第一网页加载时会显示，网页内部页面跳转不会再显示，所以要手动加上页面内跳转监听
+    flutterWebviewPlugin.onStateChanged.listen((state) {
+      print('_WebViewPageState.initState  state = ${state.type}');
+      if (state.type == WebViewState.shouldStart) {
+        setState(() {
+          showLoading = true;
+        });
+      } else if (state.type == WebViewState.finishLoad ||
+          state.type == WebViewState.abortLoad) {
+        setState(() {
+          showLoading = false;
+        });
+      }
+    });
   }
 
   @override
@@ -79,6 +95,14 @@ class _WebViewPageState extends State<WebViewPage> {
             },
           )
         ],
+        bottom: PreferredSize(
+          child: showLoading
+              ? LinearProgressIndicator(
+                  backgroundColor: Colors.grey,
+                )
+              : Container(),
+          preferredSize: Size(double.infinity, 1),
+        ),
       ),
       url: url,
       hidden: true,
