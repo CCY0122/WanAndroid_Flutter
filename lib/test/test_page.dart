@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
@@ -15,16 +18,39 @@ class _TestPageState extends State<TestPage> {
   TextEditingController userNameController;
   TextEditingController psdController;
 
+  TextEditingController _tc;
+  String appName;
+  String packageName;
+  String version;
+  String buildNumber;
+
+  var datas;
+
   @override
   void initState() {
     super.initState();
+//    SystemChrome.setEnabledSystemUIOverlays([]);
     userNameController = TextEditingController();
     psdController = TextEditingController();
+    _tc = TextEditingController();
+
+    pkif();
+  }
+
+  Future pkif() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    appName = packageInfo.appName;
+    packageName = packageInfo.packageName;
+    version = packageInfo.version;
+    buildNumber = packageInfo.buildNumber;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      // ignore: missing_return
       itemBuilder: (BuildContext context, int index) {
         if (index == 0) {
           return accountWidget();
@@ -33,10 +59,49 @@ class _TestPageState extends State<TestPage> {
           return accountTest();
         }
         if (index == 2) {
-          return TodoTest();
+//          return TodoTest();
+          return Column(
+            children: <Widget>[
+              Text('$appName,$packageName,$version,$buildNumber'),
+              TextField(
+                controller: _tc,
+              ),
+              RaisedButton(onPressed: () {
+                if (_tc.text != null && _tc.text.length > 0) {
+                  Dio()
+                    ..options.baseUrl = _tc.text
+                    ..get('/').then((resp) {
+                      setState(() {
+                        datas = resp.data;
+                      });
+                    }, onError: (a1, a2) {
+                      setState(() {
+                        datas = '$a1,,,$a2';
+                      });
+                    });
+                }
+              }),
+              Text('data = $datas'),
+            ],
+          );
+        }
+        if (index == 3) {
+          return Container(
+            height: 500,
+            alignment: Alignment.center,
+            child: Container(
+//              width: 200,
+//              height: 200,
+              child: FlareActor(
+                'assets/loading.flr',
+                animation: 'start',
+                color: WColors.theme_color_dark,
+              ),
+            ),
+          );
         }
       },
-      itemCount: 3,
+      itemCount: 4,
     );
   }
 
@@ -223,7 +288,7 @@ class _TodoTestState extends State<TodoTest> {
         ),
         RaisedButton(
           child: Text('DELETE'),
-          onPressed: (){
+          onPressed: () {
             TodoApi.deleteTodo(11511);
           },
         )

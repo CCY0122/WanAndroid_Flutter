@@ -230,7 +230,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                   ),
                   Offstage(
                     offstage: !isLoading,
-                    child: getLoading(),
+                    child: getLoading(start: isLoading),
                   )
                 ],
               ),
@@ -248,50 +248,71 @@ class _ProjectSubPageState extends State<ProjectSubPage>
       padding: EdgeInsets.all(pt(16)),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(pt(6)),
-        child: Swiper(
-          itemCount: datas.length,
-          itemBuilder: (context, index) {
-            BannerModel data = datas[index];
-            return CachedNetworkImage(
-              imageUrl: data.imagePath,
-              fit: BoxFit.cover,
-              placeholder: (context, url) {
-                return DecoratedBox(
-                  decoration: BoxDecoration(color: Colors.grey[300]),
-                );
-              },
-            );
-          },
-          autoplay: datas.length > 1,
-          pagination: SwiperPagination(
-            builder: FlatDotSwiperPaginationBuilder(
-              color: Colors.white,
-              activeColor: WColors.theme_color,
-              size: 5,
-              activeSize: 5,
-              space: 2.5,
-            ),
-            alignment: Alignment.bottomRight,
-          ),
-          onTap: (index) {
-            Navigator.pushNamed(
-              context,
-              WebViewPage.ROUTER_NAME,
-              arguments: {
-                'title': datas[index].title,
-                'url': datas[index].url,
-              },
-            );
-          },
-        ),
+        child: (datas == null || datas.length == 0)
+            ? Container(
+                color: Colors.grey[300],
+              )
+            : Swiper(
+                itemCount: datas.length,
+                itemBuilder: (context, index) {
+                  BannerModel data = datas[index];
+                  return CachedNetworkImage(
+                    imageUrl: data.imagePath,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) {
+                      return DecoratedBox(
+                        decoration: BoxDecoration(color: Colors.grey[300]),
+                      );
+                    },
+                  );
+                },
+                autoplay: datas.length > 1,
+                pagination: SwiperPagination(
+                  builder: FlatDotSwiperPaginationBuilder(
+                    color: Colors.white,
+                    activeColor: WColors.theme_color,
+                    size: 5,
+                    activeSize: 5,
+                    space: 2.5,
+                  ),
+                  alignment: Alignment.bottomRight,
+                ),
+                onTap: (index) {
+                  Navigator.pushNamed(
+                    context,
+                    WebViewPage.ROUTER_NAME,
+                    arguments: {
+                      'title': datas[index].title,
+                      'url': datas[index].url,
+                    },
+                  );
+                },
+              ),
       ),
     );
   }
 
   ///项目分类网格布局，固定两行
   Widget typesGridView({List<ProjectTypesModel> datas = const []}) {
-    //这里无法用table实现。
+    if (datas == null || datas.length == 0) {
+      //占位view
+      return GridView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Container(
+            color: Colors.grey[300],
+            margin: EdgeInsets.symmetric(horizontal: pt(9.375), vertical: pt(6)),
+          );
+        },
+        itemCount: 8,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,childAspectRatio:1.25
+        ),
+      );
+    }
 
+    //这里无法用table实现。
     //一行最多item
     int maxOneRowCount = (datas.length / 2).ceil();
     if (datas.length == 1) {
@@ -506,7 +527,7 @@ class _ProjectItemState extends State<ProjectItem> {
   ///所以通过该标志位控制第一次加载时不播放flare动画，点击时再改成可播放。
   ///因为只是第一次创建时不播放动画，记得代码中使用state的isFirstShow，而不是使用widget.isFirstShow。
   ///做法参考自：https://github.com/2d-inc/Flare-Flutter/issues/59
-  ///todo 待测试：debug版会在重建时有一闪而过的状态切换，待测试release模式是否有此现象
+  ///已知问题：重建时有一闪而过的状态切换。
   bool isFirstShow;
 
   @override

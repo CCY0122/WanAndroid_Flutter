@@ -289,7 +289,7 @@ class _WXArticleSubPageState extends State<WXArticleSubPage>
                   //加载框
                   Offstage(
                     offstage: !isLoading,
-                    child: getLoading(),
+                    child: getLoading(start: isLoading),
                   )
                 ],
               ),

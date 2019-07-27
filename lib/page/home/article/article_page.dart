@@ -367,7 +367,7 @@ class _ArticleSubPageState extends State<ArticleSubPage>
                   //加载框
                   Offstage(
                     offstage: !isLoading,
-                    child: getLoading(),
+                    child: getLoading(start: isLoading),
                   )
                 ],
               ),

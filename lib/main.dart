@@ -6,6 +6,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/page/home/drawer/support_author.dart';
 import 'package:wanandroid_flutter/page/home/home/home_page.dart';
@@ -57,6 +58,10 @@ class GlobalBlocDel extends BlocDelegate {
 }
 
 void main() async {
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
   BlocSupervisor.delegate = GlobalBlocDel();
   await DioUtil.init();
   runApp(MyApp());

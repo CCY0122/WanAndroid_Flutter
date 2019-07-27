@@ -118,6 +118,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             }),
             _menuItem(Icon(Icons.account_circle),
                 widget.isLogin ? res.logout : res.login, () {
+              Navigator.pop(context);
               if (widget.isLogin) {
                 homeBloc.dispatch(LogoutHome());
               } else {
@@ -127,36 +128,36 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 });
               }
             }),
-            FlatButton(
-              child: Text('去测试页'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return Scaffold(
-                        body: TestPage(),
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-            FlatButton(
-              child: Text('去nest'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return Scaffold(
-                        body: NestedTestPage(),
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
+//            FlatButton(
+//              child: Text('去测试页'),
+//              onPressed: () {
+//                Navigator.push(
+//                  context,
+//                  MaterialPageRoute(
+//                    builder: (context) {
+//                      return Scaffold(
+//                        body: TestPage(),
+//                      );
+//                    },
+//                  ),
+//                );
+//              },
+//            ),
+//            FlatButton(
+//              child: Text('去nest'),
+//              onPressed: () {
+//                Navigator.push(
+//                  context,
+//                  MaterialPageRoute(
+//                    builder: (context) {
+//                      return Scaffold(
+//                        body: NestedTestPage(),
+//                      );
+//                    },
+//                  ),
+//                );
+//              },
+//            ),
           ],
         );
       },
