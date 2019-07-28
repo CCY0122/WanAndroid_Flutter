@@ -302,13 +302,13 @@ class _ProjectSubPageState extends State<ProjectSubPage>
         itemBuilder: (context, index) {
           return Container(
             color: Colors.grey[300],
-            margin: EdgeInsets.symmetric(horizontal: pt(9.375), vertical: pt(6)),
+            margin:
+                EdgeInsets.symmetric(horizontal: pt(9.375), vertical: pt(6)),
           );
         },
         itemCount: 8,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,childAspectRatio:1.25
-        ),
+            crossAxisCount: 4, childAspectRatio: 1.25),
       );
     }
 
@@ -481,30 +481,31 @@ class _ProjectSubPageState extends State<ProjectSubPage>
   ///项目列表
   Widget projectGrid({List<ProjectEntity> datas = const []}) {
     return SliverGrid(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            //问题：没有类似SliverDecoration这种控件，那么怎么独立设置sliver的背景颜色呢？暂时通过改变每个item的颜色来实现吧
-            return Container(
-              color: WColors.gray_background,
-              padding: index % 2 == 0
-                  ? EdgeInsets.only(
-                      left: pt(12), right: pt(6), top: pt(6), bottom: pt(6))
-                  : EdgeInsets.only(
-                      left: pt(6), right: pt(12), top: pt(6), bottom: pt(6)),
-              child: projectItem(datas[index]),
-            );
-          },
-          childCount: datas.length,
-        ),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.9,
-        ));
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          //问题：没有类似SliverDecoration这种控件，那么怎么独立设置sliver的背景颜色呢？暂时通过改变每个item的颜色来实现吧
+          return Container(
+            color: WColors.gray_background,
+            padding: index % 2 == 0
+                ? EdgeInsets.only(
+                    left: pt(12), right: pt(6), top: pt(6), bottom: pt(6))
+                : EdgeInsets.only(
+                    left: pt(6), right: pt(12), top: pt(6), bottom: pt(6)),
+            child: projectItem(datas[index]),
+          );
+        },
+        childCount: datas.length,
+      ),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.9,
+      ),
+    );
   }
 
   ///项目item
   Widget projectItem(ProjectEntity data) {
-    return ProjectItem(data, isLoading, true);
+    return ProjectItem(data, isLoading);
   }
 
   @override
@@ -514,30 +515,37 @@ class _ProjectSubPageState extends State<ProjectSubPage>
 class ProjectItem extends StatefulWidget {
   ProjectEntity data;
   bool isLoading;
-  bool isFirstShow;
 
-  ProjectItem(this.data, this.isLoading, this.isFirstShow);
+  ProjectItem(this.data, this.isLoading);
 
   @override
   _ProjectItemState createState() => _ProjectItemState();
 }
 
-class _ProjectItemState extends State<ProjectItem> {
-  ///item是在列表将它滑动到屏幕内时才创建的，对于flare动画来说，第一次滑动进来时不应播放动画，仅点击它时才要播放动画。
-  ///所以通过该标志位控制第一次加载时不播放flare动画，点击时再改成可播放。
-  ///因为只是第一次创建时不播放动画，记得代码中使用state的isFirstShow，而不是使用widget.isFirstShow。
-  ///做法参考自：https://github.com/2d-inc/Flare-Flutter/issues/59
-  ///已知问题：重建时有一闪而过的状态切换。
-  bool isFirstShow;
+class _ProjectItemState extends State<ProjectItem>
+    with SingleTickerProviderStateMixin {
+  bool lastCollectState;
+  AnimationController _collectController;
+  Animation _collectAnim;
 
   @override
   void initState() {
     super.initState();
-    isFirstShow = widget.isFirstShow;
+    _collectController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    CurvedAnimation curvedAnimation =
+        CurvedAnimation(parent: _collectController, curve: Curves.easeOut);
+    _collectAnim = Tween<double>(begin: 1, end: 1.8).animate(curvedAnimation);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (lastCollectState == false && lastCollectState != widget.data.collect) {
+      _collectController.forward(from: 0).then((_) {
+        _collectController.reverse();
+      });
+    }
+    lastCollectState = widget.data.collect;
     return Card(
       elevation: 0.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(pt(6))),
@@ -644,26 +652,20 @@ class _ProjectItemState extends State<ProjectItem> {
                         child: Align(
                       alignment: Alignment(0.9, 0),
                       child: GestureDetector(
-                        child: SizedBox(
-                          width: pt(13),
-                          height: pt(13),
-                          child: FlareActor(
-                            'assets/Favorite.flr',
+                        child: ScaleTransition(
+                          scale: _collectAnim,
+                          child: Icon(
+                            widget.data.collect
+                                ? Icons.favorite
+                                : Icons.favorite_border,
                             color: widget.data.collect
                                 ? WColors.warning_red
                                 : Colors.grey,
-                            shouldClip: false,
-                            snapToEnd: isFirstShow,
-                            animation: widget.data.collect
-                                ? "Favorite"
-                                : "Unfavorite", //_animationName
+                            size: 18,
                           ),
                         ),
                         onTap: () {
                           if (!widget.isLoading) {
-                            setState(() {
-                              isFirstShow = false;
-                            });
                             if (BlocProvider.of<HomeBloc>(context).isLogin) {
                               BlocProvider.of<ProjectBloc>(context).dispatch(
                                 CollectProject(

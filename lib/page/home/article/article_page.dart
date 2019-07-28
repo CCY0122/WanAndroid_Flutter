@@ -1,6 +1,5 @@
 import 'dart:math' as Math;
 
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/entity/article_type_entity.dart';
@@ -411,7 +410,7 @@ class _ArticleSubPageState extends State<ArticleSubPage>
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
         ProjectEntity data = datas[index];
-        return ArticleItem(data, isLoading, true);
+        return ArticleItem(data, isLoading);
       }, childCount: datas.length),
     );
   }
@@ -423,26 +422,40 @@ class _ArticleSubPageState extends State<ArticleSubPage>
 class ArticleItem extends StatefulWidget {
   ProjectEntity data;
   bool isLoading;
-  bool isFirstShow;
 
-  ArticleItem(this.data, this.isLoading, this.isFirstShow);
+  ArticleItem(
+    this.data,
+    this.isLoading,
+  );
 
   @override
   _ArticleItemState createState() => _ArticleItemState();
 }
 
-class _ArticleItemState extends State<ArticleItem> {
-  ///请参考[_ProjectItemState]
-  bool isFirstShow;
+class _ArticleItemState extends State<ArticleItem>
+    with SingleTickerProviderStateMixin {
+  bool lastCollectState;
+  AnimationController _collectController;
+  Animation _collectAnim;
 
   @override
   void initState() {
     super.initState();
-    isFirstShow = widget.isFirstShow;
+    _collectController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    CurvedAnimation curvedAnimation =
+        CurvedAnimation(parent: _collectController, curve: Curves.easeOut);
+    _collectAnim = Tween<double>(begin: 1, end: 1.8).animate(curvedAnimation);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (lastCollectState == false && lastCollectState != widget.data.collect) {
+      _collectController.forward(from: 0).then((_) {
+        _collectController.reverse();
+      });
+    }
+    lastCollectState = widget.data.collect;
     return Column(
       children: [
         ListTile(
@@ -454,26 +467,18 @@ class _ArticleItemState extends State<ArticleItem> {
               alignment: Alignment.center,
               width: 40, //查看源码，这是leading的最小宽高
               height: 40,
-              child: SizedBox(
-                width: pt(18),
-                height: pt(18),
-                child: FlareActor(
-                  'assets/Favorite.flr',
+              child: ScaleTransition(
+                scale: _collectAnim,
+                child: Icon(
+                  widget.data.collect ? Icons.favorite : Icons.favorite_border,
                   color:
                       widget.data.collect ? WColors.warning_red : Colors.grey,
-                  shouldClip: false,
-                  snapToEnd: isFirstShow,
-                  animation: widget.data.collect
-                      ? "Favorite"
-                      : "Unfavorite", //_animationName
+                  size: 24,
                 ),
               ),
             ),
             onTap: () {
               if (!widget.isLoading) {
-                setState(() {
-                  isFirstShow = false;
-                });
                 if (BlocProvider.of<HomeBloc>(context).isLogin) {
                   BlocProvider.of<ArticleBloc>(context).dispatch(
                     CollectArticle(widget.data.id, !widget.data.collect),
