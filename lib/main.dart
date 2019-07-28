@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
+import 'package:wanandroid_flutter/page/home/drawer/about_page.dart';
 import 'package:wanandroid_flutter/page/home/drawer/support_author.dart';
 import 'package:wanandroid_flutter/page/home/home/home_page.dart';
 import 'package:wanandroid_flutter/page/home/project/project_detail_page.dart';
@@ -30,6 +31,7 @@ final Map<String, WidgetBuilder> routes = {
   ProjectDetailPage.ROUTER_NAME: (context) => new ProjectDetailPage(),
   WebViewPage.ROUTER_NAME: (context) => WebViewPage(),
   SupportAuthorPage.ROUTER_NAME: (context) => SupportAuthorPage(),
+  AboutPage.ROUTER_NAME: (context) => AboutPage(),
 };
 
 bool _blocDebug = true;
@@ -58,10 +60,8 @@ class GlobalBlocDel extends BlocDelegate {
 }
 
 void main() async {
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   BlocSupervisor.delegate = GlobalBlocDel();
   await DioUtil.init();
   runApp(MyApp());

@@ -139,6 +139,8 @@ abstract class Strings {
 
   get searchWXArticleTips;
 
+  get checkUpdate;
+
 }
 
 ///通用的语言，直接这里实现。

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
+import 'package:wanandroid_flutter/page/home/drawer/about_page.dart';
 import 'package:wanandroid_flutter/page/home/drawer/support_author.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
@@ -114,7 +115,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               Navigator.pushNamed(context, SupportAuthorPage.ROUTER_NAME);
             }),
             _menuItem(Icon(Icons.error_outline), res.about, () {
-              DisplayUtil.showMsg(context, text: res.about);
+              Navigator.pushNamed(context, AboutPage.ROUTER_NAME);
             }),
             _menuItem(Icon(Icons.account_circle),
                 widget.isLogin ? res.logout : res.login, () {

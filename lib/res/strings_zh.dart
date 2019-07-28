@@ -193,4 +193,7 @@ class StringsZh extends BaseStrings {
 
   @override
   get searchWXArticleTips => '搜索公众号文章';
+
+  @override
+  get checkUpdate => '检测升级';
 }
