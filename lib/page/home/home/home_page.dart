@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wanandroid_flutter/entity/bmob_user_entity.dart';
 import 'package:wanandroid_flutter/page/base/custom_sliver_app_bar_delegate.dart';
 import 'package:wanandroid_flutter/page/home/article/article_page.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
@@ -25,6 +26,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   BuildContext innerContext;
   HomeBloc homeBloc = HomeBloc();
   bool isLogin = false;
+  String userName;
+  BmobUserEntity bmobUserEntity;
+
   TabController _tabController;
   ScrollController _scrollController;
   bool isSearchWXArticle = false;
@@ -92,11 +96,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           }
           if (state is HomeLoaded) {
             isLogin = state.isLogin;
+            userName = state.userName;
           }
           if (state is HomeSearchStarted) {
             if (!state.isSearchWXArticle) {
               DisplayUtil.showMsg(innerContext, text: '去搜索结果页（待实现）');
             }
+          }
+          if (state is HomeBmobLoaded) {
+            bmobUserEntity = state.bmobUserEntity;
           }
         },
         child: BlocBuilder<HomeEvent, HomeState>(
@@ -164,7 +172,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       );
                     }),
                     drawer: Drawer(
-                      child: HomeDrawer(isLogin),
+                      child: HomeDrawer(isLogin, userName, bmobUserEntity),
                     ),
                     floatingActionButton: FloatingActionButton(
                       onPressed: () {

@@ -1,13 +1,21 @@
 import 'dart:io';
 
+//import 'package:data_plugin/bmob/table/bmob_object.dart';
+//import 'package:data_plugin/bmob/table/bmob_user.dart';
+import 'package:data_plugin/bmob/bmob_dio.dart';
+import 'package:data_plugin/bmob/bmob_query.dart';
+import 'package:data_plugin/bmob/table/bmob_user.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:wanandroid_flutter/entity/bmob_feedback_entity.dart';
+import 'package:wanandroid_flutter/entity/bmob_user_entity.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/shared_preference_util.dart';
+import 'package:wanandroid_flutter/views/level_view.dart';
 
 class TestPage extends StatefulWidget {
   @override
@@ -25,6 +33,7 @@ class _TestPageState extends State<TestPage> {
   String buildNumber;
 
   var datas;
+  int level = 0;
 
   @override
   void initState() {
@@ -59,49 +68,16 @@ class _TestPageState extends State<TestPage> {
           return accountTest();
         }
         if (index == 2) {
-//          return TodoTest();
-          return Column(
-            children: <Widget>[
-              Text('$appName,$packageName,$version,$buildNumber'),
-              TextField(
-                controller: _tc,
-              ),
-              RaisedButton(onPressed: () {
-                if (_tc.text != null && _tc.text.length > 0) {
-                  Dio()
-                    ..options.baseUrl = _tc.text
-                    ..get('/').then((resp) {
-                      setState(() {
-                        datas = resp.data;
-                      });
-                    }, onError: (a1, a2) {
-                      setState(() {
-                        datas = '$a1,,,$a2';
-                      });
-                    });
-                }
-              }),
-              Text('data = $datas'),
-            ],
-          );
+          return TodoTest();
         }
         if (index == 3) {
-          return Container(
-            height: 500,
-            alignment: Alignment.center,
-            child: Container(
-//              width: 200,
-//              height: 200,
-              child: FlareActor(
-                'assets/loading.flr',
-                animation: 'start',
-                color: WColors.theme_color_dark,
-              ),
-            ),
-          );
+          return BmboTest();
+        }
+        if(index == 4){
+          return getLevelWidgets(level);
         }
       },
-      itemCount: 4,
+      itemCount: 5,
     );
   }
 
@@ -259,7 +235,98 @@ class _TestPageState extends State<TestPage> {
     bool islogin = await SPUtil.isLogin();
     print('isLogin = $islogin');
   }
+
+  Widget BmboTest() {
+    return Row(
+      children: <Widget>[
+        RaisedButton(
+          onPressed: () {
+            createOne();
+          },
+          child: Text('创建一条'),
+        ),
+        RaisedButton(
+          onPressed: () {
+            updateOne();
+          },
+          child: Text('更新一条'),
+        ),
+        RaisedButton(
+          onPressed: () {
+            queryOne();
+          },
+          child: Text('查询'),
+        ),
+        RaisedButton(
+          onPressed: () {
+            String t = '2019-07-28 18:44:19';
+            DateTime d1 = DateTime.parse(t);
+            DateTime now = DateTime.now();
+            DateTime d2 = DateTime(now.year, now.month, now.day + 1);
+            if (d1.isAfter(d2)) {
+              print('之后');
+            } else {
+              print('之前');
+            }
+
+            setState(() {
+              level ++;
+            });
+          },
+          child: Text('同一天？'),
+        ),
+      ],
+    );
+  }
 }
+
+Future createOne() async {
+  BmobUserEntity userEntity = BmobUserEntity.empty();
+  userEntity.userName = 'ccy0122';
+  userEntity.signature = 'asdasdas';
+  userEntity.level = 100;
+  userEntity.save().then((value) {
+    print('save success:${value.objectId},${value.createdAt}');
+  }, onError: (e, s) {
+    print('save filed $e;$s');
+  });
+
+  BmobFeedbackEntity feedbackEntity = BmobFeedbackEntity.empty();
+  feedbackEntity.userName = 'asd';
+  feedbackEntity.feedback = '你好啊';
+  feedbackEntity.save();
+}
+
+Future queryOne() async {
+  BmobQuery<BmobUserEntity> query = BmobQuery();
+  query.addWhereEqualTo('userName', 'ccy01221');
+  query.queryObjects().then((results) {
+    print('query size = ${results.length}');
+    if (results != null && results.length >= 1) {
+      print('query success ${(BmobUserEntity.fromJson(results[0])).userName}');
+    }
+  }, onError: (e, s) {
+    print('query filed $e;$s');
+  });
+}
+
+Future updateOne() async {
+  BmobQuery<BmobUserEntity> query = BmobQuery();
+  query.addWhereEqualTo('userName', 'ccy0122');
+  query.queryObjects().then((results) {
+    print('query size = ${results.length}');
+    if (results != null && results.length >= 1) {
+      BmobUserEntity entity = BmobUserEntity.fromJson(results[0]);
+      entity.level = 110;
+      entity.update().then((value) {
+        print('update success = ${value.updatedAt}');
+      });
+    }
+  }, onError: (e, s) {
+    print('query filed $e;$s');
+  });
+}
+
 
 class TodoTest extends StatefulWidget {
   @override

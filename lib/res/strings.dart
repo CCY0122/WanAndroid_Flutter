@@ -141,11 +141,19 @@ abstract class Strings {
 
   get checkUpdate;
 
+  get initSignature;
+
+  get signin;
+
+  get signined;
+
+  get rank;
+
 }
 
 ///通用的语言，直接这里实现。
 ///非通用的语言，各自子类继承它来实现。如中文语言：[StringsZh]
 abstract class BaseStrings implements Strings {
   @override
-  get appName => 'WanAndroid';
+  get appName => '玩儿Android';
 }

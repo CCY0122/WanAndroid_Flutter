@@ -196,4 +196,16 @@ class StringsZh extends BaseStrings {
 
   @override
   get checkUpdate => '检测升级';
+
+  @override
+  get initSignature => '编辑个性签名';
+
+  @override
+  get rank => '排行';
+
+  @override
+  get signin => '打卡';
+
+  @override
+  get signined => '已打卡';
 }

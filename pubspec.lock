@@ -162,6 +162,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.9"
+  data_plugin:
+    dependency: "direct main"
+    description:
+      path: "data_plugin/"
+      ref: HEAD
+      resolved-ref: "73181ca5a555a084d4eda3a40044162fe800530e"
+      url: "https://github.com/CCY0122/bmob-flutter-sdk.git"
+    source: git
+    version: "0.0.12"
   device_info:
     dependency: "direct main"
     description:
@@ -230,6 +239,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.0.3"
+  flutter_spinkit:
+    dependency: transitive
+    description:
+      name: flutter_spinkit
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.0"
   flutter_swiper:
     dependency: "direct main"
     description:

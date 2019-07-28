@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:wanandroid_flutter/entity/bmob_user_entity.dart';
 
 abstract class HomeState extends Equatable {
   HomeState([List props = const []]) : super(props);
@@ -48,5 +49,17 @@ class HomeSearchStarted extends HomeState {
   @override
   String toString() {
     return 'HomeSearchStarted{isSearchWXArticle: $isSearchWXArticle, searchKey: $searchKey}';
+  }
+}
+
+///bmob用户信息获取
+class HomeBmobLoaded extends HomeState {
+  BmobUserEntity bmobUserEntity;
+
+  HomeBmobLoaded(this.bmobUserEntity) : super([bmobUserEntity]);
+
+  @override
+  String toString() {
+    return 'HomeBmobLoaded{bmobUserEntity: $bmobUserEntity}';
   }
 }

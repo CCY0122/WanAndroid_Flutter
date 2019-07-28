@@ -8,14 +8,15 @@ part of 'banner_entity.dart';
 
 BannerEntity _$BannerEntityFromJson(Map<String, dynamic> json) {
   return BannerEntity(
-      json['desc'] as String,
-      json['id'] as int,
-      json['imagePath'] as String,
-      json['isVisible'] as int,
-      json['order'] as int,
-      json['title'] as String,
-      json['type'] as int,
-      json['url'] as String);
+    json['desc'] as String,
+    json['id'] as int,
+    json['imagePath'] as String,
+    json['isVisible'] as int,
+    json['order'] as int,
+    json['title'] as String,
+    json['type'] as int,
+    json['url'] as String,
+  );
 }
 
 Map<String, dynamic> _$BannerEntityToJson(BannerEntity instance) =>
@@ -27,5 +28,5 @@ Map<String, dynamic> _$BannerEntityToJson(BannerEntity instance) =>
       'order': instance.order,
       'title': instance.title,
       'type': instance.type,
-      'url': instance.url
+      'url': instance.url,
     };

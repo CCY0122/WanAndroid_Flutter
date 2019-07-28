@@ -8,14 +8,15 @@ part of 'article_type_entity.dart';
 
 ArticleTypeEntity _$ArticleTypeEntityFromJson(Map<String, dynamic> json) {
   return ArticleTypeEntity(
-      json['children'] as List,
-      json['courseId'] as int,
-      json['id'] as int,
-      json['name'] as String,
-      json['order'] as int,
-      json['parentChapterId'] as int,
-      json['userControlSetTop'] as bool,
-      json['visible'] as int);
+    json['children'] as List,
+    json['courseId'] as int,
+    json['id'] as int,
+    json['name'] as String,
+    json['order'] as int,
+    json['parentChapterId'] as int,
+    json['userControlSetTop'] as bool,
+    json['visible'] as int,
+  );
 }
 
 Map<String, dynamic> _$ArticleTypeEntityToJson(ArticleTypeEntity instance) =>
@@ -27,5 +28,5 @@ Map<String, dynamic> _$ArticleTypeEntityToJson(ArticleTypeEntity instance) =>
       'order': instance.order,
       'parentChapterId': instance.parentChapterId,
       'userControlSetTop': instance.userControlSetTop,
-      'visible': instance.visible
+      'visible': instance.visible,
     };

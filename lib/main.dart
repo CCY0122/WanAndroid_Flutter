@@ -4,6 +4,7 @@
 // opens a [SnackBar], while the second action navigates to a new page.
 
 import 'package:bloc/bloc.dart';
+import 'package:data_plugin/bmob/bmob.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +35,8 @@ final Map<String, WidgetBuilder> routes = {
   AboutPage.ROUTER_NAME: (context) => AboutPage(),
 };
 
+///开源版本不会上传appkey相关数据，bmob相关操作禁用。
+bool bmobEnable = false;
 bool _blocDebug = true;
 
 class GlobalBlocDel extends BlocDelegate {
@@ -63,6 +66,8 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   BlocSupervisor.delegate = GlobalBlocDel();
+  //SDK初始化，masterkey为管理权限密钥，建议在客户端使用时置空
+  Bmob.initMasterKey('', '', '');
   await DioUtil.init();
   runApp(MyApp());
 }

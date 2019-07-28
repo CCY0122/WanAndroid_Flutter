@@ -38,6 +38,11 @@ dependencies:
   flare_flutter: ^1.5.4
   package_info: 0.4.0+6
 
+  data_plugin:
+    git:
+      url: https://github.com/CCY0122/bmob-flutter-sdk.git
+      path: data_plugin/
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -113,6 +118,12 @@ flutter:
     - images/ccy_pay_qr.jpeg
     - images/nice_xiongdei.jpeg
     - assets/
+    - images/lv_crown.png
+    - images/lv_sun.png
+    - images/lv_moon.png
+    - images/lv_star.png
+    - images/rank.png
+    - images/signin.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
