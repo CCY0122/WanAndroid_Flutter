@@ -53,18 +53,37 @@ class _AboutPageState extends State<AboutPage> {
                 ),
               );
             }
+            if (index == 2) {
+              return DecoratedBox(
+                decoration: BoxDecoration(color: Colors.white),
+                child: ListTile(
+                  title: Text('Blog'),
+                  trailing: Icon(Icons.navigate_next),
+                  onTap: (() {
+                    Navigator.pushNamed(
+                      context,
+                      WebViewPage.ROUTER_NAME,
+                      arguments: {
+                        'title': 'Blog',
+                        'url': 'https://blog.csdn.net/ccy0122'
+                      },
+                    );
+                  }),
+                ),
+              );
+            }
             return DecoratedBox(
               decoration: BoxDecoration(color: Colors.white),
               child: ListTile(
                 title: Text(res.checkUpdate),
                 trailing: Icon(Icons.navigate_next),
                 onTap: (() {
-                  DisplayUtil.showMsg(context, text: '检测升级');
+                  DisplayUtil.showMsg(context, text: '检测升级(待实现');
                 }),
               ),
             );
           },
-          itemCount: 3,
+          itemCount: 4,
         ),
       ),
     );

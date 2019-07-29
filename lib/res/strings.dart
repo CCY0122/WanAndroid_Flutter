@@ -149,6 +149,10 @@ abstract class Strings {
 
   get rank;
 
+  get levelRank;
+
+  get feedbackTips;
+
 }
 
 ///通用的语言，直接这里实现。

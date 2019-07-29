@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:data_plugin/bmob/bmob_query.dart';
 import 'package:data_plugin/bmob/response/bmob_saved.dart';
+import 'package:data_plugin/bmob/response/bmob_updated.dart';
 import 'package:wanandroid_flutter/entity/bmob_user_entity.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/main.dart';
@@ -72,6 +73,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         initUser.userName = userName;
         initUser.level = 1;
         initUser.signature = res.initSignature;
+        initUser.strWhat = '';
+        initUser.numWhat = 0;
         BmobSaved saved = await initUser.save();
         initUser.objectId = saved.objectId;
         initUser.createdAt = initUser.updatedAt = saved.createdAt;
@@ -88,7 +91,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapUpdateBmobInfoToState(BmobUserEntity entity) async* {
     try {
       yield HomeLoading();
-      await entity.update();
+      BmobUpdated updated = await entity.update();
+      entity.updatedAt = updated.updatedAt;
       yield HomeBmobLoaded(entity);
     } catch (e) {
       print('HomeBloc._mapUpdateBmobInfoToState  $e');

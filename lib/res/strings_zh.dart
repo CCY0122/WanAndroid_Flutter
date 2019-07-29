@@ -208,4 +208,10 @@ class StringsZh extends BaseStrings {
 
   @override
   get signined => '已打卡';
+
+  @override
+  get levelRank => '打卡等级排行榜';
+
+  @override
+  get feedbackTips => '反馈BUG、建议、想对作者说的话 :)';
 }

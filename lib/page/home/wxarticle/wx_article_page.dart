@@ -354,6 +354,13 @@ class _WXArticleItemState extends State<WXArticleItem>
     _collectAnim = Tween<double>(begin: 1, end: 1.8).animate(curvedAnimation);
   }
 
+
+  @override
+  void dispose() {
+    _collectController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (lastCollectState == false && lastCollectState != widget.data.collect) {

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/page/home/drawer/about_page.dart';
+import 'package:wanandroid_flutter/page/home/drawer/rank_page.dart';
 import 'package:wanandroid_flutter/page/home/drawer/support_author.dart';
 import 'package:wanandroid_flutter/page/home/home/home_page.dart';
 import 'package:wanandroid_flutter/page/home/project/project_detail_page.dart';
@@ -33,9 +34,10 @@ final Map<String, WidgetBuilder> routes = {
   WebViewPage.ROUTER_NAME: (context) => WebViewPage(),
   SupportAuthorPage.ROUTER_NAME: (context) => SupportAuthorPage(),
   AboutPage.ROUTER_NAME: (context) => AboutPage(),
+  RankPage.ROUTER_NAME: (c) => RankPage(),
 };
 
-///开源版本不会上传appkey相关数据，bmob相关操作禁用。
+///开源版本我不会上传appkey相关数据，bmob相关操作禁用。
 bool bmobEnable = false;
 bool _blocDebug = true;
 
@@ -66,8 +68,9 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   BlocSupervisor.delegate = GlobalBlocDel();
-  //SDK初始化，masterkey为管理权限密钥，建议在客户端使用时置空
-  Bmob.initMasterKey('', '', '');
+  //SDK初始化
+  Bmob.initMasterKey('',
+      '', '');
   await DioUtil.init();
   runApp(MyApp());
 }

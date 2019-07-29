@@ -449,6 +449,12 @@ class _ArticleItemState extends State<ArticleItem>
   }
 
   @override
+  void dispose() {
+    _collectController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (lastCollectState == false && lastCollectState != widget.data.collect) {
       _collectController.forward(from: 0).then((_) {

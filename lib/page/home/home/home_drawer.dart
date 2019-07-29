@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wanandroid_flutter/entity/bmob_feedback_entity.dart';
 import 'package:wanandroid_flutter/entity/bmob_user_entity.dart';
+import 'package:wanandroid_flutter/main.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/page/home/drawer/about_page.dart';
+import 'package:wanandroid_flutter/page/home/drawer/rank_page.dart';
 import 'package:wanandroid_flutter/page/home/drawer/support_author.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
@@ -62,6 +65,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         child: widget.bmobUserEntity == null
                             ? Container()
                             : GestureDetector(
+                                behavior: HitTestBehavior.opaque,
                                 onTap: () {
                                   if (canSignin) {
                                     widget.bmobUserEntity.level++;
@@ -94,8 +98,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         child: widget.bmobUserEntity == null
                             ? Container()
                             : GestureDetector(
+                                behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  DisplayUtil.showMsg(context, text: '点击了排行榜');
+                                  Navigator.pushNamed(
+                                      context, RankPage.ROUTER_NAME);
                                 },
                                 child: Image.asset(
                                   'images/rank.png',
@@ -161,14 +167,21 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   ? Container()
                                   : GestureDetector(
                                       onTap: () {
-                                        //todo 个性签名
+                                        showSignatureDialog();
                                       },
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            widget.bmobUserEntity.signature,
+                                            (widget.bmobUserEntity.signature ==
+                                                        null ||
+                                                    widget.bmobUserEntity
+                                                            .signature.length ==
+                                                        0)
+                                                ? res.initSignature
+                                                : widget
+                                                    .bmobUserEntity.signature,
                                             style:
                                                 TextStyle(color: Colors.white),
                                             overflow: TextOverflow.ellipsis,
@@ -187,9 +200,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   ),
                 ),
               ),
-              _menuItem(Icon(Icons.feedback), res.feedback, () {
-                DisplayUtil.showMsg(context, text: res.feedback);
-              }),
+              Offstage(
+                offstage: !bmobEnable,
+                child: _menuItem(Icon(Icons.feedback), res.feedback, () {
+                  showFeedbackDialog();
+                }),
+              ),
               _menuItem(Icon(Icons.attach_money), res.supportAuthor, () {
                 Navigator.pushNamed(context, SupportAuthorPage.ROUTER_NAME);
               }),
@@ -208,21 +224,21 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   });
                 }
               }),
-              FlatButton(
-                child: Text('去测试页'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return Scaffold(
-                          body: TestPage(),
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
+//              FlatButton(
+//                child: Text('去测试页'),
+//                onPressed: () {
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                      builder: (context) {
+//                        return Scaffold(
+//                          body: TestPage(),
+//                        );
+//                      },
+//                    ),
+//                  );
+//                },
+//              ),
 //            FlatButton(
 //              child: Text('去nest'),
 //              onPressed: () {
@@ -262,5 +278,96 @@ class _HomeDrawerState extends State<HomeDrawer> {
       now.day,
     );
     return updateTime.isAfter(today.toUtc());
+  }
+
+  showSignatureDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          TextEditingController controller =
+              TextEditingController(text: widget.bmobUserEntity.signature);
+          if (widget.bmobUserEntity.signature != null) {
+            controller.selection = TextSelection(
+                baseOffset: widget.bmobUserEntity.signature.length,
+                extentOffset: widget.bmobUserEntity.signature.length);
+          }
+          return AlertDialog(
+            contentPadding: EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+            content: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: pt(5),
+                  vertical: pt(8),
+                ),
+              ),
+              controller: controller,
+              autofocus: true,
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(res.cancel),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              FlatButton(
+                child: Text(res.confirm),
+                onPressed: () {
+                  BmobUserEntity copy = widget.bmobUserEntity
+                      .copyWith(signature: controller.text);
+                  homeBloc.dispatch(UpdateBmobInfo(copy));
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  showFeedbackDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          TextEditingController controller = TextEditingController();
+          return AlertDialog(
+            contentPadding: EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+            content: Container(
+              height: pt(200),
+              decoration: BoxDecoration(
+                border: Border.all(),
+              ),
+              child: TextField(
+                maxLines: null,
+                textAlign: TextAlign.start,
+                decoration: InputDecoration(
+                  hintText: res.feedbackTips,
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: pt(5),
+                    vertical: pt(8),
+                  ),
+                ),
+                controller: controller,
+                autofocus: true,
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(res.cancel),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              FlatButton(
+                child: Text(res.confirm),
+                onPressed: () {
+                  BmobFeedbackEntity feedback = BmobFeedbackEntity(widget.userName ?? '未登录用户', controller.text ?? '空');
+                  feedback.save().then((_){
+                    print('feedback send success');
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Widget getLevelWidgets(int level) {
-  if (level < 1) {
+  if (level == null || level < 1) {
     level = 1;
   }
   int crown = level ~/ (4 * 4 * 4);
