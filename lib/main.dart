@@ -15,6 +15,7 @@ import 'package:wanandroid_flutter/page/home/drawer/support_author.dart';
 import 'package:wanandroid_flutter/page/home/home/home_page.dart';
 import 'package:wanandroid_flutter/page/home/project/project_detail_page.dart';
 import 'package:wanandroid_flutter/page/home/web_view.dart';
+import 'package:wanandroid_flutter/page/search/search_page.dart';
 import 'package:wanandroid_flutter/page/todo/todo_create.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
@@ -35,6 +36,7 @@ final Map<String, WidgetBuilder> routes = {
   SupportAuthorPage.ROUTER_NAME: (context) => SupportAuthorPage(),
   AboutPage.ROUTER_NAME: (context) => AboutPage(),
   RankPage.ROUTER_NAME: (c) => RankPage(),
+  SearchPage.ROUTER_NAME: (_) => SearchPage(),
 };
 
 ///开源版本我不会上传appkey相关数据，bmob相关操作禁用。
@@ -69,8 +71,7 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   BlocSupervisor.delegate = GlobalBlocDel();
   //SDK初始化
-  Bmob.initMasterKey('',
-      '', '');
+  Bmob.initMasterKey('', '', '');
   await DioUtil.init();
   runApp(MyApp());
 }

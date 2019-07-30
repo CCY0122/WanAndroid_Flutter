@@ -44,7 +44,7 @@ class HomeSearchStarted extends HomeState {
   String searchKey;
 
   HomeSearchStarted(this.isSearchWXArticle, this.searchKey)
-      : super([isSearchWXArticle, searchKey]);
+      : super([isSearchWXArticle, searchKey,new Object()/*每次都实例一个新obj，这样可以被认为每次都是新的state即使内容都一样。*/]);
 
   @override
   String toString() {

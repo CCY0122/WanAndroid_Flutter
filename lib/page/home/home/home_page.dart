@@ -7,6 +7,7 @@ import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/home/home_drawer.dart';
 import 'package:wanandroid_flutter/page/home/project/project_page.dart';
 import 'package:wanandroid_flutter/page/home/wxarticle/wx_article_page.dart';
+import 'package:wanandroid_flutter/page/search/search_page.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           }
           if (state is HomeSearchStarted) {
             if (!state.isSearchWXArticle) {
-              DisplayUtil.showMsg(innerContext, text: '去搜索结果页（待实现）');
+              Navigator.pushNamed(context, SearchPage.ROUTER_NAME,arguments: _searchTextContriller.text);
             }
           }
           if (state is HomeBmobLoaded) {
@@ -248,52 +249,56 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
           Expanded(
-            child: SearchBar(
-              height: pt(30),
-              color: Colors.grey[50],
-              child: TextField(
-                controller: _searchTextContriller,
-                textInputAction: TextInputAction.search,
-                onSubmitted: (text) {
-                  if (_searchTextContriller.text != null) {
-                    homeBloc.dispatch(
-                      StartSearchEvent(
-                          isSearchWXArticle, _searchTextContriller.text),
-                    );
-                  }
-                },
-                style: TextStyle(fontSize: 14),
-                decoration: InputDecoration(
-                    hintText: isSearchWXArticle
-                        ? res.searchWXArticleTips
-                        : res.searchTips,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(),
-                    hintStyle: TextStyle(
-                      fontSize: 12,
-                      color: isSearchWXArticle
-                          ? WColors.wechat_green
-                          : WColors.hint_color_dark,
-                    )),
+            child: Hero(
+              tag: 'searchBar',
+              //hero的child需要为Material系widget，否则在页面跳转期间会看到报错UI，提示祖先不是material
+              child: Material(
+                type: MaterialType.transparency,
+                child: SearchBar(
+                  height: pt(30),
+                  color: Colors.grey[50],
+                  child: TextField(
+                    controller: _searchTextContriller,
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: (text) {
+                      if (_searchTextContriller.text != null) {
+                        homeBloc.dispatch(
+                          StartSearchEvent(
+                              isSearchWXArticle, _searchTextContriller.text),
+                        );
+                      }
+                    },
+                    style: TextStyle(fontSize: 14),
+                    decoration: InputDecoration(
+                        hintText: isSearchWXArticle
+                            ? res.searchWXArticleTips
+                            : res.searchTips,
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(),
+                        hintStyle: TextStyle(
+                          fontSize: 12,
+                          color: isSearchWXArticle
+                              ? WColors.wechat_green
+                              : WColors.hint_color_dark,
+                        )),
+                  ),
+                  iconColor: isSearchWXArticle
+                      ? WColors.wechat_green
+                      : WColors.hint_color_dark,
+                  icon: isSearchWXArticle
+                      ? Image.asset(
+                          'images/wechat.png',
+                          width: 24,
+                          height: 24,
+                        )
+                      : null,
+                ),
               ),
-              iconColor: isSearchWXArticle
-                  ? WColors.wechat_green
-                  : WColors.hint_color_dark,
-              icon: isSearchWXArticle
-                  ? Image.asset(
-                      'images/wechat.png',
-                      width: 24,
-                      height: 24,
-                    )
-                  : null,
             ),
           ),
           GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, TodoPage.ROUTER_NAME);
-//              Navigator.push(context, MaterialPageRoute(builder: (c){
-//                return Scaffold(body: TestPage());
-//              }));
             },
             child: Container(
               alignment: Alignment.center,

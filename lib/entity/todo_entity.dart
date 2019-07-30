@@ -3,11 +3,10 @@ import 'package:json_annotation/json_annotation.dart';
 part 'todo_entity.g.dart';
 
 //生成命令：flutter packages pub run build_runner build
-
+//        flutter packages pub run build_runner build --delete-conflicting-outputs
 
 @JsonSerializable()
-class TodoEntity extends Object{
-
+class TodoEntity extends Object {
   @JsonKey(name: 'completeDate')
   int completeDate;
 
@@ -41,9 +40,22 @@ class TodoEntity extends Object{
   @JsonKey(name: 'userId')
   int userId;
 
-  TodoEntity(this.completeDate,this.completeDateStr,this.content,this.date,this.dateStr,this.id,this.priority,this.status,this.title,this.type,this.userId,);
+  TodoEntity(
+    this.completeDate,
+    this.completeDateStr,
+    this.content,
+    this.date,
+    this.dateStr,
+    this.id,
+    this.priority,
+    this.status,
+    this.title,
+    this.type,
+    this.userId,
+  );
 
-  factory TodoEntity.fromJson(Map<String, dynamic> srcJson) => _$TodoEntityFromJson(srcJson);
+  factory TodoEntity.fromJson(Map<String, dynamic> srcJson) =>
+      _$TodoEntityFromJson(srcJson);
 
   Map<String, dynamic> toJson() => _$TodoEntityToJson(this);
 
@@ -51,8 +63,4 @@ class TodoEntity extends Object{
   String toString() {
     return 'TodoEntity{completeDate: $completeDate, completeDateStr: $completeDateStr, content: $content, date: $date, dateStr: $dateStr, id: $id, priority: $priority, status: $status, title: $title, type: $type, userId: $userId}';
   }
-
-
 }
-
-

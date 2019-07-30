@@ -6,6 +6,8 @@ class Api {
   static const int ERROR_CODE_UN_LOGIN = -1001;
 }
 
+///对于调用层涉及传入页码的，统一从1开始。
+
 ///账户相关接口
 class AccountApi {
   static const String LOGIN_PATH = "/user/login";
@@ -270,4 +272,24 @@ class CollectApi {
       queryParameters: {'originId': originId},
     );
   }
+}
+
+///其他接口
+class CommonApi{
+
+  static String SEARCH(int page) => '/article/query/$page/json';
+
+  static String HOT_SEARCH_KEY = '/hotkey/json';
+
+  ///搜索文章。页码从1开始
+  static Future<Response> searchArticles(int page,String searchKey){
+    //老接口原因，实际输入页码是从0开始
+    return dio.post(SEARCH(page-1),queryParameters: {'k':searchKey});
+  }
+
+  ///热搜词
+  static Future<Response> getHotKey(){
+    return dio.get(HOT_SEARCH_KEY);
+  }
+
 }
