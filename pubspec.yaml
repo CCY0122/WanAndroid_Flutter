@@ -37,6 +37,7 @@ dependencies:
   url_launcher: ^5.1.0
   flare_flutter: ^1.5.4
   package_info: 0.4.0+6
+  provider: ^3.0.0+1
 
   data_plugin:
     git:
@@ -124,6 +125,9 @@ flutter:
     - images/lv_star.png
     - images/rank.png
     - images/signin.png
+    - images/no1.png
+    - images/no2.png
+    - images/no3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

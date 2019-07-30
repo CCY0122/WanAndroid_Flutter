@@ -57,42 +57,86 @@ class _RankPageState extends State<RankPage> {
   }
 
   Widget _item(BmobUserEntity entity, int index) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: pt(16), vertical: pt(10)),
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: pt(8)),
-            child: Container(
-              decoration: ShapeDecoration(
-                  shape: CircleBorder(side: BorderSide(color: Colors.red))),
-              padding: EdgeInsets.all(pt(2.5)),
-              child: Text(
-                '${index + 1}',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 12
-                ),
+    Color color;
+    Widget rank;
+    TextStyle style;
+    if (index == 0) {
+      color = Colors.red;
+      rank = Image.asset(
+        'images/no1.png',
+        width: pt(22),
+        height: pt(22),
+        color: color,
+      );
+      style = TextStyle(fontWeight: FontWeight.w700, color: color);
+    } else if (index == 1) {
+      color = Colors.orange;
+      rank = Image.asset(
+        'images/no2.png',
+        width: pt(22),
+        height: pt(22),
+        color: color,
+      );
+      style = TextStyle(fontWeight: FontWeight.w600, color: color);
+    } else if (index == 2) {
+      color = Colors.purple;
+      rank = Image.asset(
+        'images/no3.png',
+        width: pt(22),
+        height: pt(22),
+        color: color,
+      );
+      style = TextStyle(fontWeight: FontWeight.w500, color: color);
+    } else {
+      color = Colors.black;
+      rank = Container(
+        decoration: ShapeDecoration(
+            shape: CircleBorder(side: BorderSide(color: Colors.red))),
+        padding: EdgeInsets.all(pt(2.5)),
+        child: Text(
+          '${index + 1}',
+          style: TextStyle(color: Colors.red, fontSize: 12),
+        ),
+      );
+      style = TextStyle(fontWeight: FontWeight.normal, color: color);
+    }
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.white,
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: pt(16), vertical: pt(10)),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: pt(8)),
+              child: rank,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    entity.userName ?? 'unknow',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: style.fontWeight,
+                        color: style.color),
+                  ),
+                  Text(
+                    entity.signature ?? '',
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: style.fontWeight,
+                        color: style.color),
+                  ),
+                ],
               ),
             ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  entity.userName ?? 'unknow',
-                  style: TextStyle(fontSize: 18),
-                ),
-                Text(
-                  entity.signature ?? '',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-          getLevelWidgets(entity.level),
-        ],
+            getLevelWidgets(entity.level),
+          ],
+        ),
       ),
     );
   }

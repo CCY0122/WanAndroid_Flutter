@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/entity/bmob_feedback_entity.dart';
 import 'package:wanandroid_flutter/entity/bmob_user_entity.dart';
+import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/main.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/page/home/drawer/about_page.dart';
@@ -27,17 +28,21 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   HomeBloc homeBloc;
+  bool hasSignin = false;
 
   @override
   void initState() {
     super.initState();
     homeBloc = BlocProvider.of<HomeBloc>(context);
+    if (widget.bmobUserEntity != null) {
+      checkTodayHasSignin(DateTime.parse(widget.bmobUserEntity.updatedAt));
+    } else {
+      hasSignin = false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    bool canSignin = widget.bmobUserEntity != null &&
-        !isToday(DateTime.parse(widget.bmobUserEntity.updatedAt));
     return BlocListener<HomeEvent, HomeState>(
       bloc: homeBloc,
       listener: (context, state) {
@@ -67,16 +72,18 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             : GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  if (canSignin) {
-                                    widget.bmobUserEntity.level++;
-                                    homeBloc.dispatch(
-                                        UpdateBmobInfo(widget.bmobUserEntity));
+                                  if (!hasSignin) {
+                                    BmobUserEntity copy = widget.bmobUserEntity
+                                        .copyWith(
+                                            level: widget.bmobUserEntity.level +
+                                                1);
+                                    homeBloc.dispatch(UpdateBmobInfo(copy));
                                   }
                                 },
                                 child: Row(
                                   children: <Widget>[
                                     Text(
-                                      canSignin ? res.signin : res.signined,
+                                      !hasSignin ? res.signin : res.signined,
                                       style: TextStyle(color: Colors.white),
                                     ),
                                     SizedBox(
@@ -224,21 +231,21 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   });
                 }
               }),
-//              FlatButton(
-//                child: Text('去测试页'),
-//                onPressed: () {
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) {
-//                        return Scaffold(
-//                          body: TestPage(),
-//                        );
-//                      },
-//                    ),
-//                  );
-//                },
-//              ),
+              FlatButton(
+                child: Text('去测试页'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Scaffold(
+                          body: TestPage(),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
 //            FlatButton(
 //              child: Text('去nest'),
 //              onPressed: () {
@@ -269,15 +276,30 @@ class _HomeDrawerState extends State<HomeDrawer> {
     );
   }
 
-  //更新时间是否在今天？
-  bool isToday(DateTime updateTime) {
-    DateTime now = DateTime.now();
+
+  Future checkTodayHasSignin(DateTime updateTime) async {
+    ///为防止打卡作弊，当前时间从网络上获取
+    DateTime now;
+    try {
+      Response response = await dio.get(
+          'http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp');
+      Map<String, dynamic> data =
+          (response.data as Map<String, dynamic>)['data'];
+      String todayMills = data['t'];
+      now = DateTime.fromMillisecondsSinceEpoch(int.parse(todayMills),
+          isUtc: true);
+    } catch (e) {
+      print(e);
+      now = DateTime.now();
+    }
+
     DateTime today = DateTime(
       now.year,
       now.month,
       now.day,
     );
-    return updateTime.isAfter(today.toUtc());
+    hasSignin = updateTime.isAfter(today.toUtc());
+    setState(() {});
   }
 
   showSignatureDialog() {
@@ -359,8 +381,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
               FlatButton(
                 child: Text(res.confirm),
                 onPressed: () {
-                  BmobFeedbackEntity feedback = BmobFeedbackEntity(widget.userName ?? '未登录用户', controller.text ?? '空');
-                  feedback.save().then((_){
+                  BmobFeedbackEntity feedback = BmobFeedbackEntity(
+                      widget.userName ?? '未登录用户', controller.text ?? '空');
+                  feedback.save().then((_) {
                     print('feedback send success');
                   });
                   Navigator.of(context).pop();

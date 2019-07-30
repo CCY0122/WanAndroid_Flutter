@@ -630,7 +630,7 @@ class _ProjectItemState extends State<ProjectItem>
               ),
             ),
             GestureDetector(
-              behavior: HitTestBehavior.opaque,
+//              behavior: HitTestBehavior.opaque,
               onTap: () {
                 DisplayUtil.showMsg(context,
                     text: 'click type ${widget.data.chapterName}（待实现）');

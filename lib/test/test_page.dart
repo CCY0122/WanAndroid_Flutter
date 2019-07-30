@@ -1,21 +1,15 @@
 import 'dart:io';
 
-//import 'package:data_plugin/bmob/table/bmob_object.dart';
-//import 'package:data_plugin/bmob/table/bmob_user.dart';
-import 'package:data_plugin/bmob/bmob_dio.dart';
 import 'package:data_plugin/bmob/bmob_query.dart';
-import 'package:data_plugin/bmob/table/bmob_user.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:wanandroid_flutter/entity/bmob_feedback_entity.dart';
 import 'package:wanandroid_flutter/entity/bmob_user_entity.dart';
 import 'package:wanandroid_flutter/http/index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/shared_preference_util.dart';
-import 'package:wanandroid_flutter/views/level_view.dart';
 
 class TestPage extends StatefulWidget {
   @override
@@ -34,6 +28,8 @@ class _TestPageState extends State<TestPage> {
 
   var datas;
   int level = 0;
+
+  CounterModel counterModel = CounterModel();
 
   @override
   void initState() {
@@ -58,26 +54,51 @@ class _TestPageState extends State<TestPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      // ignore: missing_return
-      itemBuilder: (BuildContext context, int index) {
-        if (index == 0) {
-          return accountWidget();
-        }
-        if (index == 1) {
-          return accountTest();
-        }
-        if (index == 2) {
-          return TodoTest();
-        }
-        if (index == 3) {
-          return BmboTest();
-        }
-        if(index == 4){
-          return getLevelWidgets(level);
-        }
-      },
-      itemCount: 5,
+    return ChangeNotifierProvider<CounterModel>.value(
+      value: counterModel,
+      child: ListView.builder(
+        // ignore: missing_return
+        itemBuilder: (BuildContext context, int index) {
+          if (index == 0) {
+            return accountWidget();
+          }
+          if (index == 1) {
+            return accountTest();
+          }
+          if (index == 2) {
+            return TodoTest();
+          }
+          if (index == 3) {
+            return BmboTest();
+          }
+          if (index == 4) {
+//          return getLevelWidgets(level);
+            print('1');
+            return Consumer<CounterModel>(
+              builder:
+                  (BuildContext context, CounterModel value, Widget child) {
+                return GestureDetector(
+                  onTap: () {
+                    value.increment();
+                  },
+                  child: Container(
+                    width: 100,
+                    height: 200,
+                    child: Column(
+                      children: <Widget>[
+                        Text('va = ${value.value}'),
+                        child,
+                      ],
+                    ),
+                  ),
+                );
+              },
+              child: AStful(),
+            );
+          }
+        },
+        itemCount: 5,
+      ),
     );
   }
 
@@ -270,7 +291,7 @@ class _TestPageState extends State<TestPage> {
             }
 
             setState(() {
-              level ++;
+              level++;
             });
           },
           child: Text('同一天？'),
@@ -327,7 +348,6 @@ Future updateOne() async {
   });
 }
 
-
 class TodoTest extends StatefulWidget {
   @override
   _TodoTestState createState() => _TodoTestState();
@@ -361,5 +381,37 @@ class _TodoTestState extends State<TodoTest> {
         )
       ],
     );
+  }
+}
+
+class AStful extends StatefulWidget {
+
+  @override
+  _AStfulState createState() => _AStfulState();
+
+  AStful(){
+    print('constar');
+  }
+}
+
+class _AStfulState extends State<AStful> {
+  @override
+  Widget build(BuildContext context) {
+    //结论，只第一次build 后续不会
+    print('_AStfulState : build');
+    return Container(
+      child: Text('asdasd'),
+    );
+  }
+}
+
+class CounterModel with ChangeNotifier {
+  int _count = 0;
+
+  int get value => _count;
+
+  void increment() {
+    _count++;
+    notifyListeners();
   }
 }
