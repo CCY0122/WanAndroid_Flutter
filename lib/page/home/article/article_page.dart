@@ -500,7 +500,7 @@ class _ArticleItemState extends State<ArticleItem>
           ),
           title: Text(
             widget.data.title,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 15,),
           ),
           subtitle: Row(
             children: [

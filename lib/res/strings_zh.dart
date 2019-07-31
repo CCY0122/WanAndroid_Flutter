@@ -214,4 +214,7 @@ class StringsZh extends BaseStrings {
 
   @override
   get feedbackTips => '反馈BUG、建议、想对作者说的话 :)';
+
+  @override
+  get peopleAreSearching => '大家都在搜';
 }

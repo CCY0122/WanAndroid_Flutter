@@ -251,7 +251,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Expanded(
             child: Hero(
               tag: 'searchBar',
-              //hero的child需要为Material系widget，否则在页面跳转期间会看到报错UI，提示祖先不是material
+              //hero的child中若有material系widget（如TextField），则父需要为Material系layout（如Scaffold、Material），否则在页面跳转期间会看到报错UI，提示祖先不是material
               child: Material(
                 type: MaterialType.transparency,
                 child: SearchBar(

@@ -407,7 +407,7 @@ class _WXArticleItemState extends State<WXArticleItem>
           ),
           title: Text(
             widget.data.title,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 15,),
           ),
           subtitle: Row(
             children: [

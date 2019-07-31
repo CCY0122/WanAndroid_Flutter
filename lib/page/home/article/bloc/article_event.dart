@@ -29,7 +29,7 @@ class LoadMoreArticleDatas extends ArticleEvent {
 
   @override
   String toString() {
-    return 'LoadMoreArticleDatas{originDatas: $originDatas, id: $id, page: $page}';
+    return 'LoadMoreArticleDatas{originDatas: ${originDatas?.length}, id: $id, page: $page}';
   }
 }
 

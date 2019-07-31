@@ -30,7 +30,7 @@ class ProjectBannerLoaded extends ProjectState {
 
   @override
   String toString() {
-    return 'ProjectBannerLoaded{banners: $banners}';
+    return 'ProjectBannerLoaded{banners: ${banners?.length}}';
   }
 }
 
@@ -42,7 +42,7 @@ class ProjectTypesLoaded extends ProjectState {
 
   @override
   String toString() {
-    return 'ProjectTypesLoaded{types: $types}';
+    return 'ProjectTypesLoaded{types: ${types?.length}}';
   }
 }
 
@@ -54,7 +54,7 @@ class ProjectTodoLoaded extends ProjectState {
 
   @override
   String toString() {
-    return 'ProjectTodoLoaded{todos: $todos}';
+    return 'ProjectTodoLoaded{todos: ${todos?.length}';
   }
 }
 
@@ -69,7 +69,7 @@ class ProjectDatasLoaded extends ProjectState {
 
   @override
   String toString() {
-    return 'ProjectDatasLoaded{datas: $datas, curretnPage: $curretnPage, totalPage: $totalPage}';
+    return 'ProjectDatasLoaded{datas: ${datas?.length}, curretnPage: $curretnPage, totalPage: $totalPage}';
   }
 }
 

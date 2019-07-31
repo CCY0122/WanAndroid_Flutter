@@ -23,7 +23,7 @@ class LoadMoreProjectDatas extends ProjectEvent {
 
   @override
   String toString() {
-    return 'LoadMoreProjectDatas{originDatas: $originDatas, page: $page}';
+    return 'LoadMoreProjectDatas{originDatas: ${originDatas?.length}, page: $page}';
   }
 }
 

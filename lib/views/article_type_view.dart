@@ -116,7 +116,7 @@ class ArticleTypeView {
     @required ValueChanged<int> onSelected,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: pt(8), horizontal: pt(2)),
+      padding: EdgeInsets.symmetric(vertical: pt(4), horizontal: pt(2)),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
@@ -137,6 +137,7 @@ class ArticleTypeView {
           // 导致width占满剩余空间（height已经固定给了pt(28)，而width我不希望给固定值，它应当根据文字长度自动调整），
           // 最终导致expandedTypesView中的wrap是一行一个typeItem。所以换用stack来实现文字居中。
           // 如果你还不理解，去掉stack，给Container加上Alignment.center，运行看效果。
+          // 为什么height要给固定值？因为不同文字的高度其实是不一样的，不给固定值的话他们基线不一样
           child: Stack(
             alignment: Alignment.center,
             children: [

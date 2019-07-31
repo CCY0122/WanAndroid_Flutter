@@ -18,3 +18,15 @@ Widget getLoading({bool start = true}) {
     ),
   );
 }
+
+Widget getLoadingParent(Widget child, {bool isLoading = false}) {
+  return Stack(
+    children: <Widget>[
+      child,
+      Offstage(
+        offstage: !isLoading,
+        child: getLoading(start: isLoading),
+      ),
+    ],
+  );
+}

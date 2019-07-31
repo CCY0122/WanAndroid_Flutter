@@ -153,6 +153,8 @@ abstract class Strings {
 
   get feedbackTips;
 
+  get peopleAreSearching;
+
 }
 
 ///通用的语言，直接这里实现。

@@ -27,7 +27,7 @@ class ArticleTypesloaded extends ArticleState {
 
   @override
   String toString() {
-    return 'ArticleTypesloaded{articleTypes: $articleTypes}';
+    return 'ArticleTypesloaded{articleTypes: ${articleTypes?.length}';
   }
 }
 
@@ -41,7 +41,7 @@ class ArticleDatasLoaded extends ArticleState {
 
   @override
   String toString() {
-    return 'ArticleDatasLoaded{datas: $datas, curretnPage: $curretnPage, totalPage: $totalPage}';
+    return 'ArticleDatasLoaded{datas: ${datas?.length}, curretnPage: $curretnPage, totalPage: $totalPage}';
   }
 }
 
