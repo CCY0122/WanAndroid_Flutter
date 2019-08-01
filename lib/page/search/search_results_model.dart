@@ -30,8 +30,6 @@ class SearchResultsModel with ChangeNotifier {
       }
       notifyListeners();
 
-      await Future.delayed(Duration(seconds: 2));
-
       Response response =
           await CommonApi.searchArticles(page, searchKey);
       BaseEntity<Map<String, dynamic>> baseEntity =
@@ -63,7 +61,6 @@ class SearchResultsModel with ChangeNotifier {
     try {
       isLoading = true;
       notifyListeners();
-      await Future.delayed(Duration(seconds: 2));
       if (collect) {
         await CollectApi.collect(id);
       } else {

@@ -10,6 +10,7 @@ import 'package:wanandroid_flutter/entity/todo_entity.dart';
 import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/project/bloc/project_index.dart';
+import 'package:wanandroid_flutter/page/home/project/project_detail_page.dart';
 import 'package:wanandroid_flutter/page/home/web_view.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
@@ -267,7 +268,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                 pagination: SwiperPagination(
                   builder: FlatDotSwiperPaginationBuilder(
                     color: Colors.white,
-                    activeColor: WColors.theme_color,
+                    activeColor: WColors.theme_color_light,
                     size: 5,
                     activeSize: 5,
                     space: 2.5,
@@ -336,7 +337,11 @@ class _ProjectSubPageState extends State<ProjectSubPage>
               ProjectTypesModel data = datas[index];
               return GestureDetector(
                 onTap: () {
-                  DisplayUtil.showMsg(context, text: '点击了${data.title}(待实现）');
+                  Navigator.pushNamed(
+                      context, ProjectDetailPage.ROUTER_NAME, arguments: {
+                    'id': data.id,
+                    'name': decodeString(data.title)
+                  });
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -367,7 +372,11 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                     ProjectTypesModel data = datas[index + maxOneRowCount];
                     return GestureDetector(
                       onTap: () {
-                        DisplayUtil.showMsg(context, text: '点击了${data.title}');
+                        Navigator.pushNamed(
+                            context, ProjectDetailPage.ROUTER_NAME, arguments: {
+                          'id': data.id,
+                          'name': decodeString(data.title)
+                        });
                       },
                       child: Container(
                         alignment: Alignment.center,
@@ -378,7 +387,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                           children: <Widget>[
                             data.icon,
                             Text(
-                              data.title.replaceAll('&amp;', '/'),
+                              decodeString(data.title),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -629,8 +638,11 @@ class _ProjectItemState extends State<ProjectItem>
             GestureDetector(
 //              behavior: HitTestBehavior.opaque,
               onTap: () {
-                DisplayUtil.showMsg(context,
-                    text: 'click type ${widget.data.chapterName}（待实现）');
+                Navigator.pushNamed(context, ProjectDetailPage.ROUTER_NAME,
+                    arguments: {
+                      'id': widget.data.chapterId,
+                      'name': decodeString(widget.data.chapterName)
+                    });
               },
               child: Padding(
                 padding:
