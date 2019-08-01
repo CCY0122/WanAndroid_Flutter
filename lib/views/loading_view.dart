@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 
-//后期打算自己做个flare加载动画
 Widget getLoading({bool start = true}) {
   return IgnorePointer(
     child: Container(

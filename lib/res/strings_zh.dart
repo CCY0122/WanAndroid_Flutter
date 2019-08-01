@@ -217,4 +217,7 @@ class StringsZh extends BaseStrings {
 
   @override
   get peopleAreSearching => '大家都在搜';
+
+  @override
+  get stickTop => '置顶';
 }

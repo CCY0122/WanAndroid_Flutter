@@ -1,7 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flare_dart/math/mat2d.dart';
-import 'package:flare_flutter/flare.dart';
-import 'package:flare_flutter/flare_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,10 +14,10 @@ import 'package:wanandroid_flutter/page/home/web_view.dart';
 import 'package:wanandroid_flutter/page/todo/todo_main.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
+import 'package:wanandroid_flutter/utils/string_decode.dart';
 import 'package:wanandroid_flutter/views/flat_pagination.dart';
 import 'package:wanandroid_flutter/views/load_more_footer.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
-import 'package:flare_flutter/flare_actor.dart';
 
 ///项目页
 class ProjectSubPage extends StatefulWidget {
@@ -350,7 +347,7 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                     children: <Widget>[
                       data.icon,
                       Text(
-                        data.title.replaceAll('&amp;', '/'),
+                        decodeString(data.title),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

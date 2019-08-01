@@ -8,6 +8,7 @@ import 'package:wanandroid_flutter/page/account/login_wanandroid_page.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
+import 'package:wanandroid_flutter/utils/string_decode.dart';
 import 'package:wanandroid_flutter/views/Article_type_view.dart';
 import 'package:wanandroid_flutter/views/load_more_footer.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
@@ -354,7 +355,6 @@ class _WXArticleItemState extends State<WXArticleItem>
     _collectAnim = Tween<double>(begin: 1, end: 1.8).animate(curvedAnimation);
   }
 
-
   @override
   void dispose() {
     _collectController?.dispose();
@@ -406,11 +406,28 @@ class _WXArticleItemState extends State<WXArticleItem>
             },
           ),
           title: Text(
-            widget.data.title,
-            style: TextStyle(fontSize: 15,),
+            decodeString(widget.data.title),
+            style: TextStyle(
+              fontSize: 15,
+            ),
           ),
           subtitle: Row(
             children: [
+              widget.data.type == 1 //目前本人通过对比json差异猜测出type=1表示置顶类型
+                  ? Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.red[700])),
+                      margin: EdgeInsets.only(right: pt(6)),
+                      padding: EdgeInsets.symmetric(horizontal: pt(4)),
+                      child: Text(
+                        res.stickTop,
+                        style: TextStyle(
+                            color: Colors.red[700],
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10),
+                      ),
+                    )
+                  : Container(),
               widget.data.fresh
                   ? Container(
                       decoration: BoxDecoration(
@@ -428,7 +445,7 @@ class _WXArticleItemState extends State<WXArticleItem>
                   : Container(),
 
               ///WanAndroid文档原话：superChapterId其实不是一级分类id，因为要拼接跳转url，内容实际都挂在二级分类下，所以该id实际上是一级分类的第一个子类目的id，拼接后故可正常跳转
-              widget.data.superChapterId == 294
+              widget.data.superChapterId == 294 //项目
                   ? Container(
                       decoration: BoxDecoration(
                           border: Border.all(color: WColors.theme_color_dark)),
@@ -443,7 +460,7 @@ class _WXArticleItemState extends State<WXArticleItem>
                       ),
                     )
                   : Container(),
-              widget.data.superChapterId == 440
+              widget.data.superChapterId == 440 //问答
                   ? Container(
                       decoration: BoxDecoration(
                           border: Border.all(color: WColors.theme_color)),
@@ -458,8 +475,10 @@ class _WXArticleItemState extends State<WXArticleItem>
                       ),
                     )
                   : Container(),
-              Text(
-                  '${res.author}：${widget.data.author}  ${res.time}：${widget.data.niceDate}'),
+              Expanded(
+                child: Text(
+                    '${res.author}：${widget.data.author}  ${res.time}：${widget.data.niceDate}'),
+              ),
             ],
           ),
           onTap: () {

@@ -210,6 +210,9 @@ class ArticleApi {
   static String ARTICLE_LIST(int page, int id) =>
       '/article/list/$page/json?cid=$id';
 
+  ///置顶文章
+  static String TOP_ARTICLE = '/article/top/json';
+
   ///页码从1开始
   static Future<Response> getNewArticle(int page) {
     //老接口原因，实际输入页码是从0开始
@@ -224,6 +227,10 @@ class ArticleApi {
   static Future<Response> getArticleList(int page, int id) {
     //老接口原因，实际输入页码是从0开始
     return dio.get(ARTICLE_LIST(page - 1, id));
+  }
+
+  static Future<Response> getTopArticles(){
+    return dio.get(TOP_ARTICLE);
   }
 }
 
@@ -280,6 +287,7 @@ class CommonApi{
   static String SEARCH(int page) => '/article/query/$page/json';
 
   static String HOT_SEARCH_KEY = '/hotkey/json';
+
 
   ///搜索文章。页码从1开始
   static Future<Response> searchArticles(int page,String searchKey){

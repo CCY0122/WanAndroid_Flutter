@@ -10,6 +10,7 @@ import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/web_view.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
+import 'package:wanandroid_flutter/utils/string_decode.dart';
 import 'package:wanandroid_flutter/views/article_type_view.dart';
 import 'package:wanandroid_flutter/views/load_more_footer.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
@@ -499,11 +500,28 @@ class _ArticleItemState extends State<ArticleItem>
             },
           ),
           title: Text(
-            widget.data.title,
-            style: TextStyle(fontSize: 15,),
+            decodeString(widget.data.title),
+            style: TextStyle(
+              fontSize: 15,
+            ),
           ),
           subtitle: Row(
             children: [
+              widget.data.type == 1 //目前本人通过对比json差异猜测出type=1表示置顶类型
+                  ? Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.red[700])),
+                      margin: EdgeInsets.only(right: pt(6)),
+                      padding: EdgeInsets.symmetric(horizontal: pt(4)),
+                      child: Text(
+                        res.stickTop,
+                        style: TextStyle(
+                            color: Colors.red[700],
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10),
+                      ),
+                    )
+                  : Container(),
               widget.data.fresh
                   ? Container(
                       decoration: BoxDecoration(
@@ -521,7 +539,7 @@ class _ArticleItemState extends State<ArticleItem>
                   : Container(),
 
               ///WanAndroid文档原话：superChapterId其实不是一级分类id，因为要拼接跳转url，内容实际都挂在二级分类下，所以该id实际上是一级分类的第一个子类目的id，拼接后故可正常跳转
-              widget.data.superChapterId == 294
+              widget.data.superChapterId == 294 //项目
                   ? Container(
                       decoration: BoxDecoration(
                           border: Border.all(color: WColors.theme_color_dark)),
@@ -536,7 +554,7 @@ class _ArticleItemState extends State<ArticleItem>
                       ),
                     )
                   : Container(),
-              widget.data.superChapterId == 440
+              widget.data.superChapterId == 440 //问答
                   ? Container(
                       decoration: BoxDecoration(
                           border: Border.all(color: WColors.theme_color)),
@@ -551,8 +569,25 @@ class _ArticleItemState extends State<ArticleItem>
                       ),
                     )
                   : Container(),
-              Text(
-                  '${res.author}：${widget.data.author}  ${res.time}：${widget.data.niceDate}'),
+              widget.data.superChapterId == 408 //公众号
+                  ? Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: WColors.theme_color_light)),
+                margin: EdgeInsets.only(right: pt(6)),
+                padding: EdgeInsets.symmetric(horizontal: pt(4)),
+                child: Text(
+                  res.vxArticle,
+                  style: TextStyle(
+                      color: WColors.theme_color_light,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 10),
+                ),
+              )
+                  : Container(),
+              Expanded(
+                child: Text(
+                    '${res.author}：${widget.data.author}  ${res.time}：${widget.data.niceDate}',),
+              ),
             ],
           ),
           onTap: () {

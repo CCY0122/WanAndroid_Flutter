@@ -110,7 +110,8 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
     return parentTypes;
   }
 
-  //页码从1开始
+  ///页码从1开始
+  ///id : 如果为-1，则加载最新博文，否则加载对应id类型的博文
   Future<ArticleDatasLoaded> _getArticleDatasState(
       {List<ProjectEntity> datas, int id, int page}) async {
     Response response;
@@ -131,6 +132,16 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
       datas.addAll(
           baseListEntity.datas.map((e) => ProjectEntity.fromJson(e)).toList());
     }
+
+    if (id == -1 && page == 1) {
+      //如果是最新博文的第一页，插入置顶文章
+      Response response2 = await ArticleApi.getTopArticles();
+      BaseEntity<List> baseEntity2 = BaseEntity.fromJson(response2.data);
+      List<ProjectEntity> topArticles =
+          baseEntity2.data.map((e) => ProjectEntity.fromJson(e)).toList();
+      datas.insertAll(0, topArticles);
+    }
+
     return ArticleDatasLoaded(
         datas, baseListEntity.curPage, baseListEntity.pageCount);
   }
