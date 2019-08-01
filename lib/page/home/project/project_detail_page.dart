@@ -71,7 +71,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
                 if (index < datas.length) {
                   return Container(
                     margin: EdgeInsets.symmetric(
-                        horizontal: pt(16), vertical: pt(6)),
+                        horizontal: pt(16), vertical: pt(8)),
                     height: pt(180),
                     child: ProjectItem(datas[index], isloading),
                   );
@@ -157,10 +157,11 @@ class _ProjectItemState extends State<ProjectItem>
       });
     }
     lastCollectState = widget.data.collect;
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(pt(6))),
-      clipBehavior: Clip.antiAlias,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [DisplayUtil.lightElevation(baseColor: Colors.grey[300])],
+      ),
       child: GestureDetector(
         onTap: () {
           Navigator.pushNamed(
