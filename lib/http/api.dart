@@ -288,6 +288,8 @@ class CommonApi{
 
   static String HOT_SEARCH_KEY = '/hotkey/json';
 
+  static String NAVIGATION = '/navi/json';
+
 
   ///搜索文章。页码从1开始
   static Future<Response> searchArticles(int page,String searchKey){
@@ -298,6 +300,11 @@ class CommonApi{
   ///热搜词
   static Future<Response> getHotKey(){
     return dio.get(HOT_SEARCH_KEY);
+  }
+
+  ///导航
+  static Future<Response> getNavigations(){
+    return dio.get(NAVIGATION);
   }
 
 }

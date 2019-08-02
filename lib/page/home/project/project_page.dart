@@ -21,6 +21,7 @@ import 'package:wanandroid_flutter/views/load_more_footer.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
 
 ///项目页
+///BloC模式
 class ProjectSubPage extends StatefulWidget {
   PageStorageKey pageStorageKey;
 

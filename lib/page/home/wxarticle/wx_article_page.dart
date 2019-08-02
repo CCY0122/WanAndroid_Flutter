@@ -17,7 +17,8 @@ import '../web_view.dart';
 import 'bloc/wxArticle_index.dart';
 
 ///公众号页.
-///如法炮制博文页[ArticleSubPage]，但是多了搜索功能逻辑
+///BloC模式
+///如法炮制博文页[ArticleSubPage]，但是多了公众号搜索功能逻辑
 class WXArticleSubPage extends StatefulWidget {
   PageStorageKey pageStorageKey;
 

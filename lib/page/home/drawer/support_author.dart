@@ -21,56 +21,58 @@ class _SupportAuthorPageState extends State<SupportAuthorPage> {
       ),
       body: Builder(
         builder: (context) {
-          return Column(
-            children: <Widget>[
-              //问题:如何保存asset文件到本地呢？
-              Image.asset('images/ccy_pay_qr.jpeg'),
-              RaisedButton(
-                onPressed: () {
-                  _launchURL();
-                },
-                color: WColors.theme_color,
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                child: Text(
-                  '去网页版打赏作者',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+          return SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                //问题:如何保存asset文件到本地呢？
+                Image.asset('images/ccy_pay_qr.jpeg'),
+                RaisedButton(
+                  onPressed: () {
+                    _launchURL();
+                  },
+                  color: WColors.theme_color,
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  child: Text(
+                    '去网页版打赏作者',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
                 ),
-              ),
-              Padding(
-                padding:
-                    EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 16),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        '微信：ccy01220122',
-                        style: TextStyle(fontSize: 20),
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          '微信：ccy01220122',
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
-                    ),
-                    RaisedButton(
-                      onPressed: () {
-                        Clipboard.setData(
-                          ClipboardData(text: 'ccy01220122'),
-                        );
-                        DisplayUtil.showMsg(context, text: '已复制微信号');
-                      },
-                      color: WColors.theme_color_dark,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      child: Text(
-                        '点击复制',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
-                    )
-                  ],
+                      RaisedButton(
+                        onPressed: () {
+                          Clipboard.setData(
+                            ClipboardData(text: 'ccy01220122'),
+                          );
+                          DisplayUtil.showMsg(context, text: '已复制微信号');
+                        },
+                        color: WColors.theme_color_dark,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: Text(
+                          '点击复制',
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Image.asset(
-                'images/nice_xiongdei.jpeg',
-                width: 150,
-                height: 150,
-              ),
-            ],
+                Image.asset(
+                  'images/nice_xiongdei.jpeg',
+                  width: 150,
+                  height: 150,
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -78,7 +80,7 @@ class _SupportAuthorPageState extends State<SupportAuthorPage> {
   }
 
   _launchURL() async {
-    var url = 'https://github.com/CCY0122/FocusLayoutManager/blob/master/pic/341561604648_.pic.jpg';
+    var url = 'https://github.com/CCY0122/WanAndroid_Flutter/blob/master/WechatIMG34.jpeg';
     if (await canLaunch(url)) {
       await launch(url);
     } else {

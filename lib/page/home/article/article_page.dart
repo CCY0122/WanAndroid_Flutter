@@ -16,6 +16,7 @@ import 'package:wanandroid_flutter/views/load_more_footer.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
 
 ///博文页
+///BloC模式
 class ArticleSubPage extends StatefulWidget {
   PageStorageKey pageStorageKey;
 
@@ -159,7 +160,7 @@ class _ArticleSubPageState extends State<ArticleSubPage>
                         return;
                       },
                       child: CustomScrollView(
-                        key: widget.pageStorageKey,
+//                        key: widget.pageStorageKey,
                         //在NestedScrollView的文档注释里有这句话：
                         // The "controller" and "primary" members should be left
                         // unset, so that the NestedScrollView can control this

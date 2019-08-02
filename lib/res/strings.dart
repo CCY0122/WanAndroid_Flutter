@@ -157,6 +157,10 @@ abstract class Strings {
 
   get stickTop;
 
+  get longPressToCopyUrl;
+
+  get hasCopied;
+
 }
 
 ///通用的语言，直接这里实现。

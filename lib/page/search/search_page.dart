@@ -297,7 +297,7 @@ class ResultsList extends StatelessWidget {
           },
           child: Container(
             child: getLoadingParent(
-                ListView.builder(
+                child: ListView.builder(
                   itemBuilder: (context, index) {
                     if (index < value.datas.length) {
                       return ArticleItem(value.datas[index], value.isLoading,

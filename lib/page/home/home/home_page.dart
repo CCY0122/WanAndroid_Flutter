@@ -5,6 +5,7 @@ import 'package:wanandroid_flutter/page/base/custom_sliver_app_bar_delegate.dart
 import 'package:wanandroid_flutter/page/home/article/article_page.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/home/home_drawer.dart';
+import 'package:wanandroid_flutter/page/home/navigation/navigation_page.dart';
 import 'package:wanandroid_flutter/page/home/project/project_page.dart';
 import 'package:wanandroid_flutter/page/home/wxarticle/wx_article_page.dart';
 import 'package:wanandroid_flutter/page/search/search_page.dart';
@@ -15,7 +16,8 @@ import 'package:wanandroid_flutter/views/loading_view.dart';
 import 'package:wanandroid_flutter/views/saerch_bar.dart';
 
 ///主页
-///本页存在该问题：【flutter关于NestedScrollView的这个bug：https://github.com/flutter/flutter/issues/36419】
+///BloC模式
+///本页结构存在该问题：【flutter关于NestedScrollView的这个bug：https://github.com/flutter/flutter/issues/36419】
 class HomePage extends StatefulWidget {
   static const ROUTER_NAME = '/HomePage';
 
@@ -33,6 +35,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   TabController _tabController;
   ScrollController _scrollController;
   bool isSearchWXArticle = false;
+  bool showFAB = true;
   TextEditingController _searchTextContriller;
 
   static List<PageStorageKey<String>> keys = [
@@ -43,15 +46,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     PageStorageKey<String>('5'),
   ];
 
+  //实际上如果子页已经AutomaticKeepAliveClientMixin了，那也没必要再用PageStorageKey去保存滚动状态了，因为切换tab时页面根本不会被销毁
   Map<String, Widget> tabs = {
     res.project: ProjectSubPage(keys[0]),
     res.article: ArticleSubPage(keys[1]),
-    res.vxArticle: WXArticleSubPage(keys[1]),
-    res.navigation: Scaffold(
-      body: Center(
-        child: Text('敬请期待'),
-      ),
-    ),
+    res.vxArticle: WXArticleSubPage(keys[2]),
+    res.navigation: NavigationPage(),
     res.collect: Scaffold(
       body: Center(
         child: Text('敬请期待'),
@@ -71,6 +71,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       } else {
         setState(() {
           isSearchWXArticle = false;
+        });
+      }
+      if(_tabController.index == 3){
+        setState(() {
+          showFAB = false;
+        });
+      }else{
+        setState(() {
+          showFAB = true;
         });
       }
     });
@@ -175,20 +184,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     drawer: Drawer(
                       child: HomeDrawer(isLogin, userName, bmobUserEntity),
                     ),
-                    floatingActionButton: FloatingActionButton(
-                      onPressed: () {
-                        //本打算监听_scrollController，当滑动距离较大时再显示"返回顶部"按钮，但实际发现在NestedScrollView头部被收起后就收不到监听了。
-                        //那么只能在TabBarView子页中监听它们自己的滚动距离，然后再通知到主页（可以用bloc发一个event、也可以发一个自定义Notification）显示"返回顶部"按钮。（嫌麻烦，不做了，永久显示吧）
-                        _scrollController.animateTo(1,
-                            duration: Duration(seconds: 1),
-                            curve: Curves.decelerate);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Image.asset('images/rocket.png'),
+                    floatingActionButton: Offstage(
+                      offstage: !showFAB,
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          //本打算监听_scrollController，当滑动距离较大时再显示"返回顶部"按钮，但实际发现在NestedScrollView头部被收起后就收不到监听了。
+                          //那么只能在TabBarView子页中监听它们自己的滚动距离，然后再通知到主页（可以用bloc发一个event、也可以发一个自定义Notification）显示"返回顶部"按钮。（嫌麻烦，不做了，永久显示吧）
+                          _scrollController.animateTo(1,
+                              duration: Duration(seconds: 1),
+                              curve: Curves.decelerate);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Image.asset('images/rocket.png'),
+                        ),
+                        mini: true,
+                        backgroundColor: WColors.theme_color,
                       ),
-                      mini: true,
-                      backgroundColor: WColors.theme_color,
                     ),
                   ),
                   Offstage(

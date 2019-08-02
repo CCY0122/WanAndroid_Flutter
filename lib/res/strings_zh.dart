@@ -220,4 +220,10 @@ class StringsZh extends BaseStrings {
 
   @override
   get stickTop => '置顶';
+
+  @override
+  get longPressToCopyUrl => '*长按标签可复制链接';
+
+  @override
+  get hasCopied => '已复制';
 }

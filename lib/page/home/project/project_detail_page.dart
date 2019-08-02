@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_flutter/entity/base_entity.dart';
 import 'package:wanandroid_flutter/entity/base_list_entity.dart';
@@ -29,6 +30,8 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
   int totalPage;
   bool isloading;
   ScrollController _scrollController;
+  BuildContext innerContext;
+  double lastOffsetPixels = 0;
 
   @override
   void initState() {
@@ -51,7 +54,11 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
       _scrollController.addListener(() {
         if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent) {
-          if (currentPage < totalPage && !isloading) {
+          if (currentPage < totalPage &&
+              !isloading &&
+              _scrollController.position.pixels !=
+                  lastOffsetPixels /*这个是为了避免没网时连续重复触发*/) {
+            lastOffsetPixels = _scrollController.position.pixels;
             getProjects(page: currentPage + 1, id: typeId);
           }
         }
@@ -64,9 +71,11 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
       backgroundColor: WColors.gray_background,
       body: Builder(
         builder: (context) {
+          innerContext = context;
           return getLoadingParent(
-            ListView.builder(
-              shrinkWrap: true,
+            child: ListView.builder(
+              physics: ClampingScrollPhysics(),
+              //考虑到没网时下拉到底部会无限触发"加载更多->加载失败"的循环，_scrollController里做了特殊判断，所以这里不适合使用BouncingScrollPhysics这种可以overScroller的效果
               itemBuilder: (context, index) {
                 if (index < datas.length) {
                   return Container(
@@ -109,7 +118,9 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
             .toList());
       }
     } catch (e) {
-      DisplayUtil.showMsg(context, exception: e);
+      if (innerContext != null) {
+        DisplayUtil.showMsg(innerContext, exception: e);
+      }
     }
 
     isloading = false;
@@ -184,11 +195,15 @@ class _ProjectItemState extends State<ProjectItem>
               fit: BoxFit.cover,
               placeholder: (BuildContext context, String url) {
                 return Container(
+                  width: pt(100),
                   color: Colors.grey[300],
+                  alignment: Alignment.center,
+                  child: CupertinoActivityIndicator(),
                 );
               },
               errorWidget: (BuildContext context, String url, Object error) {
                 return Container(
+                  width: pt(100),
                   color: Colors.grey[300],
                 );
               },

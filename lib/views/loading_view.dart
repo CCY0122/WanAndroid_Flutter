@@ -18,8 +18,9 @@ Widget getLoading({bool start = true}) {
   );
 }
 
-Widget getLoadingParent(Widget child, {bool isLoading = false}) {
+Widget getLoadingParent({@required Widget child,Key key, bool isLoading = false}) {
   return Stack(
+    key: key,
     children: <Widget>[
       child,
       Offstage(
