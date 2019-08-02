@@ -420,8 +420,8 @@ class _ProjectSubPageState extends State<ProjectSubPage>
           height: pt(35),
           alignment: Alignment.center,
           padding: EdgeInsets.symmetric(horizontal: pt(16)),
-          //目前Swiper不能禁止掉手势滑动，实际这里禁用掉用户体验会更好。
           child: Swiper(
+            physics: NeverScrollableScrollPhysics(),
             onTap: (index) {
               Navigator.pushNamed(context, TodoPage.ROUTER_NAME);
             },
