@@ -22,6 +22,10 @@ class WXArticleBloc extends Bloc<WXArticleEvent, WXArticleState> {
       if (state is HomeLoaded) {
         print('微信公众号子页：主页加载完成，开始加载子页');
         dispatch(LoadWXArticle(408)); //408是'鸿洋'公众号分类id
+      } else if (homeBloc.alredyHomeloaded &&
+          currentState == WXArticleUnready()) {
+        print('微信公众号子页：在构造函数之前主页就已经加载完成并可能已经发送了其他bloc state，开始加载子页');
+        dispatch(LoadWXArticle(408));
       }
     });
   }

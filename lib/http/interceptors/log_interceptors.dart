@@ -4,7 +4,7 @@ import 'package:wanandroid_flutter/utils/index.dart';
 import '../dio_util.dart';
 
 
-bool isDebug = true;
+bool isDebug = false;
 
 ///用于Dio的请求日志拦截器
 class LogsInterceptors extends InterceptorsWrapper {

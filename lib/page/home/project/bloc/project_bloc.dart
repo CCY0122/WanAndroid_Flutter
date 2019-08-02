@@ -27,6 +27,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         dispatch(LoadProject());
       }
     });
+
   }
 
   @override

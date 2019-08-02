@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wanandroid_flutter/res/index.dart';
+import 'package:wanandroid_flutter/utils/string_decode.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
 
 class WebViewPage extends StatefulWidget {
@@ -42,7 +43,7 @@ class _WebViewPageState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context).settings.arguments;
     if (args is Map) {
-      title = args['title'];
+      title = decodeString(args['title']);
       url = args['url'];
     }
     return WebviewScaffold(

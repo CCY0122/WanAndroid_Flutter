@@ -13,6 +13,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   bool isLogin = false;
   String userName;
 
+  bool alredyHomeloaded = false;
+
   @override
   HomeState get initialState => HomeLoading();
 
@@ -33,6 +35,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Stream<HomeState> _mapLoadHomeToState() async* {
     try {
+      alredyHomeloaded = false;
       yield HomeLoading();
       isLogin = await SPUtil.isLogin();
       if (isLogin) {
@@ -41,6 +44,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         userName = null;
       }
       yield HomeLoaded(isLogin, userName: userName);
+      alredyHomeloaded = true;
       if (bmobEnable && isLogin && userName != null) {
         dispatch(LoadBmobInfo(userName));
       }
@@ -51,10 +55,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Stream<HomeState> _mapLogoutHomeToState() async* {
     try {
+      alredyHomeloaded = false;
       yield HomeLoading();
       await AccountApi.logout();
       await SPUtil.setLogin(false);
       yield HomeLoaded(isLogin);
+      alredyHomeloaded = true;
       yield HomeBmobLoaded(null);
       dispatch(LoadHome());
     } catch (e) {

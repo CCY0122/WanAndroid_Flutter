@@ -22,6 +22,9 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
       if (state is HomeLoaded) {
         print('博文子页：主页加载完成，开始加载子页');
         dispatch(LoadArticle(-1));
+      }else if(homeBloc.alredyHomeloaded && currentState == ArticleUnready()){
+        print('博文子页：在构造函数之前主页就已经加载完成并可能已经发送了其他bloc state，开始加载子页');
+        dispatch(LoadArticle(-1));
       }
     });
   }
