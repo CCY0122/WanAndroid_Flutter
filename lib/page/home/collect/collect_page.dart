@@ -51,7 +51,6 @@ class _CollectSubPageState extends State<CollectSubPage>
         }
       });
     }
-    print('build');
     return !isLogin
         ? Center(
             child: Text(res.loginFirst),

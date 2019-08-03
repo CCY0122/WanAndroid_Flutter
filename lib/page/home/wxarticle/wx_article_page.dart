@@ -268,7 +268,6 @@ class _WXArticleSubPageState extends State<WXArticleSubPage>
                           },
                           onSelected: (selectId) {
                             if (!isLoading) {
-                              ///todo 这里可以利用collaspTypeScrollController将折叠分类列表滚动到当前已选中的item位置，但是麻烦，flutter没有类似scrollTo(position)这种方法。(待实现）
                               setState(() {
                                 typeIsExpanded = false;
                                 selectTypeId = selectId;
