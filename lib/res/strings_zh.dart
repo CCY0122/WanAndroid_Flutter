@@ -226,4 +226,28 @@ class StringsZh extends BaseStrings {
 
   @override
   get hasCopied => '已复制';
+
+  @override
+  get collectWeb => '收藏网址';
+
+  @override
+  get enterAuthor => '请输入作者';
+
+  @override
+  get enterLink => '请输入链接';
+
+  @override
+  get enterTitle => '请输入标题';
+
+  @override
+  get enterWebLink => '请输入网站链接';
+
+  @override
+  get enterWebName => '请输入网站名称';
+
+  @override
+  get add => '添加';
+
+  @override
+  get noEmpty => '不许为空';
 }

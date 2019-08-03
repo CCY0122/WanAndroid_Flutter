@@ -161,6 +161,22 @@ abstract class Strings {
 
   get hasCopied;
 
+  get collectWeb;
+
+  get enterWebName;
+
+  get enterWebLink;
+
+  get enterTitle;
+
+  get enterAuthor;
+
+  get enterLink;
+
+  get add;
+
+  get noEmpty;
+
 }
 
 ///通用的语言，直接这里实现。

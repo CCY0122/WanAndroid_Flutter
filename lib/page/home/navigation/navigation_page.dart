@@ -11,12 +11,12 @@ import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/loading_view.dart';
 
 ///导航子页。
-class NavigationPage extends StatefulWidget {
+class NavigationSubPage extends StatefulWidget {
   @override
-  _NavigationPageState createState() => _NavigationPageState();
+  _NavigationSubPageState createState() => _NavigationSubPageState();
 }
 
-class _NavigationPageState extends State<NavigationPage>
+class _NavigationSubPageState extends State<NavigationSubPage>
     with AutomaticKeepAliveClientMixin {
   Map<String, List<ProjectEntity>> datas;
   Map<String, GlobalKey> itemKeys;
@@ -50,6 +50,13 @@ class _NavigationPageState extends State<NavigationPage>
     });
 
     getDatas();
+  }
+
+  @override
+  void dispose() {
+    typeScrollController.dispose();
+    contentScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -96,7 +103,8 @@ class _NavigationPageState extends State<NavigationPage>
                           contentScrollController.animateTo(scrollerOffset,
                               duration: Duration(
                                   milliseconds: math.min(
-                                      300, 50 * (i - currentTypeIndex).abs())), //离得越远动画时间越久，最久300ms
+                                      300, 50 * (i - currentTypeIndex).abs())),
+                              //离得越远动画时间越久，最久300ms
                               curve: Curves.linear);
                         }
                       },
@@ -346,11 +354,15 @@ class _NavigationPageState extends State<NavigationPage>
       shouldReloadKeys = true;
     } catch (e) {
       print(e);
-      DisplayUtil.showMsg(context, exception: e);
+      if (mounted) {
+        DisplayUtil.showMsg(context, exception: e);
+      }
     }
 
     isLoading = false;
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override

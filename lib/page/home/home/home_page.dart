@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wanandroid_flutter/entity/bmob_user_entity.dart';
 import 'package:wanandroid_flutter/page/base/custom_sliver_app_bar_delegate.dart';
 import 'package:wanandroid_flutter/page/home/article/article_page.dart';
+import 'package:wanandroid_flutter/page/home/collect/collect_page.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/page/home/home/home_drawer.dart';
 import 'package:wanandroid_flutter/page/home/navigation/navigation_page.dart';
@@ -51,12 +52,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     res.project: ProjectSubPage(keys[0]),
     res.article: ArticleSubPage(keys[1]),
     res.vxArticle: WXArticleSubPage(keys[2]),
-    res.navigation: NavigationPage(),
-    res.collect: Scaffold(
-      body: Center(
-        child: Text('敬请期待'),
-      ),
-    ),
+    res.navigation: NavigationSubPage(),
+    res.collect: CollectSubPage(),
   };
 
   @override
@@ -73,11 +70,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           isSearchWXArticle = false;
         });
       }
-      if(_tabController.index == 3){
+      if (_tabController.index == 3) {
         setState(() {
           showFAB = false;
         });
-      }else{
+      } else {
         setState(() {
           showFAB = true;
         });
@@ -110,7 +107,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           }
           if (state is HomeSearchStarted) {
             if (!state.isSearchWXArticle) {
-              Navigator.pushNamed(context, SearchPage.ROUTER_NAME,arguments: _searchTextContriller.text);
+              Navigator.pushNamed(context, SearchPage.ROUTER_NAME,
+                  arguments: _searchTextContriller.text);
             }
           }
           if (state is HomeBmobLoaded) {

@@ -229,7 +229,7 @@ class ArticleApi {
     return dio.get(ARTICLE_LIST(page - 1, id));
   }
 
-  static Future<Response> getTopArticles(){
+  static Future<Response> getTopArticles() {
     return dio.get(TOP_ARTICLE);
   }
 }
@@ -260,9 +260,14 @@ class WXArticleApi {
 class CollectApi {
   static String COLLECT(int id) => '/lg/collect/$id/json';
 
+  ///收藏站外文章
+  static String COLLECT_OUTTER = '/lg/collect/add/json';
+
   static String UN_COLLECT(int id) => '/lg/uncollect_originId/$id/json';
 
   static String UN_COLLECT_WITH_ORIGIN_ID(int id) => '/lg/uncollect/$id/json';
+
+  static String COLLECT_LIST(int page) => '/lg/collect/list/$page/json';
 
   static Future<Response> collect(int id) {
     return dio.post(COLLECT(id));
@@ -276,35 +281,93 @@ class CollectApi {
   static Future<Response> unCollectWithOriginId(int id, int originId) {
     return dio.post(
       UN_COLLECT_WITH_ORIGIN_ID(id),
-      queryParameters: {'originId': originId},
+      queryParameters: {'originId': originId ?? -1},
     );
+  }
+
+  ///获取收藏列表，page从1开始
+  static Future<Response> getCollectList(int page) {
+    //老接口原因，实际输入页码是从0开始
+    return dio.get(COLLECT_LIST(page - 1));
+  }
+
+  static Future<Response> collectOutter(
+      {String title, String author, String link}) {
+    Map<String, dynamic> query = {};
+    if (title != null) {
+      query['title'] = title;
+    }
+    if (author != null) {
+      query['author'] = author;
+    }
+    if (link != null) {
+      query['link'] = link;
+    }
+    return dio.post(COLLECT_OUTTER, queryParameters: query);
+  }
+}
+
+class CollectWebApi {
+  static const String COLLECT_WEB_LIST = '/lg/collect/usertools/json';
+  static const String COLLECT_WEB = '/lg/collect/addtool/json';
+  static const String UPDATE_WEB = '/lg/collect/updatetool/json';
+  static const String DELETE_WEB = '/lg/collect/deletetool/json';
+
+  static Future<Response> getCollectWebList() {
+    return dio.get(COLLECT_WEB_LIST);
+  }
+
+  static Future<Response> collectWeb({String name, String link}) {
+    Map<String, dynamic> query = {};
+    if (name != null) {
+      query['name'] = name;
+    }
+    if (link != null) {
+      query['link'] = link;
+    }
+    return dio.post(COLLECT_WEB, queryParameters: query);
+  }
+
+  static Future<Response> updateWeb({int id, String name, String link}) {
+    Map<String, dynamic> query = {};
+    if (id != null) {
+      query['id'] = id;
+    }
+    if (name != null) {
+      query['name'] = name;
+    }
+    if (link != null) {
+      query['link'] = link;
+    }
+    return dio.post(UPDATE_WEB, queryParameters: query);
+  }
+
+  static Future<Response> deleteWeb(int id) {
+    return dio.post(DELETE_WEB, queryParameters: {'id': id});
   }
 }
 
 ///其他接口
-class CommonApi{
-
+class CommonApi {
   static String SEARCH(int page) => '/article/query/$page/json';
 
   static String HOT_SEARCH_KEY = '/hotkey/json';
 
   static String NAVIGATION = '/navi/json';
 
-
   ///搜索文章。页码从1开始
-  static Future<Response> searchArticles(int page,String searchKey){
+  static Future<Response> searchArticles(int page, String searchKey) {
     //老接口原因，实际输入页码是从0开始
-    return dio.post(SEARCH(page-1),queryParameters: {'k':searchKey});
+    return dio.post(SEARCH(page - 1), queryParameters: {'k': searchKey});
   }
 
   ///热搜词
-  static Future<Response> getHotKey(){
+  static Future<Response> getHotKey() {
     return dio.get(HOT_SEARCH_KEY);
   }
 
   ///导航
-  static Future<Response> getNavigations(){
+  static Future<Response> getNavigations() {
     return dio.get(NAVIGATION);
   }
-
 }
