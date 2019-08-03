@@ -44,7 +44,7 @@ class CollectWebModel extends ChangeNotifier {
   addWeb(
       {String name,
       String link,
-      ValueChanged<CollectWebEntity> onAddSuccess}) async {
+      VoidCallback onAddSuccess}) async {
     isLoading = true;
     notifyListeners();
 
@@ -54,7 +54,7 @@ class CollectWebModel extends ChangeNotifier {
       CollectWebEntity entity =
           CollectWebEntity.fromJson(response.data['data']);
       _datas.add(entity);
-      onAddSuccess?.call(entity);
+      onAddSuccess?.call();
     } catch (e) {
       print(e);
       onError(e);

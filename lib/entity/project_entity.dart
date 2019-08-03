@@ -45,6 +45,9 @@ class ProjectEntity extends Object {
   @JsonKey(name: 'origin')
   String origin;
 
+  @JsonKey(name: 'originId')
+  int originId;
+
   @JsonKey(name: 'prefix')
   String prefix;
 
@@ -78,7 +81,7 @@ class ProjectEntity extends Object {
   @JsonKey(name: 'zan')
   int zan;
 
-  ProjectEntity(this.apkLink,this.author,this.chapterId,this.chapterName,this.collect,this.courseId,this.desc,this.envelopePic,this.fresh,this.id,this.link,this.niceDate,this.origin,this.prefix,this.projectLink,this.publishTime,this.superChapterId,this.superChapterName,this.tags,this.title,this.type,this.userId,this.visible,this.zan,);
+  ProjectEntity(this.apkLink,this.author,this.chapterId,this.chapterName,this.collect,this.courseId,this.desc,this.envelopePic,this.fresh,this.id,this.link,this.niceDate,this.origin,this.originId,this.prefix,this.projectLink,this.publishTime,this.superChapterId,this.superChapterName,this.tags,this.title,this.type,this.userId,this.visible,this.zan,);
 
   factory ProjectEntity.fromJson(Map<String, dynamic> srcJson) => _$ProjectEntityFromJson(srcJson);
 

@@ -70,7 +70,7 @@ class CollectWebView extends StatelessWidget {
                                   value.toggleEdit();
                                 },
                                 child: Text(
-                                  value.isEditMode ? res.confirm : res.editor,
+                                  value.isEditMode ? res.finish : res.editor,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
@@ -139,7 +139,7 @@ class CollectWebView extends StatelessWidget {
                                     value.addWeb(
                                         name: name,
                                         link: link,
-                                        onAddSuccess: (entity) {
+                                        onAddSuccess: () {
                                           //构建list添加动画
                                           animListKey.currentState.insertItem(
                                             value.datas.length - 1,

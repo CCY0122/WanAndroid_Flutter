@@ -278,7 +278,7 @@ class CollectApi {
   }
 
   ///originId:列表页下发，无则为-1
-  static Future<Response> unCollectWithOriginId(int id, int originId) {
+  static Future<Response> unCollectWithOriginId(int id, {int originId}) {
     return dio.post(
       UN_COLLECT_WITH_ORIGIN_ID(id),
       queryParameters: {'originId': originId ?? -1},
@@ -291,6 +291,7 @@ class CollectApi {
     return dio.get(COLLECT_LIST(page - 1));
   }
 
+  ///收藏站外网址
   static Future<Response> collectOutter(
       {String title, String author, String link}) {
     Map<String, dynamic> query = {};

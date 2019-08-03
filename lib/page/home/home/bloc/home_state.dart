@@ -24,8 +24,10 @@ class HomeLoaded extends HomeState {
 
   @override
   String toString() {
-    return 'HomeLoaded';
+    return 'HomeLoaded{isLogin: $isLogin, userName: $userName}';
   }
+
+
 }
 
 class HomeLoadError extends HomeState {

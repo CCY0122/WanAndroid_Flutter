@@ -228,7 +228,7 @@ class StringsZh extends BaseStrings {
   get hasCopied => '已复制';
 
   @override
-  get collectWeb => '收藏网址';
+  get collectWeb => '收藏的网址';
 
   @override
   get enterAuthor => '请输入作者';
@@ -250,4 +250,16 @@ class StringsZh extends BaseStrings {
 
   @override
   get noEmpty => '不许为空';
+
+  @override
+  get collectArticle => '收藏的文章';
+
+  @override
+  get type => '分类';
+
+  @override
+  get finish => '完成';
+
+  @override
+  get loginFirst => '请先登录';
 }

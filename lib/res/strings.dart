@@ -177,6 +177,14 @@ abstract class Strings {
 
   get noEmpty;
 
+  get collectArticle;
+
+  get type;
+
+  get finish;
+
+  get loginFirst;
+
 }
 
 ///通用的语言，直接这里实现。
