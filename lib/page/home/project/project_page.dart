@@ -338,10 +338,15 @@ class _ProjectSubPageState extends State<ProjectSubPage>
               ProjectTypesModel data = datas[index];
               return GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(
-                      context, ProjectDetailPage.ROUTER_NAME, arguments: {
-                    'id': data.id,
-                    'name': decodeString(data.title)
+                  Navigator.pushNamed(context, ProjectDetailPage.ROUTER_NAME,
+                      arguments: {
+                        'id': data.id,
+                        'name': decodeString(data.title)
+                      }).then((_) {
+                    HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+                    if (!homeBloc.isLogin) {
+                      homeBloc.dispatch(LoadHome());
+                    }
                   });
                 },
                 child: Container(
@@ -377,6 +382,12 @@ class _ProjectSubPageState extends State<ProjectSubPage>
                             context, ProjectDetailPage.ROUTER_NAME, arguments: {
                           'id': data.id,
                           'name': decodeString(data.title)
+                        }).then((_) {
+                          HomeBloc homeBloc =
+                              BlocProvider.of<HomeBloc>(context);
+                          if (!homeBloc.isLogin) {
+                            homeBloc.dispatch(LoadHome());
+                          }
                         });
                       },
                       child: Container(
@@ -643,7 +654,12 @@ class _ProjectItemState extends State<ProjectItem>
                     arguments: {
                       'id': widget.data.chapterId,
                       'name': decodeString(widget.data.chapterName)
-                    });
+                    }).then((_) {
+                  HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+                  if (!homeBloc.isLogin) {
+                    homeBloc.dispatch(LoadHome());
+                  }
+                });
               },
               child: Padding(
                 padding:

@@ -108,7 +108,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           if (state is HomeSearchStarted) {
             if (!state.isSearchWXArticle) {
               Navigator.pushNamed(context, SearchPage.ROUTER_NAME,
-                  arguments: _searchTextContriller.text);
+                  arguments: _searchTextContriller.text).then((_){
+                    if(!isLogin){
+                      homeBloc.dispatch(LoadHome());
+                    }
+              });
             }
           }
           if (state is HomeBmobLoaded) {
