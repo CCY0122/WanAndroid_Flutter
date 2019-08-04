@@ -15,7 +15,7 @@
 | 导航页、项目细分页、登录注册页、待做清单等其他页面 | 常规开发模式 |
 
 
-## 正式版下载（含打卡等特色功能）
+## 正式版下载（Android版）（含打卡等特色功能）
 ![](my_flutter_pic/qrcode.png)<br/>
 手动下载请点击[下载地址](https://www.pgyer.com/ccywaf)
 
