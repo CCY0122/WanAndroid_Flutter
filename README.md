@@ -1,6 +1,5 @@
-# wanandroid_flutter
 
-## 超完整的Flutter版wanAndroid客户端--《玩儿Android》
+# 超完整的Flutter版wanAndroid客户端--《玩儿Android》
 
 - **包含 [wanAndroid](https://wanandroid.com/index)已开放API的全部功能:项目、博文、公众号、导航、收藏、搜索、待做清单等,是一个超完整的学习App**
 - **使用了常规开发模式、流行的[BloC模式](https://pub.dev/packages/bloc)、官方推荐的[Provider模式](https://pub.dev/packages/provider)，非常适合Flutter学习**
@@ -12,7 +11,7 @@
 ![](my_flutter_pic/qrcode.png)<br/>
 手动下载请点击[下载地址](https://www.pgyer.com/ccywaf)
 
-# 效果图
+## 效果图
 
 <br/>
 
@@ -23,7 +22,7 @@
 | ![](my_flutter_pic/Screenshot_2019-08-04-14-33-34-157_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-36-08-148_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-36-22-723_ccy.wanandroid.png) |
 | ![](my_flutter_pic/Screenshot_2019-08-04-14-37-25-765_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-38-46-569_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-43-57-401_ccy.wanandroid.png) | 
 
-# gif
+## gif
 
 | ![](my_flutter_pic/1564901753666.gif) | ![](my_flutter_pic/1564901639263.gif) | 
 |:----:|:----:|
