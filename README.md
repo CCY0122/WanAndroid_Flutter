@@ -7,6 +7,14 @@
 - **主流的NestedScroll + Tab + Scrollable的联动滚动主页面结构、合理动画的使用，UI流畅美观**
 - **特色！拥有日常打卡、等级排行榜、个性签名等微社交功能！让我们看看排行榜里是哪个小伙伴最爱学习。（使用Bmob后端云。仿作弊和隐私考虑，仅从本页下载的正式版才开启了该功能）**
 
+## 项目结构：
+| 页面 | 开发模式 |
+| --- | --- |
+| 主页、主页下的项目页、博文页、公众号页| [BloC模式](https://pub.dev/packages/bloc) | 
+| 收藏页、搜索页 | [Provider模式](https://pub.dev/packages/provider) |
+| 导航页、项目细分页、登录注册页、待做清单等其他页面 | 常规开发模式 |
+
+
 ## 正式版下载（含打卡等特色功能）
 ![](my_flutter_pic/qrcode.png)<br/>
 手动下载请点击[下载地址](https://www.pgyer.com/ccywaf)
