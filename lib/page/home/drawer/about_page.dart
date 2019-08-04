@@ -1,5 +1,8 @@
+import 'package:data_plugin/bmob/bmob_query.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:wanandroid_flutter/entity/bmob_update_entity.dart';
+import 'package:wanandroid_flutter/main.dart';
 import 'package:wanandroid_flutter/page/home/web_view.dart';
 import 'package:wanandroid_flutter/res/index.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
@@ -78,7 +81,11 @@ class _AboutPageState extends State<AboutPage> {
                 title: Text(res.checkUpdate),
                 trailing: Icon(Icons.navigate_next),
                 onTap: (() {
-                  DisplayUtil.showMsg(context, text: '检测升级(待实现');
+                  if (!bmobEnable) {
+                    DisplayUtil.showMsg(context, text: '仅官方正式版支持检测升级');
+                    return;
+                  }
+                  checkUpdate(context);
                 }),
               ),
             );
@@ -117,6 +124,56 @@ class _AboutPageState extends State<AboutPage> {
     packageName = packageInfo.packageName;
     version = packageInfo.version;
     buildNumber = packageInfo.buildNumber;
+    print('版本信息：$appName,$packageName,$version,$buildNumber');
     setState(() {});
+  }
+
+  Future checkUpdate(BuildContext context) async{
+    try {
+      DisplayUtil.showMsg(context,text: 'checking...',duration: Duration(seconds: 1));
+      BmobQuery<BmobUpdateEntity> query = BmobQuery();
+      dynamic result = await query.queryObject('ed22ca3838');
+      BmobUpdateEntity entity = BmobUpdateEntity.fromJson(result);
+      print('$entity');
+
+      if (version != null) {
+        int cur = int.parse(version.replaceAll('.', ''));
+        int news = int.parse(entity.versionName.replaceAll('.', ''));
+        if (cur < news) {
+          if (mounted) {
+            showDialog(
+                context: context,
+                builder: (c) {
+                  return AlertDialog(
+                    title: Text(entity.versionName),
+                    content: Text(entity.updateMsg),
+                    actions: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(WebViewPage.ROUTER_NAME, arguments: {
+                            'title': entity.versionName,
+                            'url': entity.downloadUrl
+                          });
+                        },
+                        child: Text(res.go),
+                      ),
+                    ],
+                  );
+                });
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      print(e);
+      if (mounted) {
+        DisplayUtil.showMsg(context, text: 'check update failed');
+        return;
+      }
+    }
+    if (mounted) {
+      DisplayUtil.showMsg(context, text: res.isNewestVersion);
+    }
   }
 }

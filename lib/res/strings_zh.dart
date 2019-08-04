@@ -262,4 +262,10 @@ class StringsZh extends BaseStrings {
 
   @override
   get loginFirst => '请先登录';
+
+  @override
+  get isNewestVersion => '已是最新版';
+
+  @override
+  get go => '前往';
 }

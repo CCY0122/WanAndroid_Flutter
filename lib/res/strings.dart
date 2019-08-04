@@ -185,6 +185,10 @@ abstract class Strings {
 
   get loginFirst;
 
+  get isNewestVersion;
+
+  get go;
+
 }
 
 ///通用的语言，直接这里实现。

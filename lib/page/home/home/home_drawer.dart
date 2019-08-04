@@ -10,7 +10,6 @@ import 'package:wanandroid_flutter/page/home/drawer/rank_page.dart';
 import 'package:wanandroid_flutter/page/home/drawer/support_author.dart';
 import 'package:wanandroid_flutter/page/home/home/bloc/home_index.dart';
 import 'package:wanandroid_flutter/res/index.dart';
-import 'package:wanandroid_flutter/test/test_page.dart';
 import 'package:wanandroid_flutter/utils/index.dart';
 import 'package:wanandroid_flutter/views/level_view.dart';
 
@@ -37,7 +36,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     if (widget.bmobUserEntity != null) {
       checkTodayHasSignin(DateTime.parse(widget.bmobUserEntity.updatedAt));
     } else {
-      hasSignin = false;
+      hasSignin = true;
     }
   }
 
@@ -73,6 +72,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
                                   if (!hasSignin) {
+                                    hasSignin = true;
                                     BmobUserEntity copy = widget.bmobUserEntity
                                         .copyWith(
                                             level: widget.bmobUserEntity.level +
@@ -231,21 +231,21 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   });
                 }
               }),
-              FlatButton(
-                child: Text('去测试页'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return Scaffold(
-                          body: TestPage(),
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
+//              FlatButton(
+//                child: Text('去测试页'),
+//                onPressed: () {
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                      builder: (context) {
+//                        return Scaffold(
+//                          body: TestPage(),
+//                        );
+//                      },
+//                    ),
+//                  );
+//                },
+//              ),
 //            FlatButton(
 //              child: Text('去nest'),
 //              onPressed: () {
@@ -276,7 +276,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
     );
   }
 
-
   Future checkTodayHasSignin(DateTime updateTime) async {
     ///为防止打卡作弊，当前时间从网络上获取
     DateTime now;
@@ -290,7 +289,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
           isUtc: true);
     } catch (e) {
       print(e);
-      now = DateTime.now();
+      hasSignin = true;
+      setState(() {});
+      return;
     }
 
     DateTime today = DateTime(
@@ -298,6 +299,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       now.month,
       now.day,
     );
+//    print('$updateTime,$today');
     hasSignin = updateTime.isAfter(today.toUtc());
     setState(() {});
   }
