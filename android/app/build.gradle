@@ -61,6 +61,10 @@ android {
 //开源版注释掉
 //            signingConfig signingConfigs.release
         }
+
+        debug{
+            applicationIdSuffix '.debug' //debug和release包名不同，方便一个手机同时安装2种
+        }
     }
 }
 
