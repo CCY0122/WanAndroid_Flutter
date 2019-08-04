@@ -1,6 +1,7 @@
 import 'package:data_plugin/bmob/bmob_query.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wanandroid_flutter/entity/bmob_update_entity.dart';
 import 'package:wanandroid_flutter/main.dart';
 import 'package:wanandroid_flutter/page/home/web_view.dart';
@@ -150,11 +151,7 @@ class _AboutPageState extends State<AboutPage> {
                     actions: <Widget>[
                       FlatButton(
                         onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(WebViewPage.ROUTER_NAME, arguments: {
-                            'title': entity.versionName,
-                            'url': entity.downloadUrl
-                          });
+                          _launchURL(entity.downloadUrl);
                         },
                         child: Text(res.go),
                       ),
@@ -174,6 +171,14 @@ class _AboutPageState extends State<AboutPage> {
     }
     if (mounted) {
       DisplayUtil.showMsg(context, text: res.isNewestVersion);
+    }
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }
