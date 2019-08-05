@@ -312,7 +312,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, TodoPage.ROUTER_NAME);
+              Navigator.pushNamed(context, TodoPage.ROUTER_NAME).then((_){
+                if(!isLogin){
+                  homeBloc.dispatch(LoadHome());
+                }
+              });
             },
             child: Container(
               alignment: Alignment.center,

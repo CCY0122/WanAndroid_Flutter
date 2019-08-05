@@ -103,8 +103,8 @@ class _NavigationSubPageState extends State<NavigationSubPage>
                           contentScrollController.animateTo(scrollerOffset,
                               duration: Duration(
                                   milliseconds: math.min(
-                                      300, 50 * (i - currentTypeIndex).abs())),
-                              //离得越远动画时间越久，最久300ms
+                                      600, 150 * (i - currentTypeIndex).abs())),
+                              //离得越远动画时间越久，最久600ms
                               curve: Curves.linear);
                         }
                       },
