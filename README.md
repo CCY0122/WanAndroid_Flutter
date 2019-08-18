@@ -2,9 +2,12 @@
 # 超完整的Flutter版wanAndroid客户端--《玩儿Android》
 
 - **包含 [wanAndroid](https://wanandroid.com/index)已开放API的全部功能:项目、博文、公众号、导航、收藏、搜索、待做清单等,是一个超完整的学习App**
-- **使用了常规开发模式、流行的[BloC模式](https://pub.dev/packages/bloc)、官方推荐的[Provider模式](https://pub.dev/packages/provider)，非常适合Flutter学习**
-- **易用美丽的界面UI，仿Android斗鱼客户端的项目页、仿wanAndroid网页端的博文页、公众号页、自己设计超美的（程序员の审美）TODO待做清单页、登录页**
-- **主流的NestedScroll + Tab + Scrollable的联动滚动主页面结构、合理动画的使用，UI流畅美观**
+- **使用了常规开发模式、流行的[BloC模式](https://pub.dev/packages/bloc)、官方推荐的[Provider模式](https://pub.dev/packages/provider)，完善的必要注释和采坑记录，非常适合Flutter学习**
+- **易用美丽的界面UI**
+  * **仿Android斗鱼客户端的项目页**
+  * **仿wanAndroid网页端的博文页、公众号页**
+  * **超美的（程序员の审美）TODO待做清单页**
+- **主流的NestedScroll + Tab + Scrollable的联动滚动主页面结构、合理的动画、手势运用，UI流畅美观**
 - **特色！拥有日常打卡、等级排行榜、个性签名等微社交功能！让我们看看是哪个小伙伴最爱学习。（使用Bmob后端云。防作弊和隐私考虑，仅从本页下载的正式版才开启了该功能）**
 
 ## 项目结构：
