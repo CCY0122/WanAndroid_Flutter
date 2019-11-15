@@ -23,7 +23,7 @@
 
 ## 正式版下载（Android版）（含打卡等特色功能）
 **密码：0122** <br/>
-![](https://github.com/CCY0122/WanAndroid_Flutter/blob/master/my_flutter_pic/%E6%89%B9%E6%B3%A8%202019-11-15%20225630.png)<br/>
+![](https://github.com/CCY0122/WanAndroid_Flutter/blob/master/my_flutter_pic/%E6%89%B9%E6%B3%A8%202019-11-15%20230347.png)<br/>
 手动下载请点击[下载地址](https://www.pgyer.com/5WBp)
 
 ## 效果图
