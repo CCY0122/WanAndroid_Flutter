@@ -289,6 +289,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             : res.searchTips,
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(),
+                        isDense: true,
                         hintStyle: TextStyle(
                           fontSize: 12,
                           color: isSearchWXArticle
@@ -341,7 +342,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       indicatorColor: Colors.white,
       tabs: tabs.keys.map((title) {
         return Padding(
-          padding: EdgeInsets.symmetric(vertical: pt(10), horizontal: pt(6)),
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: pt(6)),
           child: Text(
             title,
             style: TextStyle(fontSize: 15),

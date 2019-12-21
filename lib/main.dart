@@ -68,6 +68,7 @@ class GlobalBlocDel extends BlocDelegate {
 }
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   BlocSupervisor.delegate = GlobalBlocDel();

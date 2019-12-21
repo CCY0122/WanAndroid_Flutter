@@ -11,7 +11,7 @@ description: Flutter版&quot;玩Android&quot;
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.2+3
+version: 1.0.3+4
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -25,17 +25,17 @@ dependencies:
   cupertino_icons: ^0.1.2
   dio: ^2.1.7
   path_provider: ^1.1.0
-  device_info: ^0.4.0+2
-  shared_preferences: ^0.5.3+1
+  device_info: ^0.4.1+4
+  shared_preferences: ^0.5.6
   json_annotation: ^2.4.0
   bloc: ^0.14.4
   flutter_bloc: ^0.18.3
   equatable: ^0.2.6
-  cached_network_image: ^1.0.0
+  cached_network_image: ^2.0.0-rc
   flutter_swiper: ^1.1.6
-  flutter_webview_plugin: ^0.3.5
+  flutter_webview_plugin: 0.3.5 #不加"^"
   url_launcher: ^5.1.0
-  flare_flutter: ^1.5.4
+  flare_flutter: ^1.8.3
   package_info: 0.4.0+6
   provider: ^3.0.0+1
 

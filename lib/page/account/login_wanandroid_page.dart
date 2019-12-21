@@ -366,7 +366,7 @@ class _LoginCardState extends State<LoginCard> {
       await SPUtil.setLogin(true);
       await SPUtil.setUserName(username);
       print('_LoginCardState : login success');
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
       return;
     } catch (e) {
       DisplayUtil.showMsg(context, exception: e);
@@ -390,7 +390,7 @@ class _LoginCardState extends State<LoginCard> {
       await SPUtil.setLogin(true);
       await SPUtil.setUserName(username);
       print('_LoginCardState : login success');
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
       return;
     } catch (e) {
       DisplayUtil.showMsg(context, exception: e);
