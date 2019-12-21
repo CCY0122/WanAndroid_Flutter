@@ -44,13 +44,13 @@ gradle tools : "gradle:3.5.3" <br/>
 
 <br/>
 
- | ![](my_flutter_pic/Screenshot_2019-08-04-15-18-14-695_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-15-18-11-188_ccy.wanandroid.png) | 
-|:----:|:----:|
-| ![](my_flutter_pic/Screenshot_2019-08-04-14-27-57-381_ccy.wanandroid.png) | | ![](my_flutter_pic/Screenshot_2019-08-04-14-28-29-136_ccy.wanandroid.png) |
-| ![](my_flutter_pic/Screenshot_2019-08-02-23-40-22-673_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-29-40-030_ccy.wanandroid.png) |
-| ![](my_flutter_pic/WechatIMG60.jpeg) | ![](my_flutter_pic/Screenshot_2019-08-04-14-36-08-148_ccy.wanandroid.png) |
-| ![](my_flutter_pic/Screenshot_2019-08-04-14-36-22-723_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-37-25-765_ccy.wanandroid.png) |
-| ![](my_flutter_pic/Screenshot_2019-08-04-14-38-46-569_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-43-57-401_ccy.wanandroid.png) | 
+
+ | ![](my_flutter_pic/Screenshot_2019-08-04-15-18-14-695_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-15-18-11-188_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-27-57-381_ccy.wanandroid.png) |
+|:----:|:----:|:----:|
+| ![](my_flutter_pic/Screenshot_2019-08-04-14-28-29-136_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-02-23-40-22-673_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-29-40-030_ccy.wanandroid.png) |
+| ![](my_flutter_pic/Screenshot_2019-08-04-14-30-39-961_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-32-24-047_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-33-25-691_ccy.wanandroid.png) |
+| ![](my_flutter_pic/WechatIMG60.jpeg) | ![](my_flutter_pic/Screenshot_2019-08-04-14-36-08-148_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-36-22-723_ccy.wanandroid.png) |
+| ![](my_flutter_pic/Screenshot_2019-08-04-14-37-25-765_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-38-46-569_ccy.wanandroid.png) | ![](my_flutter_pic/Screenshot_2019-08-04-14-43-57-401_ccy.wanandroid.png) | 
 
 ## gif
 
